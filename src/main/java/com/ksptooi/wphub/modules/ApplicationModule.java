@@ -2,6 +2,8 @@ package com.ksptooi.wphub.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import com.ksptooi.wphub.cli.CommandLine;
+import com.ksptooi.wphub.cli.OperateCli;
 import com.ksptooi.wphub.command.CommandParser;
 import com.ksptooi.wphub.command.InnerCommandParser;
 import com.ksptooi.wphub.executor.dispatch.CommandDispatcher;
@@ -20,6 +22,9 @@ public class ApplicationModule extends AbstractModule {
 
         //命令调度器
         bind(CommandScheduler.class).to(CommandDispatcher.class).in(Scopes.SINGLETON);
+
+        //Cli
+        bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);
 
     }
 
