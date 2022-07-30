@@ -1,14 +1,17 @@
 package com.ksptooi.wphub.entities;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PreparedCommand {
 
     //名称
     private String name;
 
+    private List<String> parameter;
+
     //参数组
-    private HashMap<String,String> parameter;
+    private Map<String,String> parameters;
 
     public String getName() {
         return name;
@@ -18,11 +21,28 @@ public class PreparedCommand {
         this.name = name;
     }
 
-    public HashMap<String, String> getParameter() {
+    public List<String> getParameter() {
         return parameter;
     }
 
-    public void setParameter(HashMap<String, String> parameter) {
+    public void setParameter(List<String> parameter) {
         this.parameter = parameter;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
+
+    @Override
+    public String toString() {
+        return "PreparedCommand{" +
+                "name='" + name + '\'' +
+                ", parameter=" + parameter +
+                ", parameters=" + parameters +
+                '}';
     }
 }

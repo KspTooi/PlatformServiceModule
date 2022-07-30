@@ -6,6 +6,6 @@ import com.ksptooi.wphub.entities.PreparedCommand;
 @Component
 public interface CommandParser {
 
-    public PreparedCommand parse(String wphubCommandString);
+    public PreparedCommand parse(String inCommandString);
 
 }

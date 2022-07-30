@@ -14,9 +14,10 @@ public class ApplicationRunner {
 
         Injector injector = Guice.createInjector(new ApplicationModule());
 
-        CommandParser instance = injector.getInstance(InnerCommandParser.class);
+        CommandParser parser = injector.getInstance(CommandParser.class);
 
-        System.out.println(instance);
+
+
 
 
     }
