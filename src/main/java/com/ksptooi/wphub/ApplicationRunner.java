@@ -5,16 +5,16 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.wphub.command.CommandParser;
 import com.ksptooi.wphub.command.InnerCommandParser;
-import com.ksptooi.wphub.modules.WpHubModule;
+import com.ksptooi.wphub.modules.ApplicationModule;
 
-public class WpHubRunner {
+public class ApplicationRunner {
 
 
     public static void main(String[] args) {
 
-        Injector injector = Guice.createInjector(new WpHubModule());
+        Injector injector = Guice.createInjector(new ApplicationModule());
 
-        CommandParser instance = injector.getInstance(CommandParser.class);
+        CommandParser instance = injector.getInstance(InnerCommandParser.class);
 
         System.out.println(instance);
 

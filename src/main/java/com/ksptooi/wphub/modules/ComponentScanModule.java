@@ -28,6 +28,13 @@ public final class ComponentScanModule extends AbstractModule {
 
         Reflections packageReflections = new Reflections(packageName);
 
+
+        Set<Class<?>> typesAnnotatedWith = packageReflections.getTypesAnnotatedWith(bindingAnnotations.iterator().next());
+
+        Class<?> next = typesAnnotatedWith.iterator().next();
+
+
+
         bindingAnnotations.stream()
                 .map(packageReflections::getTypesAnnotatedWith)
                 .flatMap(Set::stream)
