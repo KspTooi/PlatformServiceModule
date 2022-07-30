@@ -7,8 +7,11 @@ public class Command {
     //命令名称
     private String name;
 
-    //命令目标点
-    private String target;
+    //该命令所属执行器的名称
+    private String executorName;
+
+    //命令元数据
+    private String metadata;
 
     //创建时间
     private Date createTime;
@@ -25,12 +28,12 @@ public class Command {
         this.name = name;
     }
 
-    public String getTarget() {
-        return target;
+    public String getExecutorName() {
+        return executorName;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
+    public void setExecutorName(String executorName) {
+        this.executorName = executorName;
     }
 
     public Date getCreateTime() {
@@ -47,5 +50,13 @@ public class Command {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
     }
 }

@@ -8,6 +8,8 @@ import com.ksptooi.wphub.command.CommandParser;
 import com.ksptooi.wphub.command.InnerCommandParser;
 import com.ksptooi.wphub.executor.dispatch.CommandDispatcher;
 import com.ksptooi.wphub.executor.dispatch.CommandScheduler;
+import org.mybatis.guice.MyBatisModule;
+import org.mybatis.guice.XMLMyBatisModule;
 
 public class ApplicationModule extends AbstractModule {
 
@@ -25,6 +27,18 @@ public class ApplicationModule extends AbstractModule {
 
         //Cli
         bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);
+
+
+        XMLMyBatisModule myBatisModule = new XMLMyBatisModule() {
+
+            @Override
+            protected void initialize() {
+                setEnvironmentId("prod");
+                setClassPathResource("my/path/to/mybatis-config.xml");
+
+            }
+        };
+
 
     }
 

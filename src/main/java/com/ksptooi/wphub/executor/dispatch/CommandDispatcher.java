@@ -31,6 +31,14 @@ public class CommandDispatcher implements CommandScheduler {
     @Override
     public void publish(PreparedCommand command) {
 
+        //查询出该命令对应的执行器
+
+
+        //查找已注册的执行器
+
+
+        //向执行器发布命令
+
         for(Listener item:this.listenerList){
             item.onCommand(command);
         }
