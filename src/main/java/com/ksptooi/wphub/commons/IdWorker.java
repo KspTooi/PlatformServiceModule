@@ -1,4 +1,4 @@
-package com.ksptooi.wphub.utils;
+package com.ksptooi.wphub.commons;
 
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
@@ -9,15 +9,15 @@ public class IdWorker {
     // 时间起始标记点，作为基准，一般取系统的最近时间（一旦确定不能变动）
     private final static long twepoch = 1288834974657L;
     // 机器标识位数
-    private final static long workerIdBits = 5L;
+    private final static long workerIdBits = 2L;
     // 数据中心标识位数
-    private final static long datacenterIdBits = 5L;
+    private final static long datacenterIdBits = 2L;
     // 机器ID最大值
     private final static long maxWorkerId = -1L ^ (-1L << workerIdBits);
     // 数据中心ID最大值
     private final static long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
     // 毫秒内自增位
-    private final static long sequenceBits = 12L;
+    private final static long sequenceBits = 10L;
     // 机器ID偏左移12位
     private final static long workerIdShift = sequenceBits;
     // 数据中心ID左移17位

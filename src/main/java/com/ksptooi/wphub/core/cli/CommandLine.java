@@ -1,4 +1,4 @@
-package com.ksptooi.wphub.cli;
+package com.ksptooi.wphub.core.cli;
 
 public interface CommandLine {
 

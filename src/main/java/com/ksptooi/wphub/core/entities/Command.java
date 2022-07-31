@@ -1,11 +1,11 @@
-package com.ksptooi.wphub.entities;
+package com.ksptooi.wphub.core.entities;
 
 import java.util.Date;
 
 public class Command {
 
     //命令ID
-    private Integer cmdId;
+    private Long cmdId;
 
     //命令名称
     private String name;
@@ -63,11 +63,11 @@ public class Command {
         this.metadata = metadata;
     }
 
-    public Integer getCmdId() {
+    public Long getCmdId() {
         return cmdId;
     }
 
-    public void setCmdId(Integer cmdId) {
+    public void setCmdId(Long cmdId) {
         this.cmdId = cmdId;
     }
 }

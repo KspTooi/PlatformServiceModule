@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ksptooi.wphub.mapper.CommandMapper">
+<mapper namespace="com.ksptooi.wphub.core.mapper.CommandMapper">
 
     <!-- 表实体出参映射-->
-    <resultMap id="poMap" type="com.ksptooi.wphub.entities.Command">
-        <result column="CMD_ID" property="cmdId" />
-        <result column="EXECUTOR_NAME" property="executorName" />
+    <resultMap id="poMap" type="com.ksptooi.wphub.core.entities.Command">
+        <result column="CMD_ID" property="cmdId"/>
+        <result column="NAME" property="name"/>
+        <result column="EXECUTOR_NAME" property="executorName"/>
         <result column="METADATA" property="metadata" />
         <result column="CREATE_TIME" property="createTime" />
         <result column="DESCRIPTION" property="description" />
@@ -15,6 +16,7 @@
     <!-- 表的所有参数 ,不带t-->
     <sql id="tableColumns">
         `CMD_ID`,
+        `NAME`,
         `EXECUTOR_NAME`,
 	    `METADATA`,
 	    `CREATE_TIME`,
@@ -27,12 +29,50 @@
         )
         VALUES (
             #{cmdId},
+            #{name},
             #{executorName},
             #{metadata},
             #{createTime},
             #{description}
         )
     </insert>
+
+    <update id="update">
+        UPDATE COMMAND SET
+            `NAME` = #{update.name},
+            `EXECUTOR_NAME` = #{update.executorName},
+            `METADATA` = #{update.metadata},
+            `CREATE_TIME` = #{update.createTime},
+            `DESCRIPTION` = #{update.description}
+        WHERE `CMD_ID` = #{update.cmdId}
+    </update>
+
+    <select id="getCommandList" resultType="com.ksptooi.wphub.core.entities.Command">
+
+        SELECT
+            <include refid="tableColumns"/>
+        FROM COMMAND
+        <where>
+            <if test="where.cmdId!=null and where.cmdId!=''">
+                and CMD_ID = #{where.cmdId}
+            </if>
+            <if test="where.name!=null and where.name!=''">
+                and `NAME` = #{where.name}
+            </if>
+            <if test="where.executorName!=null and where.executorName!=''">
+                and EXECUTOR_NAME = #{where.executorName}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="getCommandById" resultType="com.ksptooi.wphub.core.entities.Command">
+        SELECT
+        <include refid="tableColumns"/>
+        FROM COMMAND
+        WHERE CMD_ID = #{id}
+    </select>
 
 
 </mapper>

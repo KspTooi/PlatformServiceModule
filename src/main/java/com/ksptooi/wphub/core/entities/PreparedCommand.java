@@ -1,4 +1,4 @@
-package com.ksptooi.wphub.entities;
+package com.ksptooi.wphub.core.entities;
 
 import java.util.List;
 import java.util.Map;

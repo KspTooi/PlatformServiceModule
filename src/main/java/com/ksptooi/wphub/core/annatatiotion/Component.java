@@ -1,4 +1,4 @@
-package com.ksptooi.wphub.annatatiotion;
+package com.ksptooi.wphub.core.annatatiotion;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

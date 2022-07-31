@@ -1,7 +1,7 @@
-package com.ksptooi.wphub.command;
+package com.ksptooi.wphub.core.command;
 
-import com.ksptooi.wphub.annatatiotion.Component;
-import com.ksptooi.wphub.entities.PreparedCommand;
+import com.ksptooi.wphub.core.annatatiotion.Component;
+import com.ksptooi.wphub.core.entities.PreparedCommand;
 
 import java.util.ArrayList;
 import java.util.List;

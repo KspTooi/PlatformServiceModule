@@ -1,4 +1,4 @@
-package com.ksptooi.wphub.modules;
+package com.ksptooi.wphub.core.modules;
 
 import com.google.inject.AbstractModule;
 import org.reflections.Reflections;

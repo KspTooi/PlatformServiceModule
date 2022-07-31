@@ -1,8 +1,8 @@
-package com.ksptooi.wphub.cli;
+package com.ksptooi.wphub.core.cli;
 
 import com.google.inject.Inject;
-import com.ksptooi.wphub.command.CommandParser;
-import com.ksptooi.wphub.executor.dispatch.CommandScheduler;
+import com.ksptooi.wphub.core.command.CommandParser;
+import com.ksptooi.wphub.core.executor.dispatch.CommandScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
