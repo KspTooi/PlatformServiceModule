@@ -1,11 +1,13 @@
 package com.ksptooi.wphub.core.service;
 
 import com.google.inject.Inject;
+import com.ksptooi.wphub.commons.IdWorker;
 import com.ksptooi.wphub.core.entities.Command;
 import com.ksptooi.wphub.core.mapper.CommandMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.List;
 
 public class CommandService {
@@ -36,6 +38,9 @@ public class CommandService {
             logger.info("尝试添加命令"+inVo.getName()+"失败,该命令已存在!");
             return false;
         }
+
+        inVo.setCmdId(new IdWorker().nextId());
+        inVo.setCreateTime(new Date());
 
         logger.info("命令\""+inVo.getName()+"\"新增成功!");
         mapper.insert(inVo);
