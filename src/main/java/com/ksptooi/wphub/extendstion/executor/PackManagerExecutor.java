@@ -45,7 +45,7 @@ public class PackManagerExecutor extends AbstractExecutor {
         if(cmdName.equals("auto") || cmdName.equals("pm auto")){
 
             if(pCommand.getParameter().size() < 2){
-                logger.info("参数不足(path)");
+                logger.info("参数不足(name,path)");
                 return;
             }
 
@@ -58,7 +58,7 @@ public class PackManagerExecutor extends AbstractExecutor {
         if(cmdName.equals("remove") || cmdName.equals("pm remove")){
 
             if(pCommand.getParameter().size() < 1){
-                logger.info("参数不足(path)");
+                logger.info("参数不足(name)");
                 return;
             }
 
