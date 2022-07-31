@@ -32,4 +32,9 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <logger name="com.ksptooi.wphub.core.mapper">
+        <level value="ERROR" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
 </configuration>

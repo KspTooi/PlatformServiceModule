@@ -39,6 +39,7 @@ public class OperateCli implements CommandLine{
                 String commandString = br.readLine();
 
                 if(commandString.replace(" ","").equals("")){
+                    System.out.print("@:");
                     continue;
                 }
 
