@@ -47,6 +47,10 @@
         WHERE `CMD_ID` = #{update.cmdId}
     </update>
 
+    <delete id="removeById">
+        DELETE FROM COMMAND WHERE `CMD_ID` = #{id}
+    </delete>
+
     <select id="getCommandList" resultMap="poMap">
 
         SELECT

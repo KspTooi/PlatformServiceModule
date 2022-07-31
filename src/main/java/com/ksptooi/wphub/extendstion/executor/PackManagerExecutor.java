@@ -21,7 +21,19 @@ public class PackManagerExecutor extends AbstractExecutor {
 
     @Override
     public String[] defaultCommand() {
-        return new String[]{"auto","remove","pm auto","pm remove"};
+        return new String[]
+                {
+                 "auto",
+                 "remove",
+                 "pm set path", //设置基准包目录
+                 "pm add path", //添加基准包目录
+                 "pm rm path",  //移除基准包目录
+                 "pm scan",     //扫描基准包目录
+                 "pm auto",
+                 "pm remove",
+                 "pm list",     //软件包列表
+                 "pm search",   //搜索软件包
+                };
     }
 
 
@@ -42,6 +54,18 @@ public class PackManagerExecutor extends AbstractExecutor {
             return;
         }
 
+
+        if(cmdName.equals("remove") || cmdName.equals("pm remove")){
+
+            if(pCommand.getParameter().size() < 1){
+                logger.info("参数不足(path)");
+                return;
+            }
+
+            logger.info("正在移除软件包...");
+            service.removePack(pCommand.getParameter().get(0));
+            return;
+        }
 
     }
 

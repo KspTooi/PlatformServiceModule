@@ -54,4 +54,11 @@ public class CommandService {
     }
 
 
+    //移除指令
+    public boolean removeById(String id){
+        mapper.removeById(id);
+        return true;
+    }
+
+
 }

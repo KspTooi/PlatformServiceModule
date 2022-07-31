@@ -51,5 +51,20 @@ public class PackManagerService {
         logger.info("软件包安装完成,指令为: \""+name+"\"");
     }
 
+    //移除软件包
+    public void removePack(String name){
+
+        Command commandByName = service.getCommandByName(name);
+
+        if(commandByName == null){
+            logger.info("软件包移除失败,指令\""+name+"\"不存在!");
+            return;
+        }
+
+
+        service.removeById(commandByName.getCmdId()+"");
+        logger.info("软件包\""+name+"\"移除成功!");
+    }
+
 
 }

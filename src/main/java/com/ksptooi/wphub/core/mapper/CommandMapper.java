@@ -17,4 +17,6 @@ public interface CommandMapper {
 
     public int update(@Param("update")Command command);
 
+    public int removeById(String id);
+
 }
