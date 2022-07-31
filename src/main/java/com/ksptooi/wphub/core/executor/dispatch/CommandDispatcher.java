@@ -44,9 +44,11 @@ public class CommandDispatcher implements CommandScheduler {
             return;
         }
 
-
         //查找已注册的执行器
-        Listener listener = this.listenerMap.get(commandByName.getName());
+        Listener listener = this.listenerMap.get(commandByName.getExecutorName());
+
+        System.out.println(commandByName);
+        System.out.println(listenerMap.get(commandByName.getExecutorName()));
 
         if(listener == null){
             logger.info("命令推送失败,该命令无执行器.");

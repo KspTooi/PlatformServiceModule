@@ -70,4 +70,16 @@ public class Command {
     public void setCmdId(Long cmdId) {
         this.cmdId = cmdId;
     }
+
+    @Override
+    public String toString() {
+        return "Command{" +
+                "cmdId=" + cmdId +
+                ", name='" + name + '\'' +
+                ", executorName='" + executorName + '\'' +
+                ", metadata='" + metadata + '\'' +
+                ", createTime=" + createTime +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

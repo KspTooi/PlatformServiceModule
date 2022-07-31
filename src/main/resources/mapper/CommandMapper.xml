@@ -47,7 +47,7 @@
         WHERE `CMD_ID` = #{update.cmdId}
     </update>
 
-    <select id="getCommandList" resultType="com.ksptooi.wphub.core.entities.Command">
+    <select id="getCommandList" resultMap="poMap">
 
         SELECT
             <include refid="tableColumns"/>
@@ -67,7 +67,7 @@
 
     </select>
 
-    <select id="getCommandById" resultType="com.ksptooi.wphub.core.entities.Command">
+    <select id="getCommandById" resultMap="poMap">
         SELECT
         <include refid="tableColumns"/>
         FROM COMMAND
