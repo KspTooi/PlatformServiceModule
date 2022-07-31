@@ -6,7 +6,7 @@ import com.ksptooi.wphub.core.cli.CommandLine;
 import com.ksptooi.wphub.core.cli.OperateCli;
 import com.ksptooi.wphub.core.command.CommandParser;
 import com.ksptooi.wphub.core.command.InnerCommandParser;
-import com.ksptooi.wphub.core.executor.dispatch.CommandExclusiveDispatcher;
+import com.ksptooi.wphub.core.executor.dispatch.CommandExclusiveWrapper;
 import com.ksptooi.wphub.core.executor.dispatch.CommandScheduler;
 import org.mybatis.guice.XMLMyBatisModule;
 
@@ -23,7 +23,7 @@ public class ApplicationModule extends AbstractModule {
         bind(CommandParser.class).to(InnerCommandParser.class).in(Scopes.SINGLETON);
 
         //命令调度器
-        bind(CommandScheduler.class).to(CommandExclusiveDispatcher.class).in(Scopes.SINGLETON);
+        bind(CommandScheduler.class).to(CommandExclusiveWrapper.class).in(Scopes.SINGLETON);
 
         //Cli
         bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);

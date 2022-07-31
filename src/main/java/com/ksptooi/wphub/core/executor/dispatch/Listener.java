@@ -7,6 +7,8 @@ public interface Listener {
 
     public void onInit();
 
+    public String[] defaultCommand();
+
     public void onCommand(PreparedCommand preparedCommand, Command command);
 
 }

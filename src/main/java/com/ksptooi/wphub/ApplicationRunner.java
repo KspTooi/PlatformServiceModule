@@ -16,8 +16,6 @@ public class ApplicationRunner {
 
     public static void main(String[] args) {
 
-
-
         //injector.createChildInjector(new ExtendsModules());
 
         //注册基本命令

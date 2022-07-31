@@ -2,7 +2,7 @@ package com.ksptooi.wphub.core.executor.dispatch;
 
 import com.ksptooi.wphub.core.entities.PreparedCommand;
 
-public class CommandExclusiveDispatcher extends CommandDispatcher{
+public class CommandExclusiveWrapper extends CommandDispatcher{
 
     @Override
     public void publish(PreparedCommand inVo) {
