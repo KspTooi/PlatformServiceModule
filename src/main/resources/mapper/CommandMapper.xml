@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.wphub.mapper.CommandMapper">
+
+    <!-- 表实体出参映射-->
+    <resultMap id="poMap" type="com.ksptooi.wphub.entities.Command">
+        <result column="CMD_ID" property="cmdId" />
+        <result column="EXECUTOR_NAME" property="executorName" />
+        <result column="METADATA" property="metadata" />
+        <result column="CREATE_TIME" property="createTime" />
+        <result column="DESCRIPTION" property="description" />
+    </resultMap>
+
+    <!-- 表的所有参数 ,不带t-->
+    <sql id="tableColumns">
+        `CMD_ID`,
+        `EXECUTOR_NAME`,
+	    `METADATA`,
+	    `CREATE_TIME`,
+	    `DESCRIPTION`
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO COMMAND (
+            <include refid="tableColumns"/>
+        )
+        VALUES (
+            #{cmdId},
+            #{executorName},
+            #{metadata},
+            #{createTime},
+            #{description}
+        )
+    </insert>
+
+
+</mapper>

@@ -4,6 +4,9 @@ import java.util.Date;
 
 public class Command {
 
+    //命令ID
+    private Integer cmdId;
+
     //命令名称
     private String name;
 
@@ -58,5 +61,13 @@ public class Command {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Integer getCmdId() {
+        return cmdId;
+    }
+
+    public void setCmdId(Integer cmdId) {
+        this.cmdId = cmdId;
     }
 }

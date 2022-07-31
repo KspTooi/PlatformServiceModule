@@ -19,6 +19,7 @@
 
 
     <mappers>
-        <mapper resource="org/mybatis/example/BlogMapper.xml"/>
+        <mapper resource="mapper/CommandMapper.xml"></mapper>
     </mappers>
+
 </configuration>
