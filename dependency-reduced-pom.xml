@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ksptooi</groupId>
   <artifactId>ApplicationServiceFrame</artifactId>
-  <version>3.1-A</version>
+  <version>3.2-A</version>
   <build>
     <resources>
       <resource>
@@ -54,7 +54,7 @@
     </plugins>
   </build>
   <properties>
-    <maven.compiler.target>8</maven.compiler.target>
     <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
   </properties>
 </project>

@@ -1,19 +1,18 @@
-package com.ksptooi.asf.core.command;
+package com.ksptooi.asf.core.cli;
 
 import com.ksptooi.asf.core.annatatiotion.Component;
-import com.ksptooi.asf.core.entities.PreparedCommand;
+import com.ksptooi.asf.core.entities.CliCommand;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class InnerCommandParser implements CommandParser{
+public class CommandParser{
 
 
-    @Override
-    public PreparedCommand parse(String inCommand) {
+    public static CliCommand parse(String inCommand) {
 
-        PreparedCommand pCommand = new PreparedCommand();
+        CliCommand pCommand = new CliCommand();
 
         String commandString = null;
 

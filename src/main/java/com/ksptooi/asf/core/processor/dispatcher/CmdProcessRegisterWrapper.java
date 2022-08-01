@@ -1,24 +1,25 @@
-package com.ksptooi.asf.core.executor;
+package com.ksptooi.asf.core.processor.dispatcher;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.commons.IdWorker;
 import com.ksptooi.asf.core.entities.Command;
+import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-public class CommandRegisterWrapper extends CommandExclusiveWrapper{
+public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
 
-    private final Logger logger = LoggerFactory.getLogger(CommandRegisterWrapper.class);
+    private final Logger logger = LoggerFactory.getLogger(CmdProcessRegisterWrapper.class);
 
     @Inject
     private CommandService service;
 
 
     @Override
-    public boolean addListener(String listenerName, Listener listener) {
+    public boolean addListener(String listenerName, Processor listener) {
 
         logger.info("检查执行器基本指令组:"+listenerName);
 

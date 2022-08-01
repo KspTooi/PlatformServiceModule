@@ -1,6 +1,6 @@
-package com.ksptooi.asf.core.executor;
+package com.ksptooi.asf.core.processor;
 
-public abstract class AbstractExecutor implements Listener{
+public abstract class AbstractProcessor implements Processor {
 
     @Override
     public void onInit() {

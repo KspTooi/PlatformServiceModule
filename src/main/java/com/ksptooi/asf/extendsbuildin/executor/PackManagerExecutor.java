@@ -2,13 +2,13 @@ package com.ksptooi.asf.extendsbuildin.executor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.entities.Command;
-import com.ksptooi.asf.core.entities.PreparedCommand;
-import com.ksptooi.asf.core.executor.AbstractExecutor;
+import com.ksptooi.asf.core.entities.CliCommand;
+import com.ksptooi.asf.core.processor.AbstractProcessor;
 import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PackManagerExecutor extends AbstractExecutor {
+public class PackManagerExecutor extends AbstractProcessor {
 
 
     private final Logger logger = LoggerFactory.getLogger(PackManagerExecutor.class);
@@ -37,7 +37,7 @@ public class PackManagerExecutor extends AbstractExecutor {
 
 
     @Override
-    public void onCommand(PreparedCommand pCommand, Command command) {
+    public void onCommand(CliCommand pCommand, Command command) {
 
         String cmdName = pCommand.getName();
 

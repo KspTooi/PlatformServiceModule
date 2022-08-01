@@ -1,8 +1,7 @@
 package com.ksptooi.asf.core.cli;
 
 import com.google.inject.Inject;
-import com.ksptooi.asf.core.command.CommandParser;
-import com.ksptooi.asf.core.executor.CommandScheduler;
+import com.ksptooi.asf.core.processor.dispatcher.ProcessorDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,16 +15,13 @@ public class OperateCli implements CommandLine{
     private final Logger logger = LoggerFactory.getLogger(OperateCli.class);
 
     @Inject
-    private CommandScheduler scheduler;
-
-    @Inject
-    private CommandParser parser;
+    private ProcessorDispatcher scheduler;
 
 
     @Override
     public void run() {
 
-        logger.info("Cli初始化中");
+        logger.info("Cli已就绪");
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -43,7 +39,7 @@ public class OperateCli implements CommandLine{
                     continue;
                 }
 
-                scheduler.publish(parser.parse(commandString));
+                scheduler.publish(CommandParser.parse(commandString));
                 System.out.print("@:");
 
             } catch (IOException e) {

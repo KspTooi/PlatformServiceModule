@@ -1,28 +1,29 @@
-package com.ksptooi.asf.core.executor;
+package com.ksptooi.asf.core.processor.dispatcher;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.core.entities.Command;
-import com.ksptooi.asf.core.entities.PreparedCommand;
+import com.ksptooi.asf.core.entities.CliCommand;
+import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
-public class CommandDispatcher implements CommandScheduler {
+public class CmdProcessDispatcher implements ProcessorDispatcher {
 
-    private final Logger logger = LoggerFactory.getLogger(CommandDispatcher.class);
+    private final Logger logger = LoggerFactory.getLogger(CmdProcessDispatcher.class);
 
     //private final List<Listener> listenerList = new ArrayList<>();
 
-    private final HashMap<String,Listener> listenerMap = new HashMap<>();
+    private final HashMap<String, Processor> listenerMap = new HashMap<>();
 
     @Inject
     private CommandService service;
 
     @Override
-    public boolean addListener(String listenerName, Listener listener) {
+    public boolean addListener(String listenerName, Processor listener) {
 
         //注入内部组件
         ServiceFrame.injector.injectMembers(listener);
@@ -34,7 +35,7 @@ public class CommandDispatcher implements CommandScheduler {
     }
 
     @Override
-    public void publish(PreparedCommand inVo) {
+    public void publish(CliCommand inVo) {
 
         //查询出该命令对应的执行器
         Command commandByName = service.getCommandByName(inVo.getName());
@@ -45,7 +46,7 @@ public class CommandDispatcher implements CommandScheduler {
         }
 
         //查找已注册的执行器
-        Listener listener = this.listenerMap.get(commandByName.getExecutorName());
+        Processor listener = this.listenerMap.get(commandByName.getExecutorName());
 
 
         if(listener == null){
@@ -59,7 +60,7 @@ public class CommandDispatcher implements CommandScheduler {
 
 
     @Override
-    public void getExclusive(Listener listener) {
+    public void getExclusive(Processor listener) {
 
     }
 

@@ -3,7 +3,7 @@ package com.ksptooi.asf.core.entities;
 import java.util.List;
 import java.util.Map;
 
-public class PreparedCommand {
+public class CliCommand {
 
     //名称
     private String name;
