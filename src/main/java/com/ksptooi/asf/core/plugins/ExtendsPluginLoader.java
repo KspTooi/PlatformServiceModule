@@ -1,5 +1,6 @@
 package com.ksptooi.asf.core.plugins;
 
+import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.commons.JarFileFilter;
 import com.ksptooi.asf.core.annatatiotion.PluginEntry;
 import org.reflections.Reflections;
@@ -90,6 +91,7 @@ public class ExtendsPluginLoader {
 
         for(Map.Entry<String,ExtendsPlugin> item : pluginMap.entrySet()){
             logger.info("加载:"+item.getKey());
+            ServiceFrame.injector.injectMembers(item.getValue());
             item.getValue().onEnabled();
             this.loadedPlugins.put(item.getKey(),item.getValue());
         }

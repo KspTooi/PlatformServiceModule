@@ -26,9 +26,7 @@ public class ServiceFrame {
 
         ExtendsPluginLoader epl = injector.getInstance(ExtendsPluginLoader.class);
 
-        Map<String, ExtendsPlugin> plugin = epl.getPlugin("C:\\acu_system\\plugins");
-
-        epl.install(plugin);
+        epl.install(epl.getPlugin("plugins"));
 
         //注册基本命令
 /*        CommandScheduler scheduler = injector.getInstance(CommandScheduler.class);
