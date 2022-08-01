@@ -74,6 +74,20 @@ public class PackManagerService {
 
     }
 
+    public void clearLibs(){
+
+        if(!service.hasCommand(this.packLibrayKey)){
+            logger.info("当前没有设置软件包基准目录");
+            return;
+        }
+
+        Command commandByName = service.getCommandByName(this.packLibrayKey);
+        commandByName.setMetadata("[]");
+        service.update(commandByName);
+
+        logger.info("软件包基准目录已被清除");
+    }
+
 
 
     //自动安装包

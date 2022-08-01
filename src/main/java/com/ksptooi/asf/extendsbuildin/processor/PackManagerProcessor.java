@@ -27,7 +27,7 @@ public class PackManagerProcessor extends AbstractProcessor {
                  "remove",
                  "pm lib set", //设置基准包目录
                  "pm lib add", //添加基准包目录
-                 "pm lib rm",  //移除基准包目录
+                 "pm lib clear",  //移除基准包目录
                  "pm lib",     //显示基准包目录
                  "pm scan",     //扫描基准包目录
                  "pm auto",
@@ -54,6 +54,12 @@ public class PackManagerProcessor extends AbstractProcessor {
 
         service.setPackLib(pCommand.getParameter().get(1),pCommand.getParameter().get(0));
     }
+
+    @CommandMapping("pm lib clear")
+    public void clearLibs(CliCommand pCommand){
+        service.clearLibs();
+    }
+
 
     @CommandMapping("pm lib")
     public void showLibs(){
