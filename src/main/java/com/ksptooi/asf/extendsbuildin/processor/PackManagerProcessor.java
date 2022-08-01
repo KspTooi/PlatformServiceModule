@@ -1,4 +1,4 @@
-package com.ksptooi.asf.extendsbuildin.executor;
+package com.ksptooi.asf.extendsbuildin.processor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.entities.Command;
@@ -8,10 +8,10 @@ import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PackManagerExecutor extends AbstractProcessor {
+public class PackManagerProcessor extends AbstractProcessor {
 
 
-    private final Logger logger = LoggerFactory.getLogger(PackManagerExecutor.class);
+    private final Logger logger = LoggerFactory.getLogger(PackManagerProcessor.class);
 
 
     @Inject

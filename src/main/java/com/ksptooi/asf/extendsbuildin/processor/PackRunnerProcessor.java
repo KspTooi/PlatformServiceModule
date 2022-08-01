@@ -1,4 +1,4 @@
-package com.ksptooi.asf.extendsbuildin.executor;
+package com.ksptooi.asf.extendsbuildin.processor;
 
 import com.google.gson.Gson;
 import com.ksptooi.asf.core.entities.Command;
@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class PackRunnerExecutor extends AbstractProcessor {
+public class PackRunnerProcessor extends AbstractProcessor {
 
-    private final Logger logger = LoggerFactory.getLogger(PackRunnerExecutor.class);
+    private final Logger logger = LoggerFactory.getLogger(PackRunnerProcessor.class);
 
     @Override
     public void onCommand(CliCommand preparedCommand, Command command) {
