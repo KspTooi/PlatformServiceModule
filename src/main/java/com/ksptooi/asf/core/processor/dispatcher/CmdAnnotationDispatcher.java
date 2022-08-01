@@ -7,6 +7,7 @@ import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.service.CommandService;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -60,9 +61,34 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
             return;
         }
 
-        //类上存在带有注解的方法
-        
+        //类上存在带有注解的方法 准备参数
+        Object[] params = new Object[targetMethod.getParameterCount()];
 
+        Class<?>[] paramsTypes = targetMethod.getParameterTypes();
+
+        for (int i = 0; i < paramsTypes.length; i++) {
+
+            if(paramsTypes[i].isInstance(inVo)){
+                params[i] = inVo;
+                continue;
+            }
+            if(paramsTypes[i].isInstance(commandByName)){
+                params[i] = commandByName;
+                continue;
+            }
+
+            params[i] = null;
+        }
+
+        try {
+
+            targetMethod.invoke(processor,params);
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
 
     }
 }
