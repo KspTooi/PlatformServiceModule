@@ -17,7 +17,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
     //private final List<Listener> listenerList = new ArrayList<>();
 
-    private final HashMap<String, Processor> listenerMap = new HashMap<>();
+    private final HashMap<String, Processor> processorMap = new HashMap<>();
 
     @Inject
     private CommandService service;
@@ -29,7 +29,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         ServiceFrame.injector.injectMembers(listener);
         logger.info("已注册命令处理器:"+listenerName);
         //this.listenerList.add(listener);
-        this.listenerMap.put(listenerName,listener);
+        this.processorMap.put(listenerName,listener);
         listener.onInit();
         return true;
     }
@@ -46,7 +46,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         }
 
         //查找已注册的执行器
-        Processor listener = this.listenerMap.get(commandByName.getExecutorName());
+        Processor listener = this.processorMap.get(commandByName.getExecutorName());
 
 
         if(listener == null){
@@ -69,4 +69,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
     }
 
+    public HashMap<String, Processor> getProcessorMap() {
+        return processorMap;
+    }
 }
