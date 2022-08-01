@@ -13,6 +13,7 @@ import com.ksptooi.asf.extendstion.executor.PackManagerExecutor;
 import com.ksptooi.asf.extendstion.executor.PackRunnerExecutor;
 
 import java.util.List;
+import java.util.Map;
 
 public class ServiceFrame {
 
@@ -25,9 +26,9 @@ public class ServiceFrame {
 
         ExtendsPluginLoader epl = injector.getInstance(ExtendsPluginLoader.class);
 
-        List<ExtendsPlugin> plugin = epl.getPlugin("C:\\acu_system\\plugins");
+        Map<String, ExtendsPlugin> plugin = epl.getPlugin("C:\\acu_system\\plugins");
 
-        plugin.get(0).onEnabled();
+        epl.install(plugin);
 
         //注册基本命令
 /*        CommandScheduler scheduler = injector.getInstance(CommandScheduler.class);

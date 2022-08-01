@@ -17,15 +17,15 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ExtendsPluginLoader {
 
     private final Logger logger = LoggerFactory.getLogger(ExtendsPluginLoader.class);
 
-    public List<ExtendsPlugin> getPlugin(String directoryPath){
+    private Map<String,ExtendsPlugin> loadedPlugins = new HashMap<>();
+
+    public Map<String,ExtendsPlugin> getPlugin(String directoryPath){
 
         logger.info("正在获取插件...");
 
@@ -33,21 +33,21 @@ public class ExtendsPluginLoader {
 
         if(!dir.exists()){
             logger.info("获取出错,路径\""+directoryPath+"\"不存在!");
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
         if(!dir.isDirectory()){
             logger.info("获取出错,路径\""+directoryPath+"\"不是文件夹!");
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
         File[] jarFiles = dir.listFiles(new JarFileFilter());
 
         if(jarFiles==null){
-            return new ArrayList<>();
+            return new HashMap<>();
         }
 
-        List<ExtendsPlugin> pluginList = new ArrayList<>();
+        Map<String,ExtendsPlugin> pluginList = new HashMap<>();
 
         //加载jar
         for(File jar : jarFiles){
@@ -73,7 +73,7 @@ public class ExtendsPluginLoader {
                 ExtendsPlugin pluginEntry = (ExtendsPlugin)entry.newInstance();
                 logger.info("已获取:"+jar.getName()+ "::" + entry.getAnnotation(PluginEntry.class).name()+"["+entry.getAnnotation(PluginEntry.class).version()+"]");
 
-                pluginList.add(pluginEntry);
+                pluginList.put(entry.getAnnotation(PluginEntry.class).name(),pluginEntry);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -84,6 +84,16 @@ public class ExtendsPluginLoader {
         return pluginList;
     }
 
+    public void install(Map<String,ExtendsPlugin> pluginMap){
 
+        logger.info("正在加载插件...");
+
+        for(Map.Entry<String,ExtendsPlugin> item : pluginMap.entrySet()){
+            logger.info("加载:"+item.getKey());
+            item.getValue().onEnabled();
+            this.loadedPlugins.put(item.getKey(),item.getValue());
+        }
+
+    }
 
 }
