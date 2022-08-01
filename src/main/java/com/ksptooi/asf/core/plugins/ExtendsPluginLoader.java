@@ -41,9 +41,47 @@ public class ExtendsPluginLoader {
             return new ArrayList<>();
         }
 
-        dir.listFiles(new JarFileFilter());
+        File[] jarFiles = dir.listFiles(new JarFileFilter());
 
-        return null;
+        if(jarFiles==null){
+            return new ArrayList<>();
+        }
+
+        List<ExtendsPlugin> pluginList = new ArrayList<>();
+
+        //加载jar
+        for(File jar : jarFiles){
+
+            try {
+
+                URL url=jar.toURI().toURL();
+                ClassLoader loader=new URLClassLoader(new URL[]{url});
+
+                Reflections packageReflections = new Reflections(new ConfigurationBuilder()
+                        .addUrls(url).addClassLoaders(loader)
+                );
+
+                Set<Class<?>> entrySet = packageReflections.getTypesAnnotatedWith(PluginEntry.class);
+
+                if(entrySet.size()!= 1){
+                    logger.info("尝试获取"+jar.getName()+"时出错. 期望的Entry为1 当前为:"+entrySet.size());
+                    continue;
+                }
+
+                Class<?> entry = entrySet.iterator().next();
+
+                ExtendsPlugin pluginEntry = (ExtendsPlugin)entry.newInstance();
+                logger.info("已获取:"+jar.getName()+ "::" + entry.getAnnotation(PluginEntry.class).name()+"["+entry.getAnnotation(PluginEntry.class).version()+"]");
+
+                pluginList.add(pluginEntry);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return pluginList;
     }
 
 

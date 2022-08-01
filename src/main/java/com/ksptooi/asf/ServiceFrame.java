@@ -22,10 +22,9 @@ public class ServiceFrame {
 
 
 
-/*
         ExtendsPluginLoader epl = injector.getInstance(ExtendsPluginLoader.class);
 
-        epl.loadPlugin();*/
+        epl.getPlugin("C:\\acu_system\\plugins");
 
         //注册基本命令
 /*        CommandScheduler scheduler = injector.getInstance(CommandScheduler.class);
