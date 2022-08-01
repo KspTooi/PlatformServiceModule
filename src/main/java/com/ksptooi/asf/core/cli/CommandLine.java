@@ -5,5 +5,5 @@ public interface CommandLine {
     public void run();
 
     public void stop();
-
+    
 }
