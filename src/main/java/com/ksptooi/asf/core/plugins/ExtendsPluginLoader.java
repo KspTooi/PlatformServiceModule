@@ -85,38 +85,5 @@ public class ExtendsPluginLoader {
     }
 
 
-    public void loadPlugin() throws Exception {
-
-
-
-
-        File file=new File("C:/acu_system/plugins/my-plugin-1.0-SNAPSHOT.jar");
-
-        URL url=file.toURI().toURL();
-        ClassLoader loader=new URLClassLoader(new URL[]{url});
-        Class<?> cls=loader.loadClass("com.ksptooi.plugin.MyPlugins");
-
-        //InputStream resourceAsStream = loader.getResourceAsStream("plugin.yml");
-
-        //BufferedReader br = new BufferedReader(new InputStreamReader(resourceAsStream));
-
-        Reflections packageReflections = new Reflections(new ConfigurationBuilder()
-                .addUrls(url).addClassLoaders(loader)
-        );
-
-        Set<Class<?>> typesAnnotatedWith = packageReflections.getTypesAnnotatedWith(PluginEntry.class);
-
-        System.out.println(typesAnnotatedWith.size());
-
-        //File plugin = new File(resource.getFile());
-
-        //System.out.println(br.readLine());
-
-        Object instance = cls.newInstance();
-
-        Method onEnabled = cls.getMethod("onEnabled");
-        onEnabled.invoke(instance);
-    }
-
 
 }

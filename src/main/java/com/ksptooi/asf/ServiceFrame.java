@@ -7,9 +7,12 @@ import com.ksptooi.asf.core.annatatiotion.PluginEntry;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.executor.dispatch.CommandScheduler;
 import com.ksptooi.asf.core.modules.ApplicationModule;
+import com.ksptooi.asf.core.plugins.ExtendsPlugin;
 import com.ksptooi.asf.core.plugins.ExtendsPluginLoader;
 import com.ksptooi.asf.extendstion.executor.PackManagerExecutor;
 import com.ksptooi.asf.extendstion.executor.PackRunnerExecutor;
+
+import java.util.List;
 
 public class ServiceFrame {
 
@@ -20,11 +23,11 @@ public class ServiceFrame {
 
         //injector.createChildInjector(new ExtendsModules());
 
-
-
         ExtendsPluginLoader epl = injector.getInstance(ExtendsPluginLoader.class);
 
-        epl.getPlugin("C:\\acu_system\\plugins");
+        List<ExtendsPlugin> plugin = epl.getPlugin("C:\\acu_system\\plugins");
+
+        plugin.get(0).onEnabled();
 
         //注册基本命令
 /*        CommandScheduler scheduler = injector.getInstance(CommandScheduler.class);
