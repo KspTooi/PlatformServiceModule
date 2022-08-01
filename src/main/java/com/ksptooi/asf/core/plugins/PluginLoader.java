@@ -8,25 +8,18 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
-public class ExtendsPluginLoader {
+public class PluginLoader {
 
-    private final Logger logger = LoggerFactory.getLogger(ExtendsPluginLoader.class);
+    private final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
 
-    private Map<String,ExtendsPlugin> loadedPlugins = new HashMap<>();
+    private final Map<String, Plugin> loadedPlugins = new HashMap<>();
 
-    public Map<String,ExtendsPlugin> getPlugin(String directoryPath){
+    public Map<String, Plugin> getPlugin(String directoryPath){
 
         logger.info("正在获取插件...");
 
@@ -48,7 +41,7 @@ public class ExtendsPluginLoader {
             return new HashMap<>();
         }
 
-        Map<String,ExtendsPlugin> pluginList = new HashMap<>();
+        Map<String, Plugin> pluginList = new HashMap<>();
 
         //加载jar
         for(File jar : jarFiles){
@@ -71,7 +64,7 @@ public class ExtendsPluginLoader {
 
                 Class<?> entry = entrySet.iterator().next();
 
-                ExtendsPlugin pluginEntry = (ExtendsPlugin)entry.newInstance();
+                Plugin pluginEntry = (Plugin)entry.newInstance();
                 logger.info("已获取:"+jar.getName()+ "::" + entry.getAnnotation(PluginEntry.class).name()+"["+entry.getAnnotation(PluginEntry.class).version()+"]");
 
                 pluginList.put(entry.getAnnotation(PluginEntry.class).name(),pluginEntry);
@@ -85,11 +78,11 @@ public class ExtendsPluginLoader {
         return pluginList;
     }
 
-    public void install(Map<String,ExtendsPlugin> pluginMap){
+    public void install(Map<String, Plugin> pluginMap){
 
         logger.info("正在加载插件...");
 
-        for(Map.Entry<String,ExtendsPlugin> item : pluginMap.entrySet()){
+        for(Map.Entry<String, Plugin> item : pluginMap.entrySet()){
             logger.info("加载:"+item.getKey());
             ServiceFrame.injector.injectMembers(item.getValue());
             item.getValue().onEnabled();

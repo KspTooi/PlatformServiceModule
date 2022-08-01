@@ -6,7 +6,7 @@ import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.cli.OperateCli;
 import com.ksptooi.asf.core.processor.dispatcher.CmdProcessRegisterWrapper;
 import com.ksptooi.asf.core.processor.dispatcher.ProcessorDispatcher;
-import com.ksptooi.asf.core.plugins.ExtendsPluginLoader;
+import com.ksptooi.asf.core.plugins.PluginLoader;
 import org.mybatis.guice.XMLMyBatisModule;
 
 public class ApplicationModule extends AbstractModule {
@@ -25,7 +25,7 @@ public class ApplicationModule extends AbstractModule {
         bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);
 
         //EPL
-        bind(ExtendsPluginLoader.class).in(Scopes.SINGLETON);
+        bind(PluginLoader.class).in(Scopes.SINGLETON);
 
         XMLMyBatisModule myBatisModule = new XMLMyBatisModule() {
             @Override
