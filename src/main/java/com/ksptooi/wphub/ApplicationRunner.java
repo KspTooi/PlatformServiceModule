@@ -26,7 +26,6 @@ public class ApplicationRunner {
 
         CommandLine cli = injector.getInstance(CommandLine.class);
         cli.run();
-
     }
 
 

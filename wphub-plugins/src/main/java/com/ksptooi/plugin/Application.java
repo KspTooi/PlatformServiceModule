@@ -1,7 +1,13 @@
 package com.ksptooi.plugin;
 
-public class Application {
+import com.ksptooi.wphub.core.plugins.AbstractPlugin;
+
+public class Application extends AbstractPlugin {
 
 
+    @Override
+    public void onEnabled() {
+
+    }
 
 }
