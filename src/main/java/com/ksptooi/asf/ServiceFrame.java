@@ -9,7 +9,7 @@ import com.ksptooi.asf.core.modules.ApplicationModule;
 import com.ksptooi.asf.extendstion.executor.PackManagerExecutor;
 import com.ksptooi.asf.extendstion.executor.PackRunnerExecutor;
 
-public class ApplicationRunner {
+public class ServiceFrame {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 

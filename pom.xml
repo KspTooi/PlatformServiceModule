@@ -115,7 +115,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.ksptooi.asf.ApplicationRunner</mainClass>
+                                    <mainClass>com.ksptooi.asf.ServiceFrame</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -131,7 +131,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <!-- 此处为main程序主入口,类的全路径-->
-                            <mainClass>com.ksptooi.asf.ApplicationRunner</mainClass>
+                            <mainClass>com.ksptooi.asf.ServiceFrame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

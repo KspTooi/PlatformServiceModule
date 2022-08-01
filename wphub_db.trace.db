@@ -1293,7 +1293,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
 	at com.sun.proxy.$Proxy17.insert(Unknown Source)
-	at com.ksptooi.asf.ApplicationRunner.main(ApplicationRunner.java:45)
+	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:45)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
@@ -1406,7 +1406,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
 	at com.sun.proxy.$Proxy17.insert(Unknown Source)
-	at com.ksptooi.asf.ApplicationRunner.main(ApplicationRunner.java:45)
+	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:45)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
@@ -1579,7 +1579,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
 	at com.sun.proxy.$Proxy17.insert(Unknown Source)
-	at com.ksptooi.asf.ApplicationRunner.main(ApplicationRunner.java:46)
+	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:46)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
@@ -1697,7 +1697,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
 	at com.sun.proxy.$Proxy17.getCommandById(Unknown Source)
-	at com.ksptooi.asf.ApplicationRunner.main(ApplicationRunner.java:40)
+	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:40)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
@@ -1818,7 +1818,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at com.ksptooi.asf.core.service.CommandService.getCommandByName(CommandService.java:23)
 	at com.ksptooi.asf.core.service.CommandService.hasCommand(CommandService.java:48)
 	at com.ksptooi.asf.core.executor.dispatch.CommandRegisterWrapper.addListener(CommandRegisterWrapper.java:29)
-	at com.ksptooi.asf.ApplicationRunner.main(ApplicationRunner.java:23)
+	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:23)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
@@ -1998,7 +1998,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at com.ksptooi.asf.core.service.CommandService.getCommandByName(CommandService.java:25)
 	at com.ksptooi.asf.core.service.CommandService.hasCommand(CommandService.java:53)
 	at com.ksptooi.asf.core.executor.dispatch.CommandRegisterWrapper.addListener(CommandRegisterWrapper.java:29)
-	at com.ksptooi.asf.ApplicationRunner.main(ApplicationRunner.java:24)
+	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:24)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)

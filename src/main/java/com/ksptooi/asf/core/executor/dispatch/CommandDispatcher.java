@@ -1,7 +1,7 @@
 package com.ksptooi.asf.core.executor.dispatch;
 
 import com.google.inject.Inject;
-import com.ksptooi.asf.ApplicationRunner;
+import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.PreparedCommand;
 import com.ksptooi.asf.core.service.CommandService;
@@ -25,7 +25,7 @@ public class CommandDispatcher implements CommandScheduler {
     public boolean addListener(String listenerName, Listener listener) {
 
         //注入内部组件
-        ApplicationRunner.injector.injectMembers(listener);
+        ServiceFrame.injector.injectMembers(listener);
         logger.info("已注册命令执行器:"+listenerName);
         //this.listenerList.add(listener);
         this.listenerMap.put(listenerName,listener);
