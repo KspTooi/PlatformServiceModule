@@ -6,7 +6,11 @@
 
     <groupId>com.ksptooi</groupId>
     <artifactId>wp-hub</artifactId>
+    <packaging>pom</packaging>
     <version>3.1-A</version>
+    <modules>
+        <module>wphub-plugins</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
