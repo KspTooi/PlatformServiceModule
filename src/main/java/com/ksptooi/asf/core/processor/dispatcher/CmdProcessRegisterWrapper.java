@@ -19,9 +19,9 @@ public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
 
 
     @Override
-    public boolean addListener(String listenerName, Processor listener) {
+    public boolean register(String listenerName, Processor listener) {
 
-        logger.info("检查执行器基本指令组:"+listenerName);
+        logger.info("检查PROC基本指令组:"+listenerName);
 
         String[] defaultCmd = listener.defaultCommand();
 
@@ -41,9 +41,9 @@ public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
 
         }
 
-        logger.info("执行器检查通过:"+listenerName);
+        logger.info("PROC检查通过:"+listenerName);
 
-        return super.addListener(listenerName, listener);
+        return super.register(listenerName, listener);
     }
 
 }

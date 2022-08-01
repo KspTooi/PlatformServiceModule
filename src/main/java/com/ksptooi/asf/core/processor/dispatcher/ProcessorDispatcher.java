@@ -5,14 +5,14 @@ import com.ksptooi.asf.core.processor.Processor;
 
 public interface ProcessorDispatcher {
 
-    //添加命令监听器
-    public boolean addListener(String listenerName, Processor listener);
+    //注册命令处理器
+    public boolean register(String procName, Processor proc);
 
     //发布命令
     public void publish(CliCommand command);
 
     //获取命令独占调度
-    public void getExclusive(Processor listener);
+    public void getExclusive(Processor proc);
 
     //取消命令独占
     public void removeExclusive();

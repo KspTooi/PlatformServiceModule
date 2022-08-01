@@ -23,11 +23,11 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
     private CommandService service;
 
     @Override
-    public boolean addListener(String listenerName, Processor listener) {
+    public boolean register(String listenerName, Processor listener) {
 
         //注入内部组件
         ServiceFrame.injector.injectMembers(listener);
-        logger.info("已注册命令执行器:"+listenerName);
+        logger.info("已注册命令处理器:"+listenerName);
         //this.listenerList.add(listener);
         this.listenerMap.put(listenerName,listener);
         listener.onInit();
@@ -50,7 +50,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
 
         if(listener == null){
-            logger.info("命令推送失败,该命令无执行器.");
+            logger.info("命令推送失败,该命令无处理器.");
             return;
         }
 
