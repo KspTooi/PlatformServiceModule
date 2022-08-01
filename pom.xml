@@ -6,12 +6,8 @@
 
     <groupId>com.ksptooi</groupId>
     <artifactId>ApplicationServiceFrame</artifactId>
-    <packaging>pom</packaging>
     <version>3.1-A</version>
 
-    <modules>
-        <module>wphub-plugins</module>
-    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -104,7 +100,7 @@
             <!-- 打包依赖maven插件-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId> maven-shade-plugin</artifactId>
+                <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.2</version>
                 <executions>
                     <execution>
