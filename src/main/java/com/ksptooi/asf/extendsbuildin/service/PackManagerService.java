@@ -1,10 +1,10 @@
-package com.ksptooi.asf.extendstion.service;
+package com.ksptooi.asf.extendsbuildin.service;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.service.CommandService;
-import com.ksptooi.asf.extendstion.entities.SoftwarePack;
+import com.ksptooi.asf.extendsbuildin.entities.SoftwarePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

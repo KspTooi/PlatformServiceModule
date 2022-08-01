@@ -1817,7 +1817,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at com.sun.proxy.$Proxy17.getCommandList(Unknown Source)
 	at com.ksptooi.asf.core.service.CommandService.getCommandByName(CommandService.java:23)
 	at com.ksptooi.asf.core.service.CommandService.hasCommand(CommandService.java:48)
-	at com.ksptooi.asf.core.executor.dispatch.CommandRegisterWrapper.addListener(CommandRegisterWrapper.java:29)
+	at CommandRegisterWrapper.addListener(CommandRegisterWrapper.java:29)
 	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:23)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
@@ -1997,7 +1997,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at com.sun.proxy.$Proxy17.getCommandList(Unknown Source)
 	at com.ksptooi.asf.core.service.CommandService.getCommandByName(CommandService.java:25)
 	at com.ksptooi.asf.core.service.CommandService.hasCommand(CommandService.java:53)
-	at com.ksptooi.asf.core.executor.dispatch.CommandRegisterWrapper.addListener(CommandRegisterWrapper.java:29)
+	at CommandRegisterWrapper.addListener(CommandRegisterWrapper.java:29)
 	at com.ksptooi.asf.ServiceFrame.main(ApplicationRunner.java:24)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)

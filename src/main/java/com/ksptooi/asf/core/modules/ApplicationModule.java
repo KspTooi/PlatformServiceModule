@@ -6,8 +6,8 @@ import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.cli.OperateCli;
 import com.ksptooi.asf.core.command.CommandParser;
 import com.ksptooi.asf.core.command.InnerCommandParser;
-import com.ksptooi.asf.core.executor.dispatch.CommandRegisterWrapper;
-import com.ksptooi.asf.core.executor.dispatch.CommandScheduler;
+import com.ksptooi.asf.core.executor.CommandRegisterWrapper;
+import com.ksptooi.asf.core.executor.CommandScheduler;
 import com.ksptooi.asf.core.plugins.ExtendsPluginLoader;
 import org.mybatis.guice.XMLMyBatisModule;
 

@@ -2,7 +2,7 @@ package com.ksptooi.asf.core.cli;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.command.CommandParser;
-import com.ksptooi.asf.core.executor.dispatch.CommandScheduler;
+import com.ksptooi.asf.core.executor.CommandScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

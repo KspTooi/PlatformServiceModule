@@ -1,9 +1,9 @@
-package com.ksptooi.asf.extendstion.modules;
+package com.ksptooi.asf.extendsbuildin.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.ksptooi.asf.extendstion.executor.PackManagerExecutor;
-import com.ksptooi.asf.extendstion.service.PackManagerService;
+import com.ksptooi.asf.extendsbuildin.executor.PackManagerExecutor;
+import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
 
 public class ExtendsModules extends AbstractModule {
 

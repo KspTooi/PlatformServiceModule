@@ -1,10 +1,10 @@
-package com.ksptooi.asf.extendstion.executor;
+package com.ksptooi.asf.extendsbuildin.executor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.PreparedCommand;
-import com.ksptooi.asf.core.executor.dispatch.AbstractExecutor;
-import com.ksptooi.asf.extendstion.service.PackManagerService;
+import com.ksptooi.asf.core.executor.AbstractExecutor;
+import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

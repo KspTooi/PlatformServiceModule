@@ -1,4 +1,4 @@
-package com.ksptooi.asf.extendstion.entities;
+package com.ksptooi.asf.extendsbuildin.entities;
 
 public class SoftwarePack {
 
