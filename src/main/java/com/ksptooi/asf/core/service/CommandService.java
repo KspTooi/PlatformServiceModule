@@ -47,6 +47,18 @@ public class CommandService {
         return true;
     }
 
+    public boolean update(Command inVo){
+
+        if(!this.hasCommand(inVo.getName())){
+            logger.info("尝试修改命令"+inVo.getName()+"失败,该命令不存在!");
+            return false;
+        }
+
+        logger.info("命令\""+inVo.getName()+"\"修改成功!");
+        mapper.update(inVo);
+        return true;
+    }
+
 
     //数据库是否包含该指令
     public boolean hasCommand(String name){

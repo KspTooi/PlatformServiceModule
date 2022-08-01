@@ -1,15 +1,21 @@
 package com.ksptooi.asf.extendsbuildin.service;
 
+import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.service.CommandService;
+import com.ksptooi.asf.extendsbuildin.entities.PackLibrary;
+import com.ksptooi.asf.extendsbuildin.entities.PackLibraryDocument;
 import com.ksptooi.asf.extendsbuildin.entities.SoftwarePack;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PackManagerService {
 
@@ -17,6 +23,57 @@ public class PackManagerService {
 
     @Inject
     private CommandService service;
+
+
+    private final String packLibrayKey = "#pack_libray";
+
+
+    //设置软件包目录
+    public void setPackLib(String name,String path){
+
+        PackLibrary library = new PackLibrary();
+        List<PackLibrary> libraryList = new ArrayList<>();
+
+        if(name == null){
+            library.setName("软件包目录");
+        }
+        library.setPath(path);
+        libraryList.add(library);
+
+        //软件包库记录不存在则增加
+        if(!service.hasCommand(packLibrayKey)){
+            Command librayDocument = new Command();
+            librayDocument.setName(this.packLibrayKey);
+            librayDocument.setMetadata(null);
+            librayDocument.setExecutorName("#document");
+            service.insert(librayDocument);
+        }
+
+        Command update = service.getCommandByName(this.packLibrayKey);
+        update.setMetadata(new Gson().toJson(libraryList));
+        service.update(update);
+    }
+
+    //显示软件包目录
+    public void showPackLibs(){
+
+        if(!service.hasCommand(this.packLibrayKey)){
+            logger.info("当前没有设置软件包基准目录");
+            return;
+        }
+
+        Command commandByName = service.getCommandByName(this.packLibrayKey);
+
+        List<PackLibrary> list = JSON.parseArray(commandByName.getMetadata(),PackLibrary.class);
+
+        System.out.println("当前软件包目录");
+
+        for(PackLibrary item:list){
+            System.out.println(item.getName() + "--" + item.getPath());
+        }
+
+    }
+
 
 
     //自动安装包

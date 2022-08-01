@@ -1,6 +1,7 @@
 package com.ksptooi.asf.extendsbuildin.processor;
 
 import com.google.inject.Inject;
+import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
@@ -24,9 +25,10 @@ public class PackManagerProcessor extends AbstractProcessor {
                 {
                  "auto",
                  "remove",
-                 "pm set path", //设置基准包目录
-                 "pm add path", //添加基准包目录
-                 "pm rm path",  //移除基准包目录
+                 "pm lib set", //设置基准包目录
+                 "pm lib add", //添加基准包目录
+                 "pm lib rm",  //移除基准包目录
+                 "pm lib",     //显示基准包目录
                  "pm scan",     //扫描基准包目录
                  "pm auto",
                  "pm remove",
@@ -36,36 +38,68 @@ public class PackManagerProcessor extends AbstractProcessor {
     }
 
 
+
+    @CommandMapping("pm lib set")
+    public void setPath(CliCommand pCommand){
+
+        if(pCommand.getParameter().size() < 1){
+            logger.info("参数不足(name,path)");
+            return;
+        }
+
+        if(pCommand.getParameter().size() == 1){
+            service.setPackLib(null,pCommand.getParameter().get(0));
+            return;
+        }
+
+        service.setPackLib(pCommand.getParameter().get(1),pCommand.getParameter().get(0));
+    }
+
+    @CommandMapping("pm lib")
+    public void showLibs(){
+        service.showPackLibs();
+    }
+
+
+    @CommandMapping("auto")
+    public void auto(CliCommand pCommand, Command command){
+
+        if(pCommand.getParameter().size() < 2){
+            logger.info("参数不足(name,path)");
+            return;
+        }
+
+        logger.info("正在从路径安装软件包...");
+        service.autoInstall(pCommand.getParameter().get(0),pCommand.getParameter().get(1));
+    }
+
+
+    @CommandMapping("remove")
+    public void remove(CliCommand pCommand, Command command){
+
+        if(pCommand.getParameter().size() < 1){
+            logger.info("参数不足(name)");
+            return;
+        }
+
+        logger.info("正在移除软件包...");
+        service.removePack(pCommand.getParameter().get(0));
+    }
+
+
+    @CommandMapping("pm auto")
+    public void pmAuto(CliCommand pCommand, Command command){
+        this.auto(pCommand,command);
+    }
+
+    @CommandMapping("pm remove")
+    public void pmRemove(CliCommand pCommand, Command command){
+        this.remove(pCommand,command);
+    }
+
+
     @Override
     public void onCommand(CliCommand pCommand, Command command) {
-
-        String cmdName = pCommand.getName();
-
-        if(cmdName.equals("auto") || cmdName.equals("pm auto")){
-
-            if(pCommand.getParameter().size() < 2){
-                logger.info("参数不足(name,path)");
-                return;
-            }
-
-            logger.info("正在从路径安装软件包...");
-            service.autoInstall(pCommand.getParameter().get(0),pCommand.getParameter().get(1));
-            return;
-        }
-
-
-        if(cmdName.equals("remove") || cmdName.equals("pm remove")){
-
-            if(pCommand.getParameter().size() < 1){
-                logger.info("参数不足(name)");
-                return;
-            }
-
-            logger.info("正在移除软件包...");
-            service.removePack(pCommand.getParameter().get(0));
-            return;
-        }
-
     }
 
 
