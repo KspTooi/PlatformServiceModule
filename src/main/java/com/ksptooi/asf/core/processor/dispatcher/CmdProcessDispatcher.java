@@ -46,16 +46,16 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         }
 
         //查找已注册的执行器
-        Processor listener = this.processorMap.get(commandByName.getExecutorName());
+        Processor proc = this.processorMap.get(commandByName.getExecutorName());
 
 
-        if(listener == null){
+        if(proc == null){
             logger.info("命令推送失败,该命令无处理器.");
             return;
         }
 
         //向执行器发布命令
-        listener.onCommand(inVo,commandByName);
+        proc.onCommand(inVo,commandByName);
     }
 
 
