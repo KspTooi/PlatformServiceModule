@@ -47,6 +47,22 @@ public class DocumentService {
         return true;
     }
 
+    public boolean removeById(Long id){
+        mapper.remove(id);
+        return true;
+    }
+
+    public String getMetadata(String inDocName){
+
+        Document documentByName = this.getDocumentByName(inDocName);
+
+        if(documentByName == null){
+            return null;
+        }
+
+        return documentByName.getMetadata();
+    }
+
 
 
 }
