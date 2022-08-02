@@ -33,8 +33,6 @@ public class ServiceFrame {
 
 
 
-        System.out.println(scan);
-
         //注册基本命令
         scheduler.register("build-in-PackManagerProcessor",new PackManagerProcessor());
         scheduler.register("build-in-PackRunnerProcessor",new PackRunnerProcessor());

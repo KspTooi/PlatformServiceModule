@@ -1,8 +1,12 @@
 package com.ksptooi.asf.core.plugins;
 
+import com.google.inject.Inject;
 import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.commons.JarFileFilter;
 import com.ksptooi.asf.core.annatatiotion.PluginEntry;
+import com.ksptooi.asf.core.processor.Processor;
+import com.ksptooi.asf.core.processor.ProcessorDispatcher;
+import com.ksptooi.asf.core.processor.ProcessorScanner;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -18,6 +22,12 @@ public class PluginLoader {
     private final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
 
     private final Map<String, Plugin> loadedPlugins = new HashMap<>();
+
+    @Inject
+    private ProcessorDispatcher processorDispatcher;
+
+    @Inject
+    private ProcessorScanner scanner;
 
     public Map<String, Plugin> getPlugin(String directoryPath){
 
