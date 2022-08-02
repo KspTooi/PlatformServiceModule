@@ -1,6 +1,7 @@
 package com.ksptooi.asf.extendsbuildin.processor;
 
 import com.google.gson.Gson;
+import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+@Processor
 public class PackRunnerProcessor extends AbstractProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(PackRunnerProcessor.class);

@@ -2,6 +2,7 @@ package com.ksptooi.asf.extendsbuildin.processor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
+import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
@@ -9,6 +10,7 @@ import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Processor
 public class PackManagerProcessor extends AbstractProcessor {
 
 
