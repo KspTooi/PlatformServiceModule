@@ -52,7 +52,7 @@ public class DocumentService {
         return true;
     }
 
-    public String getMetadata(String inDocName){
+    public String queryMetadata(String inDocName){
 
         Document documentByName = this.getDocumentByName(inDocName);
 
