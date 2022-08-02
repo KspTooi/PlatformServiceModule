@@ -76,7 +76,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
     }
 
-    public HashMap<String, Processor> getProcessorMap() {
+    public Map<String, Processor> getProcessorMap() {
         return processorMap;
     }
 }

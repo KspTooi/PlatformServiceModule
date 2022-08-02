@@ -9,6 +9,7 @@ import com.ksptooi.asf.core.service.CommandService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
@@ -18,7 +19,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
     @Override
     public void publish(CliCommand inVo) {
 
-        HashMap<String, Processor> processorMap = this.getProcessorMap();
+        Map<String, Processor> processorMap = this.getProcessorMap();
 
         Command commandByName = service.getCommandByName(inVo.getName());
 
