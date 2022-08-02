@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.asf.core.mapper.DocumentMapper">
+
+    <!-- 表实体出参映射-->
+    <resultMap id="poMap" type="com.ksptooi.asf.core.entities.Document">
+        <result column="DOC_ID" property="docId"/>
+        <result column="NAME" property="name" />
+        <result column="METADATA" property="metadata"/>
+        <result column="BINARY_DATA" property="binaryData" />
+        <result column="DESCRIPTION" property="description" />
+        <result column="CREATE_TIME" property="createTime"/>
+    </resultMap>
+
+    <!-- 表的所有参数 ,不带t-->
+    <sql id="tableColumns">
+        `DOC_ID`,
+        `NAME`,
+        `METADATA`,
+	    `BINARY_DATA`,
+	    `DESCRIPTION`,
+	    `CREATE_TIME`
+    </sql>
+
+
+    <select id="getDocumentList" resultType="com.ksptooi.asf.core.entities.Document">
+        SELECT
+            <include refid="tableColumns"/>
+        FROM DOCUMENT
+        <where>
+
+            <if test="where.docId!=null and where.docId!=''">
+                and DOC_ID = #{where.docId}
+            </if>
+
+            <if test="where.name!=null and where.name!=''">
+                and `NAME` = #{where.name}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="getDocumentById" resultType="com.ksptooi.asf.core.entities.Document">
+        SELECT
+            <include refid="tableColumns"/>
+        FROM DOCUMENT
+        WHERE DOC_ID = #{id}
+    </select>
+
+    <select id="getDocumentByName" resultType="com.ksptooi.asf.core.entities.Document">
+        SELECT
+            <include refid="tableColumns"/>
+        FROM DOCUMENT
+        WHERE `NAME` = #{name}
+    </select>
+
+
+    <insert id="insert">
+        INSERT INTO DOCUMENT (
+            <include refid="tableColumns"/>
+        )
+        VALUES (
+        #{insert.docId},
+        #{insert.name},
+        #{insert.metadata},
+        #{insert.binaryData},
+        #{insert.description},
+        #{insert.createTime}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE COMMAND SET
+                           `NAME` = #{update.name},
+                           `METADATA` = #{update.metadata},
+                           `BINARY_DATA` = #{update.binaryData},
+                           `DESCRIPTION` = #{update.description}
+        WHERE `DOC_ID` = #{update.docId}
+    </update>
+
+
+</mapper>
