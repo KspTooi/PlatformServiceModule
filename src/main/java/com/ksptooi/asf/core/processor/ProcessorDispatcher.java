@@ -3,7 +3,12 @@ package com.ksptooi.asf.core.processor;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.Processor;
 
+import java.util.HashMap;
+
 public interface ProcessorDispatcher {
+
+
+    public void register(HashMap<String,Processor> procMap);
 
     //注册命令处理器
     public boolean register(String procName, Processor proc);

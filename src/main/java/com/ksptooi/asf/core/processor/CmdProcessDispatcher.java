@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CmdProcessDispatcher implements ProcessorDispatcher {
 
@@ -20,6 +21,13 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
     @Inject
     private CommandService service;
+
+    @Override
+    public void register(HashMap<String, Processor> procMap) {
+        for(Map.Entry<String,Processor> item:procMap.entrySet()){
+            this.register(item.getKey(),item.getValue());
+        }
+    }
 
     @Override
     public boolean register(String listenerName, Processor listener) {

@@ -23,16 +23,20 @@ public class ServiceFrame {
     public static void main(String[] args) throws Exception {
 
         PluginLoader epl = injector.getInstance(PluginLoader.class);
+        ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
 
         epl.install(epl.getPlugin("plugins"));
 
         Map<String, Processor> scan = processorScanner.scan("com.ksptooi.asf");
 
+
+
+
         System.out.println(scan);
 
         //注册基本命令
-        ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
+
         scheduler.register("build-in-PackManagerExecutor",new PackManagerProcessor());
         scheduler.register("build-in-PackRunnerExecutor",new PackRunnerProcessor());
 

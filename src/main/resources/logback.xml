@@ -37,9 +37,9 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-<!--    <logger name="org.reflections">
+    <logger name="org.reflections">
         <level value="ERROR" />
         <appender-ref ref="STDOUT" />
-    </logger>-->
+    </logger>
 
 </configuration>
