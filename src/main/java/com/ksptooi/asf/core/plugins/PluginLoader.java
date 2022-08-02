@@ -90,6 +90,7 @@ public class PluginLoader {
 
     public void install(Map<String, Plugin> pluginMap){
 
+
         logger.info("正在加载插件...");
 
         for(Map.Entry<String, Plugin> item : pluginMap.entrySet()){

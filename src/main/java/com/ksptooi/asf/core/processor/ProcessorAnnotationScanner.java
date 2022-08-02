@@ -49,7 +49,6 @@ public class ProcessorAnnotationScanner implements ProcessorScanner{
         return this.getProcessorForClassSet(typesAnnotatedWith);
     }
 
-
     private Map<String,Processor> getProcessorForClassSet(Set<Class<?>> classSet){
 
         if(classSet.size()<1){
