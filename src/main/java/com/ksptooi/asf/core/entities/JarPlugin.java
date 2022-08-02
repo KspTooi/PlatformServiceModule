@@ -7,14 +7,19 @@ import java.io.File;
 
 public class JarPlugin {
 
+    //插件文件
     private File jarFile;
 
+    //插件名称
     private String pluginName;
 
+    //插件版本
     private String pluginVersion;
 
+    //插件入口点
     private Plugin entry;
 
+    //处理器组
     private Processor[] processors;
 
 
