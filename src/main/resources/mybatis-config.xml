@@ -9,7 +9,7 @@
 
             <dataSource type="POOLED">
                 <property name="driver" value="org.h2.Driver"/>
-                <property name="url" value="jdbc:h2:C:\acu_system\wphub_db"/>
+                <property name="url" value="jdbc:h2:C:\acu_system\AppServiceFrame"/>
                 <property name="username" value=""/>
                 <property name="password" value=""/>
             </dataSource>
