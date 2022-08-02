@@ -23,7 +23,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
     private CommandService service;
 
     @Override
-    public void register(HashMap<String, Processor> procMap) {
+    public void register(Map<String, Processor> procMap) {
         for(Map.Entry<String,Processor> item:procMap.entrySet()){
             this.register(item.getKey(),item.getValue());
         }

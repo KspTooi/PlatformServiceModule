@@ -29,8 +29,7 @@ public class ServiceFrame {
         epl.install(epl.getPlugin("plugins"));
 
         Map<String, Processor> scan = processorScanner.scan("com.ksptooi.asf");
-
-
+        scheduler.register(scan);
 
 
         System.out.println(scan);
