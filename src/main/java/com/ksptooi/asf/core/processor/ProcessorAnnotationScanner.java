@@ -58,14 +58,12 @@ public class ProcessorAnnotationScanner implements ProcessorScanner{
 
         Map<String,Processor> retMap =  new HashMap<>();
 
-        while (classSet.iterator().hasNext()) {
-
-            Class<?> next = classSet.iterator().next();
+        for(Class<?> item:classSet){
 
             try {
 
-                Processor processor = (Processor) next.newInstance();
-                retMap.put(next.getAnnotation(com.ksptooi.asf.core.annatatiotion.Processor.class).value(),processor);
+                Processor processor = (Processor) item.newInstance();
+                retMap.put(item.getAnnotation(com.ksptooi.asf.core.annatatiotion.Processor.class).value(),processor);
 
             } catch (Exception e) {
                 e.printStackTrace();

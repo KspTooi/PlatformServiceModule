@@ -5,8 +5,10 @@ import com.google.inject.Scopes;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.cli.OperateCli;
 import com.ksptooi.asf.core.processor.CmdAnnotationDispatcher;
+import com.ksptooi.asf.core.processor.ProcessorAnnotationScanner;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.plugins.PluginLoader;
+import com.ksptooi.asf.core.processor.ProcessorScanner;
 import org.mybatis.guice.XMLMyBatisModule;
 
 public class ApplicationModule extends AbstractModule {
@@ -26,6 +28,8 @@ public class ApplicationModule extends AbstractModule {
 
         //EPL
         bind(PluginLoader.class).in(Scopes.SINGLETON);
+
+        bind(ProcessorScanner.class).to(ProcessorAnnotationScanner.class).in(Scopes.SINGLETON);
 
         XMLMyBatisModule myBatisModule = new XMLMyBatisModule() {
             @Override
