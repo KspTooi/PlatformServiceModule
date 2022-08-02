@@ -10,7 +10,7 @@ import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Processor
+@Processor("build-in-PackManagerProcessor")
 public class PackManagerProcessor extends AbstractProcessor {
 
 

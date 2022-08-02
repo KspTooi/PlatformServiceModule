@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-@Processor
+@Processor("build-in-PackRunnerProcessor")
 public class PackRunnerProcessor extends AbstractProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(PackRunnerProcessor.class);
