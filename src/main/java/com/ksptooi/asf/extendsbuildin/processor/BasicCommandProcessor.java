@@ -19,7 +19,7 @@ public class BasicCommandProcessor extends AbstractProcessor {
 
     @Override
     public void onCommand(CliCommand preparedCommand, Command command) {
-        
+
     }
 
 }
