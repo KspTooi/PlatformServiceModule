@@ -1,7 +1,7 @@
 package com.ksptooi.asf.core.cli;
 
 import com.google.inject.Inject;
-import com.ksptooi.asf.core.processor.dispatcher.ProcessorDispatcher;
+import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

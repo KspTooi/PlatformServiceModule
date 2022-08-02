@@ -4,9 +4,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.cli.OperateCli;
-import com.ksptooi.asf.core.processor.dispatcher.CmdAnnotationDispatcher;
-import com.ksptooi.asf.core.processor.dispatcher.CmdProcessRegisterWrapper;
-import com.ksptooi.asf.core.processor.dispatcher.ProcessorDispatcher;
+import com.ksptooi.asf.core.processor.CmdAnnotationDispatcher;
+import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.plugins.PluginLoader;
 import org.mybatis.guice.XMLMyBatisModule;
 

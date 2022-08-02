@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.modules.ApplicationModule;
 import com.ksptooi.asf.core.plugins.PluginLoader;
-import com.ksptooi.asf.core.processor.dispatcher.ProcessorDispatcher;
+import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.extendsbuildin.processor.PackManagerProcessor;
 import com.ksptooi.asf.extendsbuildin.processor.PackRunnerProcessor;
 

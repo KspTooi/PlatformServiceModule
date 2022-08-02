@@ -1,4 +1,4 @@
-package com.ksptooi.asf.core.processor.scanner;
+package com.ksptooi.asf.core.processor;
 
 import com.ksptooi.asf.core.processor.Processor;
 

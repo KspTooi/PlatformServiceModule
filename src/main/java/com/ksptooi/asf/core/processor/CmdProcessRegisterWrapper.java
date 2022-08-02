@@ -1,9 +1,8 @@
-package com.ksptooi.asf.core.processor.dispatcher;
+package com.ksptooi.asf.core.processor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.commons.IdWorker;
 import com.ksptooi.asf.core.entities.Command;
-import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

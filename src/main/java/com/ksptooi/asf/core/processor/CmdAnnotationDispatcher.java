@@ -1,10 +1,9 @@
-package com.ksptooi.asf.core.processor.dispatcher;
+package com.ksptooi.asf.core.processor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.entities.Command;
-import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.service.CommandService;
 
 import java.lang.reflect.InvocationTargetException;

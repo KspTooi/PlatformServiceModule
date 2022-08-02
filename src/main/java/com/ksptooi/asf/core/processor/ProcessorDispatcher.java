@@ -1,4 +1,4 @@
-package com.ksptooi.asf.core.processor.dispatcher;
+package com.ksptooi.asf.core.processor;
 
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.Processor;
