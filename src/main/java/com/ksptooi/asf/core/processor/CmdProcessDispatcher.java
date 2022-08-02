@@ -32,6 +32,11 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
     @Override
     public boolean register(String listenerName, Processor listener) {
 
+        if(processorMap.get(listenerName) != null){
+            logger.warn("处理器注册失败,该处理器名称已被占用:{}",listenerName);
+            return false;
+        }
+
         //注入内部组件
         ServiceFrame.injector.injectMembers(listener);
         logger.info("已注册命令处理器:"+listenerName);

@@ -32,12 +32,12 @@ public class ServiceFrame {
         scheduler.register(scan);
 
 
+
         System.out.println(scan);
 
         //注册基本命令
-
-        scheduler.register("build-in-PackManagerExecutor",new PackManagerProcessor());
-        scheduler.register("build-in-PackRunnerExecutor",new PackRunnerProcessor());
+        scheduler.register("build-in-PackManagerProcessor",new PackManagerProcessor());
+        scheduler.register("build-in-PackRunnerProcessor",new PackRunnerProcessor());
 
         CommandLine cli = injector.getInstance(CommandLine.class);
         cli.run();

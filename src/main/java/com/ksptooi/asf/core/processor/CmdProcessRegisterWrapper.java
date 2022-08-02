@@ -23,13 +23,6 @@ public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
     public boolean register(String listenerName, Processor listener) {
 
 
-        Map<String, Processor> processorMap = this.getProcessorMap();
-
-        if(processorMap.get(listenerName) != null){
-            logger.warn("处理器注册失败,该处理器名称已被占用:{}",listenerName);
-            return false;
-        }
-
         logger.info("检查PROC基本指令组:"+listenerName);
 
         String[] defaultCmd = listener.defaultCommand();
