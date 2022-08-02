@@ -23,7 +23,6 @@
 	    `CREATE_TIME`
     </sql>
 
-
     <select id="getDocumentList" resultType="com.ksptooi.asf.core.entities.Document">
         SELECT
             <include refid="tableColumns"/>
@@ -72,13 +71,17 @@
     </insert>
 
     <update id="update">
-        UPDATE COMMAND SET
+        UPDATE DOCUMENT SET
                            `NAME` = #{update.name},
                            `METADATA` = #{update.metadata},
                            `BINARY_DATA` = #{update.binaryData},
                            `DESCRIPTION` = #{update.description}
         WHERE `DOC_ID` = #{update.docId}
     </update>
+
+    <delete id="remove">
+        DELETE FROM DOCUMENT WHERE `DOC_ID` = #{id}
+    </delete>
 
 
 </mapper>
