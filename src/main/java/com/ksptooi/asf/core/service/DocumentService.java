@@ -47,6 +47,22 @@ public class DocumentService {
         return true;
     }
 
+    public boolean update(Document in){
+
+        Document update = this.getDocumentById(in.getDocId());
+
+        if(update==null){
+            logger.info("修改失败,文档不存在.ID:{}",in.getDocId());
+            return false;
+        }
+
+        update.setMetadata(in.getMetadata());
+        update.setBinaryData(in.getBinaryData());
+        update.setDescription(in.getDescription());
+        mapper.update(in);
+        return true;
+    }
+
     public boolean removeById(Long id){
         mapper.remove(id);
         return true;
@@ -61,6 +77,19 @@ public class DocumentService {
         }
 
         return documentByName.getMetadata();
+    }
+
+    public boolean updateMetadata(String inDomName,String metadata){
+
+        Document documentByName = this.getDocumentByName(inDomName);
+
+        if(documentByName==null){
+            return false;
+        }
+
+        documentByName.setMetadata(metadata);
+        this.update(documentByName);
+        return true;
     }
 
 
