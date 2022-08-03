@@ -48,10 +48,25 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
             if(annotation == null){
                 continue;
             }
-            if(annotation.value().equals(inVo.getName())){
-                targetMethod = item;
+
+            String[] value = annotation.value();
+
+            boolean hasTargetMethod = false;
+
+            for(String valueItem:value){
+
+                if(valueItem.equals(inVo.getName())){
+                    targetMethod = item;
+                    hasTargetMethod = true;
+                    break;
+                }
+
+            }
+
+            if(hasTargetMethod){
                 break;
             }
+
 
         }
 

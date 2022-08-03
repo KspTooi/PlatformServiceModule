@@ -10,9 +10,14 @@ import com.ksptooi.asf.core.processor.AbstractProcessor;
 public class BasicCommandProcessor extends AbstractProcessor {
 
 
+    @Override
+    public String[] defaultCommand() {
+        return new String[]{"list"};
+    }
 
     @CommandMapping("list")
     public void list(){
+
 
     }
 
