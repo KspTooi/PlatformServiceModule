@@ -5,6 +5,7 @@ import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.commons.JarFileFilter;
 import com.ksptooi.asf.core.annatatiotion.PluginEntry;
 import com.ksptooi.asf.core.entities.JarPlugin;
+import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
 import org.reflections.Reflections;
@@ -104,21 +105,103 @@ public class JarPluginLoader implements PluginLoader{
 
     @Override
     public List<JarPlugin> getJarPlugin(String directoryPath) {
-        return null;
+        return this.getJarPlugin(new File(directoryPath));
     }
 
     @Override
-    public List<JarPlugin> getJarPlugin(File directoryFile) {
-        return null;
+    public List<JarPlugin> getJarPlugin(File dirFile) {
+
+        logger.info("正在获取插件...");
+
+        List<JarPlugin> retList = new ArrayList<>();
+
+        if(!dirFile.exists()){
+            logger.info("获取出错,路径\""+dirFile+"\"不存在!");
+            return retList;
+        }
+
+        if(!dirFile.isDirectory()){
+            logger.info("获取出错,路径\""+dirFile+"\"不是文件夹!");
+            return retList;
+        }
+
+        File[] jarFiles = dirFile.listFiles(new JarFileFilter());
+
+        if(jarFiles==null){
+            return retList;
+        }
+
+        //加载jar
+        for(File jar : jarFiles){
+
+            try {
+
+                URL url=jar.toURI().toURL();
+                ClassLoader loader=new URLClassLoader(new URL[]{url});
+
+                Reflections packageReflections = new Reflections(new ConfigurationBuilder()
+                        .addUrls(url).addClassLoaders(loader)
+                );
+
+                Set<Class<?>> entrySet = packageReflections.getTypesAnnotatedWith(PluginEntry.class);
+
+                if(entrySet.size()!= 1){
+                    logger.info("尝试获取"+jar.getName()+"时出错. 期望的Entry为1 当前为:"+entrySet.size());
+                    continue;
+                }
+
+                Class<?> entry = entrySet.iterator().next();
+                Plugin pluginEntry = (Plugin)entry.newInstance();
+                String pluginName = entry.getAnnotation(PluginEntry.class).name();
+                String pluginVersion = entry.getAnnotation(PluginEntry.class).version();
+
+                JarPlugin jarPlugin = new JarPlugin();
+                jarPlugin.setJarFile(jar);
+                jarPlugin.setPluginName(pluginName);
+                jarPlugin.setPluginVersion(pluginVersion);
+                jarPlugin.setEntry(pluginEntry);
+                jarPlugin.setProcessors(scanner.scan(url, loader));
+
+                logger.info("已获取:{}-{}:{} 处理器数量:{}",jar.getName(),pluginName,pluginVersion,jarPlugin.getProcessors().size());
+                retList.add(jarPlugin);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return retList;
     }
 
     @Override
     public boolean install(JarPlugin jarPlugin) {
-        return false;
+
+        Plugin entry = jarPlugin.getEntry();
+        Map<String, Processor> processors = jarPlugin.getProcessors();
+
+        logger.info("加载:{}[{}]",jarPlugin.getPluginName(),jarPlugin.getPluginVersion());
+
+        ServiceFrame.injector.injectMembers(entry);
+        entry.onEnabled();
+        this.loadedPlugins.put(jarPlugin.getPluginName(),entry);
+
+        for(Map.Entry<String,Processor> item:processors.entrySet()){
+
+            logger.info("注册插件处理器:{}",item.getKey());
+            this.processorDispatcher.register(item.getKey(),item.getValue());
+
+        }
+
+        return true;
     }
 
     @Override
     public void install(List<JarPlugin> jarPlugins) {
+
+        for(JarPlugin item:jarPlugins){
+            this.install(item);
+        }
 
     }
 

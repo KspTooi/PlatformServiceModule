@@ -4,6 +4,7 @@ import com.ksptooi.asf.core.plugins.Plugin;
 import com.ksptooi.asf.core.processor.Processor;
 
 import java.io.File;
+import java.util.Map;
 
 public class JarPlugin {
 
@@ -20,8 +21,7 @@ public class JarPlugin {
     private Plugin entry;
 
     //处理器组
-    private Processor[] processors;
-
+    private Map<String,Processor> processors;
 
     public File getJarFile() {
         return jarFile;
@@ -55,11 +55,11 @@ public class JarPlugin {
         this.entry = entry;
     }
 
-    public Processor[] getProcessors() {
+    public Map<String, Processor> getProcessors() {
         return processors;
     }
 
-    public void setProcessors(Processor[] processors) {
+    public void setProcessors(Map<String, Processor> processors) {
         this.processors = processors;
     }
 }

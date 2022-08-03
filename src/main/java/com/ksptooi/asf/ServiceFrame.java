@@ -14,9 +14,7 @@ import com.ksptooi.asf.extendsbuildin.processor.PackManagerProcessor;
 import com.ksptooi.asf.extendsbuildin.processor.PackRunnerProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Map;
-
 
 public class ServiceFrame {
 
@@ -38,16 +36,13 @@ public class ServiceFrame {
         scheduler.register(scan);
 
 
-
         //注册基本命令
         scheduler.register("build-in-PackManagerProcessor",new PackManagerProcessor());
         scheduler.register("build-in-PackRunnerProcessor",new PackRunnerProcessor());
-
         logger.info("服务平台版本:{}",version);
 
         CommandLine cli = injector.getInstance(CommandLine.class);
         cli.run();
-
 
 
     }
