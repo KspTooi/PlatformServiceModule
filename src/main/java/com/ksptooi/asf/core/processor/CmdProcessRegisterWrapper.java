@@ -23,7 +23,7 @@ public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
     public boolean register(String listenerName, Processor listener) {
 
 
-        logger.info("检查PROC基本指令组:"+listenerName);
+        //logger.info("检查PROC基本指令组:"+listenerName);
 
         String[] defaultCmd = listener.defaultCommand();
 
@@ -43,7 +43,7 @@ public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
 
         }
 
-        logger.info("PROC检查通过:"+listenerName);
+        //logger.info("PROC检查通过:"+listenerName);
 
         return super.register(listenerName, listener);
     }

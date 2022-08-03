@@ -39,8 +39,6 @@ public class ServiceFrame {
 
 
         //注册基本命令
-/*        scheduler.register("build-in-PackManagerProcessor",new PackManagerProcessor());
-        scheduler.register("build-in-PackRunnerProcessor",new PackRunnerProcessor());*/
         logger.info("服务平台版本:{}",version);
 
         CommandLine cli = injector.getInstance(CommandLine.class);
