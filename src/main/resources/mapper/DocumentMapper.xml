@@ -23,7 +23,7 @@
 	    `CREATE_TIME`
     </sql>
 
-    <select id="getDocumentList" resultType="com.ksptooi.asf.core.entities.Document">
+    <select id="getDocumentList" resultMap="poMap">
         SELECT
             <include refid="tableColumns"/>
         FROM DOCUMENT
@@ -41,14 +41,14 @@
 
     </select>
 
-    <select id="getDocumentById" resultType="com.ksptooi.asf.core.entities.Document">
+    <select id="getDocumentById" resultMap="poMap">
         SELECT
             <include refid="tableColumns"/>
         FROM DOCUMENT
         WHERE DOC_ID = #{id}
     </select>
 
-    <select id="getDocumentByName" resultType="com.ksptooi.asf.core.entities.Document">
+    <select id="getDocumentByName" resultMap="poMap">
         SELECT
             <include refid="tableColumns"/>
         FROM DOCUMENT
