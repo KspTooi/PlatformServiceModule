@@ -20,6 +20,7 @@
 
     <mappers>
         <mapper resource="mapper/CommandMapper.xml"></mapper>
+        <mapper resource="mapper/DocumentMapper.xml"></mapper>
     </mappers>
 
 </configuration>

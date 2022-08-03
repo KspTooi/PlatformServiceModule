@@ -12,7 +12,7 @@ public class Document {
 
     private String metadata;
 
-    private Blob binaryData;
+    private Byte[] binaryData;
 
     private String description;
 
@@ -42,11 +42,11 @@ public class Document {
         this.metadata = metadata;
     }
 
-    public Blob getBinaryData() {
+    public Byte[] getBinaryData() {
         return binaryData;
     }
 
-    public void setBinaryData(Blob binaryData) {
+    public void setBinaryData(Byte[] binaryData) {
         this.binaryData = binaryData;
     }
 
@@ -65,4 +65,6 @@ public class Document {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
+
+
 }

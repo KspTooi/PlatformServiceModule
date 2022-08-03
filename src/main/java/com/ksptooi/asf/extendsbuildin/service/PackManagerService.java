@@ -14,6 +14,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.print.Doc;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ public class PackManagerService {
 
     @Inject
     private DocumentService service;
+
+    @Inject
+    private CommandService commandService;
 
 
     private final String packLibrayKey = "#pack_libray";
@@ -56,12 +60,12 @@ public class PackManagerService {
     //显示软件包目录
     public void showPackLibs(){
 
-        if(!service.hasCommand(this.packLibrayKey)){
+        if(!service.hasDocument(this.packLibrayKey)){
             logger.info("当前没有设置软件包基准目录");
             return;
         }
 
-        Command commandByName = service.getCommandByName(this.packLibrayKey);
+        Document commandByName = service.getDocumentByName(this.packLibrayKey);
 
         List<PackLibrary> list = JSON.parseArray(commandByName.getMetadata(),PackLibrary.class);
 
@@ -75,12 +79,12 @@ public class PackManagerService {
 
     public void clearLibs(){
 
-        if(!service.hasCommand(this.packLibrayKey)){
+        if(!service.hasDocument(this.packLibrayKey)){
             logger.info("当前没有设置软件包基准目录");
             return;
         }
 
-        Command commandByName = service.getCommandByName(this.packLibrayKey);
+        Document commandByName = service.getDocumentByName(this.packLibrayKey);
         commandByName.setMetadata("[]");
         service.update(commandByName);
 
@@ -92,7 +96,7 @@ public class PackManagerService {
     //自动安装包
     public void autoInstall(String name,String path){
 
-        if(service.hasCommand(name)){
+        if(service.hasDocument(name)){
             logger.info("软件包安装失败,指令\""+name+"\"已被占用");
             return;
         }
@@ -113,7 +117,7 @@ public class PackManagerService {
         insert.setName(name);
         insert.setExecutorName("build-in-PackRunnerExecutor");
         insert.setMetadata(new Gson().toJson(pack));
-        service.insert(insert);
+        commandService.insert(insert);
 
         logger.info("软件包安装完成,指令为: \""+name+"\"");
     }
@@ -121,15 +125,14 @@ public class PackManagerService {
     //移除软件包
     public void removePack(String name){
 
-        Command commandByName = service.getCommandByName(name);
+        Command commandByName = commandService.getCommandByName(name);
 
         if(commandByName == null){
             logger.info("软件包移除失败,指令\""+name+"\"不存在!");
             return;
         }
 
-
-        service.removeById(commandByName.getCmdId()+"");
+        commandService.removeById(commandByName.getCmdId()+"");
         logger.info("软件包\""+name+"\"移除成功!");
     }
 
