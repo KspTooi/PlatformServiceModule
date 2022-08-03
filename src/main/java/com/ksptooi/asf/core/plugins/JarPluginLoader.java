@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.commons.JarFileFilter;
 import com.ksptooi.asf.core.annatatiotion.PluginEntry;
+import com.ksptooi.asf.core.entities.JarPlugin;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
 import org.reflections.Reflections;
@@ -16,7 +17,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
-public class JarPluginLoader {
+public class JarPluginLoader implements PluginLoader{
 
     private final Logger logger = LoggerFactory.getLogger(JarPluginLoader.class);
 
@@ -98,6 +99,26 @@ public class JarPluginLoader {
             item.getValue().onEnabled();
             this.loadedPlugins.put(item.getKey(),item.getValue());
         }
+
+    }
+
+    @Override
+    public List<JarPlugin> getJarPlugin(String directoryPath) {
+        return null;
+    }
+
+    @Override
+    public List<JarPlugin> getJarPlugin(File directoryFile) {
+        return null;
+    }
+
+    @Override
+    public boolean install(JarPlugin jarPlugin) {
+        return false;
+    }
+
+    @Override
+    public void install(List<JarPlugin> jarPlugins) {
 
     }
 

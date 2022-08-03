@@ -6,6 +6,7 @@ import com.google.inject.Injector;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.modules.ApplicationModule;
 import com.ksptooi.asf.core.plugins.JarPluginLoader;
+import com.ksptooi.asf.core.plugins.PluginLoader;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
@@ -27,11 +28,11 @@ public class ServiceFrame {
 
     public static void main(String[] args) throws Exception {
 
-        JarPluginLoader epl = injector.getInstance(JarPluginLoader.class);
+        PluginLoader epl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
 
-        epl.install(epl.getPlugin("plugins"));
+        //epl.install(epl.getPlugin("plugins"));
 
         Map<String, Processor> scan = processorScanner.scan("com.ksptooi.asf");
         scheduler.register(scan);

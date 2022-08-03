@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.cli.OperateCli;
+import com.ksptooi.asf.core.plugins.PluginLoader;
 import com.ksptooi.asf.core.processor.CmdAnnotationDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorAnnotationScanner;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
@@ -27,7 +28,7 @@ public class ApplicationModule extends AbstractModule {
         bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);
 
         //EPL
-        bind(JarPluginLoader.class).in(Scopes.SINGLETON);
+        bind(PluginLoader.class).to(JarPluginLoader.class).in(Scopes.SINGLETON);
 
         bind(ProcessorScanner.class).to(ProcessorAnnotationScanner.class).in(Scopes.SINGLETON);
 

@@ -11,8 +11,8 @@ public interface PluginLoader {
 
     public List<JarPlugin> getJarPlugin(File directoryFile);
 
+    public boolean install(JarPlugin jarPlugin);
 
-
-
+    public void install(List<JarPlugin> jarPlugins);
 
 }
