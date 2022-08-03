@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class CmdProcessRegisterWrapper extends CmdProcessExclusiveWrapper {
 
-    private final Logger logger = LoggerFactory.getLogger(CmdProcessRegisterWrapper.class);
+    private final Logger logger = LoggerFactory.getLogger(ProcessorDispatcher.class);
 
     @Inject
     private CommandService service;

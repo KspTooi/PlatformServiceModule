@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class CmdProcessDispatcher implements ProcessorDispatcher {
 
-    private final Logger logger = LoggerFactory.getLogger(CmdProcessDispatcher.class);
+    private final Logger logger = LoggerFactory.getLogger(ProcessorDispatcher.class);
 
     //private final List<Listener> listenerList = new ArrayList<>();
 
