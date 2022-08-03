@@ -17,6 +17,8 @@ public class DocumentService {
     @Inject
     private DocumentMapper mapper;
 
+    private IdWorker idWorker = new IdWorker();
+
     public Document getDocumentById(Long id){
         return mapper.getDocumentById(id);
     }
@@ -28,6 +30,38 @@ public class DocumentService {
     public List<Document> getDocumentList(Document document){
         return mapper.getDocumentList(document);
     }
+
+
+    public Document createDocument(String name){
+
+        Document dom = new Document();
+        dom.setDocId(this.idWorker.nextId());
+        dom.setName(name);
+        dom.setMetadata(null);
+        dom.setBinaryData(null);
+        dom.setDescription("document");
+        dom.setCreateTime(new Date());
+
+        boolean insert = this.insert(dom);
+
+        if(!insert){
+            return null;
+        }
+
+        return dom;
+    }
+
+    public boolean hasDocument(String name){
+
+        Document documentByName = this.getDocumentByName(name);
+
+        if(documentByName == null){
+            return false;
+        }
+
+        return true;
+    }
+
 
     public boolean insert(Document in){
 

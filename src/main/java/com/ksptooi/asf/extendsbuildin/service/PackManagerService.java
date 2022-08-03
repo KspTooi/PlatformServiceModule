@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.entities.Command;
+import com.ksptooi.asf.core.entities.Document;
 import com.ksptooi.asf.core.service.CommandService;
+import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.entities.PackLibrary;
 import com.ksptooi.asf.extendsbuildin.entities.PackLibraryDocument;
 import com.ksptooi.asf.extendsbuildin.entities.SoftwarePack;
@@ -21,8 +23,9 @@ public class PackManagerService {
 
     private final Logger logger = LoggerFactory.getLogger(PackManagerService.class);
 
+
     @Inject
-    private CommandService service;
+    private DocumentService service;
 
 
     private final String packLibrayKey = "#pack_libray";
@@ -40,18 +43,14 @@ public class PackManagerService {
         library.setPath(path);
         libraryList.add(library);
 
-        //软件包库记录不存在则增加
-        if(!service.hasCommand(packLibrayKey)){
-            Command librayDocument = new Command();
-            librayDocument.setName(this.packLibrayKey);
-            librayDocument.setMetadata(null);
-            librayDocument.setExecutorName("#document");
-            service.insert(librayDocument);
+        Document document = service.getDocumentByName(this.packLibrayKey);
+
+        if(document == null){
+            document = service.createDocument(this.packLibrayKey);
         }
 
-        Command update = service.getCommandByName(this.packLibrayKey);
-        update.setMetadata(new Gson().toJson(libraryList));
-        service.update(update);
+        document.setMetadata(new Gson().toJson(libraryList));
+        service.update(document);
     }
 
     //显示软件包目录
