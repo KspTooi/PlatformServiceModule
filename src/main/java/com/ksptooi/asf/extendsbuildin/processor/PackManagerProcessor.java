@@ -69,7 +69,7 @@ public class PackManagerProcessor extends AbstractProcessor {
     }
 
 
-    @CommandMapping("auto")
+    @CommandMapping({"auto","pm auto"})
     public void auto(CliCommand pCommand, Command command){
 
         if(pCommand.getParameter().size() < 2){
@@ -82,7 +82,7 @@ public class PackManagerProcessor extends AbstractProcessor {
     }
 
 
-    @CommandMapping("remove")
+    @CommandMapping({"remove","pm remove"})
     public void remove(CliCommand pCommand, Command command){
 
         if(pCommand.getParameter().size() < 1){
@@ -92,17 +92,6 @@ public class PackManagerProcessor extends AbstractProcessor {
 
         logger.info("正在移除软件包...");
         service.removePack(pCommand.getParameter().get(0));
-    }
-
-
-    @CommandMapping("pm auto")
-    public void pmAuto(CliCommand pCommand, Command command){
-        this.auto(pCommand,command);
-    }
-
-    @CommandMapping("pm remove")
-    public void pmRemove(CliCommand pCommand, Command command){
-        this.remove(pCommand,command);
     }
 
 
