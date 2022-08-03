@@ -26,9 +26,11 @@ public class ServiceFrame {
 
     public static void main(String[] args) throws Exception {
 
-        PluginLoader epl = injector.getInstance(PluginLoader.class);
+        PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
+
+        pl.install(pl.getJarPlugin("plugins"));
 
         //epl.install(epl.getPlugin("plugins"));
 
@@ -37,8 +39,8 @@ public class ServiceFrame {
 
 
         //注册基本命令
-        scheduler.register("build-in-PackManagerProcessor",new PackManagerProcessor());
-        scheduler.register("build-in-PackRunnerProcessor",new PackRunnerProcessor());
+/*        scheduler.register("build-in-PackManagerProcessor",new PackManagerProcessor());
+        scheduler.register("build-in-PackRunnerProcessor",new PackRunnerProcessor());*/
         logger.info("服务平台版本:{}",version);
 
         CommandLine cli = injector.getInstance(CommandLine.class);

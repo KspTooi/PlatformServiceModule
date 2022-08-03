@@ -162,7 +162,7 @@ public class JarPluginLoader implements PluginLoader{
                 jarPlugin.setEntry(pluginEntry);
                 jarPlugin.setProcessors(scanner.scan(url, loader));
 
-                logger.info("已获取:{}-{}:{} 处理器数量:{}",jar.getName(),pluginName,pluginVersion,jarPlugin.getProcessors().size());
+                logger.info("已获取:{}-{}[{}] 处理器数量:{}",jar.getName(),pluginName,pluginVersion,jarPlugin.getProcessors().size());
                 retList.add(jarPlugin);
 
             } catch (Exception e) {
