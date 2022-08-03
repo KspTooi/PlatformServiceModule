@@ -2962,7 +2962,7 @@ org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The
 	at com.ksptooi.asf.core.service.CommandService.hasCommand(CommandService.java:65)
 	at com.ksptooi.asf.core.processor.dispatcher.CmdProcessRegisterWrapper.register(CmdProcessRegisterWrapper.java:30)
 	at com.ksptooi.plugin.MyPlugins.onEnabled(MyPlugins.java:23)
-	at com.ksptooi.asf.core.plugins.PluginLoader.install(PluginLoader.java:88)
+	at com.ksptooi.asf.core.plugins.JarPluginLoader.install(PluginLoader.java:88)
 	at com.ksptooi.asf.ServiceFrame.main(ServiceFrame.java:28)
 Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: C:/acu_system/wphub_db.mv.db [2.1.214/7]" [50000-214]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)

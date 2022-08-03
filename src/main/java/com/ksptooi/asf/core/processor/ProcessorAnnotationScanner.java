@@ -1,5 +1,6 @@
 package com.ksptooi.asf.core.processor;
 
+import ch.qos.logback.core.util.COWArrayList;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -8,6 +9,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ProcessorAnnotationScanner implements ProcessorScanner{
 
