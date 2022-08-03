@@ -5,10 +5,9 @@ import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
-import com.ksptooi.asf.extendsbuildin.entities.SoftwarePack;
+import com.ksptooi.asf.extendsbuildin.entities.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 
 @Processor("build-in-PackRunnerProcessor")
@@ -25,11 +24,11 @@ public class PackRunnerProcessor extends AbstractProcessor {
 
         logger.info("运行软件包:" + preparedCommand);
 
-        SoftwarePack softwarePack = new Gson().fromJson(command.getMetadata(), SoftwarePack.class);
+        Application application = new Gson().fromJson(command.getMetadata(), Application.class);
 
         try {
 
-            Runtime.getRuntime().exec("explorer " + softwarePack.getPath());
+            Runtime.getRuntime().exec("explorer " + application.getPath());
 
         } catch (IOException e) {
             e.printStackTrace();

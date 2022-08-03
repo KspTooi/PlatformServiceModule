@@ -8,13 +8,10 @@ import com.ksptooi.asf.core.entities.Document;
 import com.ksptooi.asf.core.service.CommandService;
 import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.entities.PackLibrary;
-import com.ksptooi.asf.extendsbuildin.entities.PackLibraryDocument;
-import com.ksptooi.asf.extendsbuildin.entities.SoftwarePack;
-import org.checkerframework.checker.units.qual.C;
+import com.ksptooi.asf.extendsbuildin.entities.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.print.Doc;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -109,7 +106,7 @@ public class PackManagerService {
         }
 
 
-        SoftwarePack pack = new SoftwarePack();
+        Application pack = new Application();
         pack.setPath(path);
 
 

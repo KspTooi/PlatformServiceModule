@@ -1,6 +1,6 @@
 package com.ksptooi.asf.extendsbuildin.entities;
 
-public class SoftwarePack {
+public class Application {
 
     private final String metaVersion = "v1";
 
