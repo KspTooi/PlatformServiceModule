@@ -30,7 +30,10 @@ public class ApplicationModule extends AbstractModule {
         //EPL
         bind(PluginLoader.class).to(JarPluginLoader.class).in(Scopes.SINGLETON);
 
+        //PAS
         bind(ProcessorScanner.class).to(ProcessorAnnotationScanner.class).in(Scopes.SINGLETON);
+
+        //
 
         XMLMyBatisModule myBatisModule = new XMLMyBatisModule() {
             @Override
