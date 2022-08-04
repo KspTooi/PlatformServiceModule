@@ -11,7 +11,7 @@ import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Processor("build-in-PackManagerProcessor")
+@Processor("build-in-AppLibraryProcessor")
 public class AppLibraryProcessor extends AbstractProcessor {
 
 
@@ -38,7 +38,7 @@ public class AppLibraryProcessor extends AbstractProcessor {
 
     @CommandMapping({"lib add","lib a"})
     public void addAppLibrary(){
-        
+
     }
 
     @CommandMapping({"lib remove","lib rm"})
