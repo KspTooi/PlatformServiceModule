@@ -26,11 +26,11 @@ public class CommandOperateService {
 
         List<Command> commandList = mapper.getCommandList(new Command());
 
-        Comparator<Object> comparator = Collator.getInstance(Locale.US);
+/*        Comparator<Object> comparator = Collator.getInstance(Locale.US);
 
         commandList.sort((u1, u2) -> {
             return comparator.compare(u1.getName(), u2.getName());
-        });
+        });*/
 
         CommandLineTable clTable = new CommandLineTable();
 

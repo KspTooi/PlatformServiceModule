@@ -68,6 +68,7 @@
             </if>
 
         </where>
+        ORDER BY `NAME` ASC
 
     </select>
 
