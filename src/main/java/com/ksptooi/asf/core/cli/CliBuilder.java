@@ -27,6 +27,10 @@ public class CliBuilder {
         return this.withParam(name,require);
     }
 
+    public CliBuilder withParam(String name,boolean require,String desc){
+        return this.withParam(name,require,desc);
+    }
+
     public CliBuilder withParam(String name, String desc,boolean require){
 
         CliParam[] params = this.define.getParams();

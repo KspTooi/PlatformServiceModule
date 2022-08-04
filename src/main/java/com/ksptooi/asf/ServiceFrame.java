@@ -21,7 +21,7 @@ public class ServiceFrame {
 
 
         CliCommandDefine command = CliBuilder.newDefine("command")
-                .withParam("param1","123")
+                .withParam("param1",true)
                 .withParam("param2")
                 .build();
 
