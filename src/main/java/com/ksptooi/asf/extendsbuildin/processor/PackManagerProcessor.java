@@ -94,7 +94,6 @@ public class PackManagerProcessor extends AbstractProcessor {
         service.removePack(pCommand.getParameter().get(0));
     }
 
-
     @Override
     public void onCommand(CliCommand pCommand, Command command) {
     }
