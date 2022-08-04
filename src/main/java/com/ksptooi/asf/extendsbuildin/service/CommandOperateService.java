@@ -50,8 +50,33 @@ public class CommandOperateService {
 
     public void refreshCommand(){
 
+        //获取所有已注册的处理器
+        List<String> registeredProcessor = processorDispatcher.getRegisteredProcessor();
 
+        //获取所有已注册的命令
+        List<Command> commandList = mapper.getCommandList(new Command());
 
+        for(Command item : commandList){
+
+            boolean existsProcessor = false;
+
+            for(String procName : registeredProcessor){
+
+                if(procName.equals(item.getProcessorName())){
+                    existsProcessor = true;
+                    break;
+                }
+
+            }
+
+            if(!existsProcessor){
+                logger.info("清除无效的指令:{}->{}",item.getName(),item.getProcessorName());
+                mapper.removeById(item.getCmdId()+"");
+            }
+
+        }
+
+        logger.info("刷新指令数据完成");
 
     }
 

@@ -71,6 +71,10 @@ public class Command{
         this.cmdId = cmdId;
     }
 
+    public String getProcessorName(){
+        return this.executorName;
+    }
+
     @Override
     public String toString() {
         return "Command{" +

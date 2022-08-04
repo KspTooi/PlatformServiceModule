@@ -31,9 +31,7 @@ public class CommandOperateProcessor extends AbstractProcessor {
 
     @CommandMapping("cmd refresh")
     public void refreshCommand(){
-
-
-
+        service.refreshCommand();
     }
 
 
