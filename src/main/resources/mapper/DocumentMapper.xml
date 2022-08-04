@@ -61,6 +61,13 @@
         WHERE `NAME` = #{name}
     </select>
 
+    <select id="getDocumentByType" resultMap="poMap">
+        SELECT
+            <include refid="tableColumns"/>
+        FROM DOCUMENT
+        WHERE DOM_TYPE = #{type}
+    </select>
+
 
     <insert id="insert">
         INSERT INTO DOCUMENT (
