@@ -17,7 +17,7 @@ public class DocumentService {
     @Inject
     private DocumentMapper mapper;
 
-    private IdWorker idWorker = new IdWorker();
+    private final IdWorker idWorker = new IdWorker();
 
     public Document getDocumentById(Long id){
         return mapper.getDocumentById(id);
@@ -29,6 +29,10 @@ public class DocumentService {
 
     public List<Document> getDocumentList(Document document){
         return mapper.getDocumentList(document);
+    }
+
+    public List<Document> getDocumentByType(String documentType){
+        return mapper.getDocumentByType(documentType);
     }
 
 
