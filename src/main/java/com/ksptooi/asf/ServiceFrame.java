@@ -11,6 +11,7 @@ import com.ksptooi.asf.core.plugins.PluginLoader;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,26 +27,17 @@ public class ServiceFrame {
 
     public static void main(String[] args) throws Exception {
 
-
-/*        CliCommandDefine command = CliBuilder.newDefine("command")
-                .withParam("param1",true,"")
-                .withParam("param2")
-                .build();
-
-        System.out.println(command);*/
-
-
-
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
-
         pl.install(pl.getJarPlugin("plugins"));
 
         //epl.install(epl.getPlugin("plugins"));
 
         Map<String, Processor> scan = processorScanner.scan("com.ksptooi.asf");
         scheduler.register(scan);
+
+
 
 
         //注册基本命令

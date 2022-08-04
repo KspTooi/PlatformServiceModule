@@ -180,6 +180,9 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/**.xml</include>
+                    <include>**/**.yaml</include>
+                    <include>**/**.yml</include>
+                    <include>**/**.mmdb</include>
                 </includes>
             </resource>
         </resources>
