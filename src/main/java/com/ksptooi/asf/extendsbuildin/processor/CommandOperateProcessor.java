@@ -20,7 +20,8 @@ public class CommandOperateProcessor extends AbstractProcessor {
         return new String[]{
                 "cmd list",
                 "cmd l",
-                "cmd refresh"
+                "cmd refresh",
+                "cmd r"
         };
     }
 
@@ -29,7 +30,7 @@ public class CommandOperateProcessor extends AbstractProcessor {
         service.listAll();
     }
 
-    @CommandMapping("cmd refresh")
+    @CommandMapping({"cmd refresh","cmd r"})
     public void refreshCommand(){
         service.refreshCommand();
     }
