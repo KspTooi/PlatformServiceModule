@@ -1,11 +1,13 @@
 package com.ksptooi.asf.core.processor;
 
 import com.google.inject.Inject;
+import com.ksptooi.asf.commons.ArrayUtils;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.service.CommandService;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -15,6 +17,28 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
     @Inject
     private CommandService service;
+
+
+    //查找类上带有指定注解与value的方法
+    public Method[] getMethodByAnnotation(Class<?> clazz,Class<? extends Annotation> inAnno,String value){
+
+        Method[] methods = clazz.getMethods();
+
+        Method[] retMethod = new Method[0];
+
+        for(Method item:methods){
+
+            Annotation annotation = item.getAnnotation(inAnno);
+
+            if(annotation!=null){
+                retMethod = ArrayUtils.append(retMethod,item);
+            }
+
+        }
+
+        return retMethod;
+    }
+
 
     @Override
     public void publish(CliCommand inVo) {

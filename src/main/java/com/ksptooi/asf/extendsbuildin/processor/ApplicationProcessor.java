@@ -2,6 +2,7 @@ package com.ksptooi.asf.extendsbuildin.processor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
+import com.ksptooi.asf.core.annatatiotion.Param;
 import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.entities.CliCommandDefine;
@@ -40,7 +41,7 @@ public class ApplicationProcessor extends AbstractProcessor {
 
 
     @CommandMapping({"auto","pm auto"})
-    public void auto(CliCommand pCommand, Command command){
+    public void auto(CliCommand pCommand,Command command){
 
         if(pCommand.getParameter().size() < 2){
             logger.info("参数不足(name,path)");
