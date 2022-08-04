@@ -2,7 +2,7 @@ package com.ksptooi.asf.core.entities;
 
 import java.util.Date;
 
-public class Command {
+public class Command{
 
     //命令ID
     private Long cmdId;
@@ -82,4 +82,6 @@ public class Command {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+
 }
