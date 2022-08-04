@@ -17,9 +17,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PackManagerService {
+public class ApplicationService {
 
-    private final Logger logger = LoggerFactory.getLogger(PackManagerService.class);
+    private final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
 
 
     @Inject

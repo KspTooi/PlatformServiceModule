@@ -6,7 +6,7 @@ import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
-import com.ksptooi.asf.extendsbuildin.service.PackManagerService;
+import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class PackManagerProcessor extends AbstractProcessor {
 
 
     @Inject
-    private PackManagerService service;
+    private ApplicationService service;
 
 
     @Override
