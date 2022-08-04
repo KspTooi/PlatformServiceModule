@@ -15,15 +15,18 @@ public class CliDefineBuilder {
     public CliDefineBuilder withParam(String name, String desc){
 
         CliParam[] params = this.define.getParams();
-        
 
-        return null;
+        CliParam[] extend = this.extend(params, new CliParam(name, desc));
+
+        this.define.setParams(extend);
+
+        return this;
     }
 
 
 
 
-    private static CliParam[] extend(CliParam[] param,CliParam insert){
+    private CliParam[] extend(CliParam[] param,CliParam insert){
 
         CliParam[] retParam = new CliParam[param.length + 1];
 

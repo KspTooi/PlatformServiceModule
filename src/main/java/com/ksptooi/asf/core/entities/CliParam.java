@@ -12,6 +12,11 @@ public class CliParam {
         this.name = name;
     }
 
+    public CliParam(String name,String desc){
+        this.name = name;
+        this.description = desc;
+    }
+
     public String getName() {
         return name;
     }
