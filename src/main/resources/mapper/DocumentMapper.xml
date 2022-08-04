@@ -7,6 +7,7 @@
     <resultMap id="poMap" type="com.ksptooi.asf.core.entities.Document">
         <result column="DOC_ID" property="docId"/>
         <result column="NAME" property="name" />
+        <result column="DOM_TYPE" property="domType" />
         <result column="METADATA" property="metadata"/>
         <result column="BINARY_DATA" property="binaryData" />
         <result column="DESCRIPTION" property="description" />
@@ -17,6 +18,7 @@
     <sql id="tableColumns">
         `DOC_ID`,
         `NAME`,
+        `DOM_TYPE`,
         `METADATA`,
 	    `BINARY_DATA`,
 	    `DESCRIPTION`,
@@ -35,6 +37,10 @@
 
             <if test="where.name!=null and where.name!=''">
                 and `NAME` = #{where.name}
+            </if>
+
+            <if test="where.domType!=null and where.domType!=''">
+                and `DOM_TYPE` = #{where.domType}
             </if>
 
         </where>

@@ -10,6 +10,8 @@ public class Document {
 
     private String name;
 
+    private String domType;
+
     private String metadata;
 
     private Byte[] binaryData;
@@ -66,5 +68,11 @@ public class Document {
         this.createTime = createTime;
     }
 
+    public String getDomType() {
+        return domType;
+    }
 
+    public void setDomType(String domType) {
+        this.domType = domType;
+    }
 }

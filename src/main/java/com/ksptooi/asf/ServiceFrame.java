@@ -26,6 +26,7 @@ public class ServiceFrame {
 
     public static void main(String[] args) throws Exception {
 
+
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
@@ -43,7 +44,6 @@ public class ServiceFrame {
 
         CommandLine cli = injector.getInstance(CommandLine.class);
         cli.run();
-
 
     }
 
