@@ -78,7 +78,7 @@ public class PackManagerProcessor extends AbstractProcessor {
         }
 
         logger.info("正在从路径安装软件包...");
-        service.autoInstall(pCommand.getParameter().get(0),pCommand.getParameter().get(1));
+        service.appInstall(pCommand.getParameter().get(0),pCommand.getParameter().get(1));
     }
 
 
@@ -91,7 +91,7 @@ public class PackManagerProcessor extends AbstractProcessor {
         }
 
         logger.info("正在移除软件包...");
-        service.removePack(pCommand.getParameter().get(0));
+        service.appRemove(pCommand.getParameter().get(0));
     }
 
     @Override

@@ -5,8 +5,6 @@ import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.annatatiotion.Param;
 import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.CliCommand;
-import com.ksptooi.asf.core.entities.CliCommandDefine;
-import com.ksptooi.asf.core.entities.CliParam;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
 import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
@@ -30,6 +28,8 @@ public class ApplicationProcessor extends AbstractProcessor {
                 "app i",
                 "app remove",
                 "app rm",
+                "app list",
+                "app l",
         };
     }
 
@@ -38,12 +38,19 @@ public class ApplicationProcessor extends AbstractProcessor {
                            @Param("path")String path){
 
         logger.info("正在从路径安装应用...");
-        service.autoInstall(appName,path);
+        service.appInstall(appName,path);
     }
 
     @CommandMapping({"app rm","app remove"})
     public void appRemove(@Param("appName")String appName){
-        service.removePack(appName);
+        service.appRemove(appName);
+    }
+
+    @CommandMapping({"app l","app list"})
+    public void appList(CliCommand preparedCommand){
+
+
+
     }
 
 

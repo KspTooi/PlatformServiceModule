@@ -35,7 +35,7 @@ public class CommandService {
 
         Command query = new Command();
         query.setExecutorName(processorName);
-        
+
         return mapper.getCommandList(query);
     }
 

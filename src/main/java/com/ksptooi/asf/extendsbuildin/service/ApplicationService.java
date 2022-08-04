@@ -91,7 +91,7 @@ public class ApplicationService {
 
 
     //自动安装包
-    public void autoInstall(String name,String path){
+    public void appInstall(String name, String path){
 
         if(commandService.hasCommand(name)){
             logger.info("软件包安装失败,指令\""+name+"\"已被占用");
@@ -120,7 +120,7 @@ public class ApplicationService {
     }
 
     //移除软件包
-    public void removePack(String name){
+    public void appRemove(String name){
 
         Command commandByName = commandService.getCommandByName(name);
 
