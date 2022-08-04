@@ -4,14 +4,19 @@ import com.google.inject.Inject;
 import com.ksptooi.asf.commons.ArrayUtils;
 import com.ksptooi.asf.commons.ReflectUtils;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
+import com.ksptooi.asf.core.annatatiotion.Param;
 import com.ksptooi.asf.core.entities.CliCommand;
+import com.ksptooi.asf.core.entities.CliParam;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.service.CommandService;
+import org.checkerframework.checker.units.qual.C;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
@@ -44,10 +49,43 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
         return null;
     }
 
-    private void getParamCount(){
+    private Object[] assemblyParams(Method method, Object[] innerParam, List<String> stringParam){
 
-        
+        if(stringParam==null){
+            stringParam = new ArrayList<>();
+        }
 
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+        //参数不足
+        if((parameterTypes.length - innerParam.length) < stringParam.size()){
+            return null;
+        }
+
+        Object[] params = new Object[method.getParameterCount()];
+
+        int paramCount = 0;
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+
+            boolean isInnerParam = false;
+
+            //判断当前参数类型是否为innerParam中的类型
+            for(Object item : innerParam){
+                if(parameterTypes[i].isInstance(item)){
+                    params[i] = item;
+                    isInnerParam = true;
+                }
+            }
+
+            if(!isInnerParam){
+                params[i] = stringParam.get(paramCount);
+                paramCount ++;
+            }
+
+        }
+
+        return params;
     }
 
 
@@ -81,6 +119,11 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
         }
 
         //类上存在带有注解的方法 准备参数
+        Object[] params = this.assemblyParams(targetMethod, new Object[]{inVo, commandByName}, inVo.getParameter());
+
+
+
+/*
         Object[] params = new Object[targetMethod.getParameterCount()];
 
         Class<?>[] paramsTypes = targetMethod.getParameterTypes();
@@ -98,6 +141,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
             params[i] = null;
         }
+*/
 
         try {
 

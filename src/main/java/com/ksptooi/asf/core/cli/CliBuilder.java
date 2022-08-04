@@ -20,15 +20,15 @@ public class CliBuilder {
     }
 
     public CliBuilder withParam(String name,String desc){
-        return this.withParam(name,desc);
+        return this.withParam(name,desc,false);
     }
 
     public CliBuilder withParam(String name,boolean require){
-        return this.withParam(name,require);
+        return this.withParam(name,null,require);
     }
 
     public CliBuilder withParam(String name,boolean require,String desc){
-        return this.withParam(name,require,desc);
+        return this.withParam(name,desc,require);
     }
 
     public CliBuilder withParam(String name, String desc,boolean require){
