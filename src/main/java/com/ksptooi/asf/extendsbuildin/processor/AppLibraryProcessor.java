@@ -6,6 +6,7 @@ import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
+import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.service.AppLibraryService;
 import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
@@ -19,6 +20,17 @@ public class AppLibraryProcessor extends AbstractProcessor {
 
     @Inject
     private AppLibraryService service;
+
+    @Inject
+    private DocumentService documentService;
+
+    @Override
+    public void onInit() {
+
+
+
+
+    }
 
 
     @Override
