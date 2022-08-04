@@ -2,6 +2,9 @@ package com.ksptooi.asf.commons;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ReflectUtils {
 
@@ -10,19 +13,21 @@ public class ReflectUtils {
 
         Method[] methods = clazz.getMethods();
 
-        Method[] retMethod = new Method[0];
+
+        List<Method> retMethod = new ArrayList<>();
 
         for(Method item:methods){
 
             Annotation annotation = item.getAnnotation(inAnno);
 
             if(annotation!=null){
-                retMethod = ArrayUtils.append(retMethod,item);
+                retMethod.add(item);
             }
 
         }
 
-        return retMethod;
+
+        return retMethod.toArray(new Method[0]);
     }
 
 }

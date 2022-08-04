@@ -30,7 +30,6 @@ public class ApplicationProcessor extends AbstractProcessor {
         new CliCommandDefine("",new CliParam("123"),new CliParam("123"));
 
 
-
         return new String[]{
                 "app install",
                 "app remove",
