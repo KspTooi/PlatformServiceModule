@@ -35,12 +35,16 @@ public class DocumentService {
         return mapper.getDocumentByType(documentType);
     }
 
-
     public Document createDocument(String name){
+        return this.createDocument(name,null);
+    }
+
+    public Document createDocument(String name,String type){
 
         Document dom = new Document();
         dom.setDocId(this.idWorker.nextId());
         dom.setName(name);
+        dom.setDomType(type);
         dom.setMetadata(null);
         dom.setBinaryData(null);
         dom.setDescription("document");
