@@ -5,6 +5,7 @@ import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.commons.CommandLineTable;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.mapper.CommandMapper;
+import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,9 @@ public class CommandOperateService {
 
     @Inject
     private CommandMapper mapper;
+
+    @Inject
+    private ProcessorDispatcher processorDispatcher;
 
 
     public void listAll(){
@@ -42,6 +46,13 @@ public class CommandOperateService {
         });
 
         clTable.print();
+    }
+
+    public void refreshCommand(){
+
+
+
+
     }
 
 
