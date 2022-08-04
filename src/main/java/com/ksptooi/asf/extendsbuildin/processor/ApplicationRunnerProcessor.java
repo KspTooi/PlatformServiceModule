@@ -10,13 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
-@Processor("build-in-PackRunnerProcessor")
-public class PackRunnerProcessor extends AbstractProcessor {
+@Processor("build-in-ApplicationRunnerProcessor")
+public class ApplicationRunnerProcessor extends AbstractProcessor {
 
 
-    private final Logger logger = LoggerFactory.getLogger(PackRunnerProcessor.class);
-
-
+    private final Logger logger = LoggerFactory.getLogger(ApplicationRunnerProcessor.class);
 
 
     @Override
