@@ -2,6 +2,7 @@ package com.ksptooi.asf.core.processor;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.commons.ArrayUtils;
+import com.ksptooi.asf.commons.ReflectUtils;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.entities.Command;
@@ -20,23 +21,27 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
 
     //查找类上带有指定注解与value的方法
-    public Method[] getMethodByAnnotation(Class<?> clazz,Class<? extends Annotation> inAnno,String value){
+    public Method getMethodByCommandMapping(Class<?> clazz,String inCommand){
 
-        Method[] methods = clazz.getMethods();
+        Method[] methodByAnnotation = ReflectUtils.getMethodByAnnotation(clazz, CommandMapping.class);
 
-        Method[] retMethod = new Method[0];
+        if(methodByAnnotation.length < 1){
+            return null;
+        }
 
-        for(Method item:methods){
+        for(Method item:methodByAnnotation){
 
-            Annotation annotation = item.getAnnotation(inAnno);
+            String[] values = item.getAnnotation(CommandMapping.class).value();
 
-            if(annotation!=null){
-                retMethod = ArrayUtils.append(retMethod,item);
+            for(String value : values){
+                if(value.equals(inCommand)){
+                    return item;
+                }
             }
 
         }
 
-        return retMethod;
+        return null;
     }
 
 
@@ -59,41 +64,10 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
             return;
         }
 
-        //获取类上所有方法
-        Method[] methods = processor.getClass().getMethods();
+        //获取类上带注解的方法
+        Method targetMethod = this.getMethodByCommandMapping(processor.getClass(), inVo.getName());
 
-        Method targetMethod = null;
-
-        //查找带有注解的方法
-        for(Method item:methods){
-
-            CommandMapping annotation = item.getAnnotation(CommandMapping.class);
-
-            if(annotation == null){
-                continue;
-            }
-
-            String[] value = annotation.value();
-
-            boolean hasTargetMethod = false;
-
-            for(String valueItem:value){
-
-                if(valueItem.equals(inVo.getName())){
-                    targetMethod = item;
-                    hasTargetMethod = true;
-                    break;
-                }
-
-            }
-
-            if(hasTargetMethod){
-                break;
-            }
-
-
-        }
-
+        
         //类上没有带有注解的方法
         if(targetMethod == null){
             super.publish(inVo);
