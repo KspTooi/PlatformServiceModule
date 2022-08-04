@@ -27,21 +27,24 @@ public class ApplicationProcessor extends AbstractProcessor {
     public String[] defaultCommand() {
         return new String[]{
                 "app install",
-                "app remove",
                 "app i",
+                "app remove",
                 "app rm",
         };
     }
 
     @CommandMapping({"app i","app install"})
-    public void auto(@Param("name")String name,
-                     @Param("path")String path){
+    public void appInstall(@Param("appName")String appName,
+                           @Param("path")String path){
 
         logger.info("正在从路径安装应用...");
-        service.autoInstall(name,path);
+        service.autoInstall(appName,path);
     }
 
-
+    @CommandMapping({"app rm","app remove"})
+    public void appRemove(@Param("appName")String appName){
+        service.removePack(appName);
+    }
 
 
     @Override
