@@ -8,6 +8,9 @@ public class CliParam {
 
     private String description;
 
+    public CliParam(String name){
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -31,5 +34,14 @@ public class CliParam {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "CliParam{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

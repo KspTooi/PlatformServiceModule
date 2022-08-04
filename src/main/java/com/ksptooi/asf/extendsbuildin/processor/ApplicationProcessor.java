@@ -5,6 +5,7 @@ import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.entities.CliCommandDefine;
+import com.ksptooi.asf.core.entities.CliParam;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
 import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
@@ -25,7 +26,7 @@ public class ApplicationProcessor extends AbstractProcessor {
     public String[] defaultCommand() {
 
 
-        new CliCommandDefine("");
+        new CliCommandDefine("",new CliParam("123"),new CliParam("123"));
 
 
 
