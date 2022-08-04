@@ -93,7 +93,7 @@ public class ApplicationService {
     //自动安装包
     public void autoInstall(String name,String path){
 
-        if(service.hasDocument(name)){
+        if(commandService.hasCommand(name)){
             logger.info("软件包安装失败,指令\""+name+"\"已被占用");
             return;
         }

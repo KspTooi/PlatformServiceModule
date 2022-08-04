@@ -25,11 +25,6 @@ public class ApplicationProcessor extends AbstractProcessor {
 
     @Override
     public String[] defaultCommand() {
-
-
-        new CliCommandDefine("",new CliParam("123"),new CliParam("123"));
-
-
         return new String[]{
                 "app install",
                 "app remove",
@@ -38,10 +33,11 @@ public class ApplicationProcessor extends AbstractProcessor {
         };
     }
 
-
     @CommandMapping({"app i","app install"})
-    public void auto(@Param("name")String name,@Param("path")String path){
-        logger.info("正在从路径安装软件包...");
+    public void auto(@Param("name")String name,
+                     @Param("path")String path){
+
+        logger.info("正在从路径安装应用...");
         service.autoInstall(name,path);
     }
 
