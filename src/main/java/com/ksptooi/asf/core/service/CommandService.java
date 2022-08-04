@@ -31,6 +31,14 @@ public class CommandService {
         return commandList.get(0);
     }
 
+    public List<Command> getCommandByProcessorName(String processorName){
+
+        Command query = new Command();
+        query.setExecutorName(processorName);
+        
+        return mapper.getCommandList(query);
+    }
+
     //添加指令
     public boolean insert(Command inVo){
 
