@@ -80,9 +80,13 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
                 }
             }
 
-            if(!isInnerParam){
-                params[i] = stringParam.get(paramCount);
-                paramCount ++;
+            try{
+                if(!isInnerParam){
+                    params[i] = stringParam.get(paramCount);
+                    paramCount ++;
+                }
+            }catch (IndexOutOfBoundsException e){
+                return null;
             }
 
         }
