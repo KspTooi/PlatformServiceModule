@@ -48,9 +48,7 @@ public class ApplicationProcessor extends AbstractProcessor {
 
     @CommandMapping({"app l","app list"})
     public void appList(CliCommand preparedCommand){
-
-
-
+        service.appShow();
     }
 
 

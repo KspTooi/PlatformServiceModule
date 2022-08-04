@@ -20,7 +20,7 @@ public class ApplicationRunnerProcessor extends AbstractProcessor {
     @Override
     public void onCommand(CliCommand preparedCommand, Command command) {
 
-        logger.info("运行软件包:" + preparedCommand);
+        logger.info("运行应用:" + preparedCommand);
 
         Application application = new Gson().fromJson(command.getMetadata(), Application.class);
 
@@ -30,7 +30,7 @@ public class ApplicationRunnerProcessor extends AbstractProcessor {
 
         } catch (IOException e) {
             e.printStackTrace();
-            logger.info("运行软件包失败:" + preparedCommand.getName());
+            logger.info("运行应用失败:" + preparedCommand.getName());
         }
 
     }
