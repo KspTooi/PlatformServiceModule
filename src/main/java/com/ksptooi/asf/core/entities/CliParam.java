@@ -8,6 +8,8 @@ public class CliParam {
 
     private String description;
 
+    private boolean require = false;
+
     public CliParam(String name){
         this.name = name;
     }
@@ -15,6 +17,25 @@ public class CliParam {
     public CliParam(String name,String desc){
         this.name = name;
         this.description = desc;
+    }
+
+    public CliParam(String name,boolean require){
+        this.name = name;
+        this.require = require;
+    }
+
+    public CliParam(String name,String desc,boolean require){
+        this.name = name;
+        this.description = desc;
+        this.require = require;
+    }
+
+    public Boolean getRequire() {
+        return require;
+    }
+
+    public void setRequire(Boolean require) {
+        this.require = require;
     }
 
     public String getName() {
@@ -47,6 +68,7 @@ public class CliParam {
                 "name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 ", description='" + description + '\'' +
+                ", require=" + require +
                 '}';
     }
 }

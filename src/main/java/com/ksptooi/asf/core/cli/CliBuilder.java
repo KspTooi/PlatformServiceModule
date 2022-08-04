@@ -16,20 +16,28 @@ public class CliBuilder {
     }
 
     public CliBuilder withParam(String name){
-        return this.withParam(name,null);
+        return this.withParam(name,false);
     }
 
-    public CliBuilder withParam(String name, String desc){
+    public CliBuilder withParam(String name,String desc){
+        return this.withParam(name,desc);
+    }
+
+    public CliBuilder withParam(String name,boolean require){
+        return this.withParam(name,require);
+    }
+
+    public CliBuilder withParam(String name, String desc,boolean require){
 
         CliParam[] params = this.define.getParams();
 
         CliParam[] extend = null;
 
         if(desc==null){
-            extend = this.extend(params, new CliParam(name));
+            extend = this.extend(params, new CliParam(name,require));
         }
         if(desc!=null){
-            extend = this.extend(params, new CliParam(name,desc));
+            extend = this.extend(params, new CliParam(name,desc,require));
         }
 
         this.define.setParams(extend);
