@@ -6,6 +6,17 @@ public class CliCommandDefine {
 
     private CliParam[] params;
 
+    public CliCommandDefine(String name){
+        this.name = name;
+        this.params = new CliParam[0];
+    }
+
+    public CliCommandDefine(String name,CliParam... params){
+        this.name = name;
+        this.params = params;
+    }
+
+
     public String getName() {
         return name;
     }

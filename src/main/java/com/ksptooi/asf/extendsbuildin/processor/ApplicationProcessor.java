@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
 import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.CliCommand;
+import com.ksptooi.asf.core.entities.CliCommandDefine;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
 import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
@@ -22,6 +23,12 @@ public class ApplicationProcessor extends AbstractProcessor {
 
     @Override
     public String[] defaultCommand() {
+
+
+        new CliCommandDefine("");
+
+
+
         return new String[]{
                 "app install",
                 "app remove",
