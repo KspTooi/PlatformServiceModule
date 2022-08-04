@@ -1,6 +1,8 @@
 package com.ksptooi.asf.core.processor;
 
 import com.ksptooi.asf.core.entities.CliCommand;
+
+import java.util.List;
 import java.util.Map;
 
 public interface ProcessorDispatcher {
@@ -19,5 +21,7 @@ public interface ProcessorDispatcher {
 
     //取消命令独占
     public void removeExclusive();
+
+    public List<String> getRegisteredProcessor();
 
 }

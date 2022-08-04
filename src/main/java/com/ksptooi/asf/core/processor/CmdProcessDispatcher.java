@@ -8,8 +8,7 @@ import com.ksptooi.asf.core.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CmdProcessDispatcher implements ProcessorDispatcher {
 
@@ -79,6 +78,12 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
     @Override
     public void removeExclusive() {
 
+    }
+
+    @Override
+    public List<String> getRegisteredProcessor() {
+        Set<String> strings = this.processorMap.keySet();
+        return new ArrayList<>(strings);
     }
 
     public Map<String, Processor> getProcessorMap() {
