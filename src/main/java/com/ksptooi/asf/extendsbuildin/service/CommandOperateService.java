@@ -34,15 +34,14 @@ public class CommandOperateService {
 
         CommandLineTable clTable = new CommandLineTable();
 
-        clTable.setHeaders("Name","Processor","metadata");
+        clTable.setHeaders("Name","Processor","description","metadata");
         clTable.setShowVerticalLines(true);
 
         commandList.forEach(item -> {
-            clTable.addRow(item.getName(),item.getExecutorName(),"N/A");
+            clTable.addRow(item.getName(),item.getExecutorName(),item.getDescription(),"N/A");
         });
 
         clTable.print();
-
     }
 
 
