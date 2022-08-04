@@ -39,20 +39,10 @@ public class ApplicationProcessor extends AbstractProcessor {
     }
 
 
-    @CommandMapping("app i")
-    public void auto(@Param("type")String type,CliCommand pCommand,Command command){
-
-/*        if(pCommand.getParameter().size() < 2){
-            logger.info("参数不足(name,path)");
-            return;
-        }*/
-
-        System.out.println(type);
-        System.out.println(pCommand);
-        System.out.println(command);
-
+    @CommandMapping({"app i","app install"})
+    public void auto(@Param("name")String name,@Param("path")String path){
         logger.info("正在从路径安装软件包...");
-        //service.autoInstall(pCommand.getParameter().get(0),pCommand.getParameter().get(1));
+        service.autoInstall(name,path);
     }
 
 
