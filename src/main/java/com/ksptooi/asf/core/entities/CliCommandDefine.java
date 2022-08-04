@@ -1,5 +1,7 @@
 package com.ksptooi.asf.core.entities;
 
+import java.util.Arrays;
+
 public class CliCommandDefine {
 
     private String name;
@@ -31,5 +33,13 @@ public class CliCommandDefine {
 
     public void setParams(CliParam[] params) {
         this.params = params;
+    }
+
+    @Override
+    public String toString() {
+        return "CliCommandDefine{" +
+                "name='" + name + '\'' +
+                ", params=" + Arrays.toString(params) +
+                '}';
     }
 }
