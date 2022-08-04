@@ -21,7 +21,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
 
     //查找类上带有指定注解与value的方法
-    public Method getMethodByCommandMapping(Class<?> clazz,String inCommand){
+    private Method getMethodByCommandMapping(Class<?> clazz,String inCommand){
 
         Method[] methodByAnnotation = ReflectUtils.getMethodByAnnotation(clazz, CommandMapping.class);
 
@@ -42,6 +42,10 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
         }
 
         return null;
+    }
+
+    private void getParamCount(){
+
     }
 
 
@@ -67,7 +71,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
         //获取类上带注解的方法
         Method targetMethod = this.getMethodByCommandMapping(processor.getClass(), inVo.getName());
 
-        
+
         //类上没有带有注解的方法
         if(targetMethod == null){
             super.publish(inVo);
