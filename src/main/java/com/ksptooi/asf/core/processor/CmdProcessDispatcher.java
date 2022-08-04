@@ -53,7 +53,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         Command commandByName = service.getCommandByName(inVo.getName());
 
         if(commandByName == null){
-            logger.info("命令推送失败,数据库无记录.");
+            logger.info("指令推送失败,数据库无记录.");
             return;
         }
 
@@ -62,7 +62,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
 
         if(proc == null){
-            logger.info("命令推送失败,该命令无处理器.");
+            logger.info("指令推送失败,该命令无处理器.");
             return;
         }
 

@@ -149,7 +149,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
         Object[] params = this.assemblyParams(targetMethod, new Object[]{inVo, commandByName}, inVo.getParameter());
 
         if(params==null){
-            logger.info("参数不足>{}", Arrays.toString(this.getParamNameByAnnotation(targetMethod)));
+            logger.info("指令参数不足>{}", Arrays.toString(this.getParamNameByAnnotation(targetMethod)));
             return;
         }
 
@@ -177,9 +177,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
             targetMethod.invoke(processor,params);
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
 

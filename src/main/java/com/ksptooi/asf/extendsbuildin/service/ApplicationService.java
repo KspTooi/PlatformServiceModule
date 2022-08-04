@@ -140,7 +140,7 @@ public class ApplicationService {
         List<Command> apps = commandService.getCommandByProcessorName(BuildIn.APP_RUNNER.getProcessorName());
 
         apps.forEach(item->{
-            logger.info("N:{} P:{}",item.getName(),JSON.parseObject(item.getMetadata()).getString("path"));
+            logger.info("N:{} | P:{}",item.getName(),JSON.parseObject(item.getMetadata()).getString("path"));
         });
 
 
