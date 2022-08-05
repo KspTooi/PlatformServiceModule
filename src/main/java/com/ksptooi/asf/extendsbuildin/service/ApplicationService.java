@@ -135,13 +135,13 @@ public class ApplicationService {
 
             documentService.update(document);
 
+            appData.setDocumentName(appData.getMd5());
+            app.setMetadata(JSON.toJSONString(appData));
+            commandService.update(app);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        File file = new File(appData.getPath());
-
 
 
     }
