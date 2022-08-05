@@ -11,6 +11,7 @@ import com.ksptooi.asf.core.plugins.PluginLoader;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
+import com.ksptooi.asf.core.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +28,7 @@ public class ServiceFrame {
     public static void main(String[] args) throws Exception {
 
 
-/*        CliCommandDefine command = CliBuilder.newDefine("command")
-                .withParam("param1",true,"")
-                .withParam("param2")
-                .build();
-
-        System.out.println(command);*/
-
+        DocumentService instance = injector.getInstance(DocumentService.class);
 
 
         PluginLoader pl = injector.getInstance(PluginLoader.class);

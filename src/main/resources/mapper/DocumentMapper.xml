@@ -87,12 +87,12 @@
 
     <update id="update">
         UPDATE DOCUMENT SET
-                           `NAME` = #{update.name},
-                           `METADATA` = #{update.metadata},
-                           `BINARY_DATA` = #{update.binaryData},
-                           `DESCRIPTION` = #{update.description},
-                           `DOM_TYPE` = #{update.domType},
-        WHERE `DOC_ID` = #{update.docId}
+        NAME = #{update.name},
+        METADATA = #{update.metadata},
+        BINARY_DATA = #{update.binaryData},
+        DESCRIPTION = #{update.description},
+        DOM_TYPE = #{update.domType}
+        WHERE DOC_ID = #{update.docId}
     </update>
 
     <delete id="remove">
