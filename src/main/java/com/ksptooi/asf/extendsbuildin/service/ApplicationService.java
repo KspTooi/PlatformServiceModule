@@ -94,6 +94,15 @@ public class ApplicationService {
     }
 
 
+    public void saveAsDocument(){
+
+
+        
+
+    }
+
+
+
 
     //自动安装包
     public void appInstall(String name, String path){

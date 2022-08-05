@@ -37,10 +37,27 @@ public class ApplicationProcessor extends AbstractProcessor {
 
     @CommandMapping({"app i","app install"})
     public void appInstall(@Param("appName")String appName,
-                           @Param("path")String path){
+                           @Param("path")String path,CliCommand inCommand){
+
+        String save = null;
+
+        if(inCommand.getParameter().size()>2){
+            save = inCommand.getParameter().get(2);
+        }
+
 
         logger.info("正在从路径安装应用...");
         service.appInstall(appName,path);
+
+        if(save == null){
+            return;
+        }
+
+        if (save.equals("save")){
+            logger.info("正在从保存应用...");
+
+        }
+
     }
 
     @CommandMapping({"app rm","app remove"})
