@@ -2,6 +2,7 @@ package com.ksptooi.asf.core.entities;
 
 import java.math.BigInteger;
 import java.sql.Blob;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Document {
@@ -14,11 +15,34 @@ public class Document {
 
     private String metadata;
 
-    private Byte[] binaryData;
+    private byte[] binaryData;
 
     private String description;
 
     private Date createTime;
+
+
+    public void appendBinaryData(byte[] binary,int length){
+
+        byte[] target = null;
+
+        if(this.binaryData != null){
+            target = new byte[this.binaryData.length + length];
+            System.arraycopy(binaryData, 0, target, 0, this.binaryData.length);
+            System.arraycopy(binary, 0, target, this.binaryData.length, length);
+            this.binaryData = target;
+        }
+
+        if(this.binaryData == null){
+            target = new byte[length];
+            System.arraycopy(binary, 0, target, 0, length);
+
+            this.binaryData = target;
+        }
+
+    }
+
+
 
     public Long getDocId() {
         return docId;
@@ -44,11 +68,11 @@ public class Document {
         this.metadata = metadata;
     }
 
-    public Byte[] getBinaryData() {
+    public byte[] getBinaryData() {
         return binaryData;
     }
 
-    public void setBinaryData(Byte[] binaryData) {
+    public void setBinaryData(byte[] binaryData) {
         this.binaryData = binaryData;
     }
 

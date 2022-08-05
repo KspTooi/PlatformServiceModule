@@ -19,12 +19,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
+//@Transactional
 public class ApplicationService {
 
     private final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
@@ -109,7 +110,7 @@ public class ApplicationService {
 
 
 
-    public void saveAsDocument(String name, String path,Command app){
+    public void saveAsDocument(Command app){
 
         ApplicationData appData = JSON.parseObject(app.getMetadata(), ApplicationData.class);
 
@@ -118,9 +119,21 @@ public class ApplicationService {
 
         try {
 
-            Files.newInputStream(Paths.get(appData.getPath()));
+            InputStream fis = Files.newInputStream(Paths.get(appData.getPath()));
 
+            byte[] read = new byte[1024*500];
 
+            while (true){
+                int length = fis.read(read);
+
+                if(length<1){
+                    break;
+                }
+
+                document.appendBinaryData(read,length);
+            }
+
+            documentService.update(document);
 
 
         } catch (IOException e) {
@@ -130,7 +143,6 @@ public class ApplicationService {
         File file = new File(appData.getPath());
 
 
-        document.setBinaryData();
 
     }
 

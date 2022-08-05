@@ -54,7 +54,8 @@ public class ApplicationProcessor extends AbstractProcessor {
         }
 
         if (save.equals("save")){
-            logger.info("正在从保存应用...");
+            logger.info("正在保存应用...");
+            service.saveAsDocument(command);
         }
 
     }
