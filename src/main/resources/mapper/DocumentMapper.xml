@@ -77,6 +77,7 @@
         VALUES (
         #{insert.docId},
         #{insert.name},
+        #{insert.domType},
         #{insert.metadata},
         #{insert.binaryData},
         #{insert.description},
@@ -89,7 +90,8 @@
                            `NAME` = #{update.name},
                            `METADATA` = #{update.metadata},
                            `BINARY_DATA` = #{update.binaryData},
-                           `DESCRIPTION` = #{update.description}
+                           `DESCRIPTION` = #{update.description},
+                           `DOM_TYPE` = #{update.domType},
         WHERE `DOC_ID` = #{update.docId}
     </update>
 
