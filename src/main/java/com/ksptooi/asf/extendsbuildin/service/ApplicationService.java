@@ -114,7 +114,7 @@ public class ApplicationService {
 
 
     public void saveAsDocument(Command app){
-        
+
         ApplicationData appData = Metadata.asAppdata(app);
 
         Document document = documentService.createDocument(appData.getMd5(), DocumentType.APP_ARCHIVE.getName());
