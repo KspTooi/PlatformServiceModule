@@ -47,15 +47,14 @@ public class ApplicationProcessor extends AbstractProcessor {
 
 
         logger.info("正在从路径安装应用...");
-        service.appInstall(appName,path);
+        Command command = service.appInstall(appName, path);
 
-        if(save == null){
+        if(save == null || command == null){
             return;
         }
 
         if (save.equals("save")){
             logger.info("正在从保存应用...");
-
         }
 
     }

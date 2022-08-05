@@ -10,7 +10,9 @@ import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.entities.PackLibrary;
 import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
+import com.ksptooi.asf.extendsbuildin.enums.DocumentType;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 public class ApplicationService {
 
     private final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
@@ -32,6 +35,9 @@ public class ApplicationService {
 
     @Inject
     private CommandService commandService;
+
+    @Inject
+    private DocumentService documentService;
 
 
     private final String packLibrayKey = "#pack_libray";
@@ -94,22 +100,57 @@ public class ApplicationService {
     }
 
 
-    public void saveAsDocument(){
 
 
-        
+
+
+
+
+
+
+
+    public void saveAsDocument(String name, String path,Command app){
+
+        ApplicationData appData = JSON.parseObject(app.getMetadata(), ApplicationData.class);
+
+        Document document = documentService.createDocument(appData.getMd5(), DocumentType.APP_ARCHIVE.getName());
+        document.setDescription("archived:"+appData.getPath());
+
+        try {
+
+            Files.newInputStream(Paths.get(appData.getPath()));
+
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File file = new File(appData.getPath());
+
+
+        document.setBinaryData();
 
     }
 
 
 
 
+
+
+
+
+
+
+
+
     //自动安装包
-    public void appInstall(String name, String path){
+    public Command appInstall(String name, String path){
 
         if(commandService.hasCommand(name)){
             logger.info("应用安装失败,指令\""+name+"\"已被占用");
-            return;
+            return null;
         }
 
         boolean exists = Files.exists(Paths.get(path));
@@ -117,7 +158,7 @@ public class ApplicationService {
 
         if(!exists){
             logger.info("应用安装失败,提供的Path不正确! \""+path+"\"");
-            return;
+            return null;
         }
 
 
@@ -145,6 +186,7 @@ public class ApplicationService {
         commandService.insert(insert);
 
         logger.info("应用安装完成,指令为: \""+name+"\"");
+        return insert;
     }
 
     //移除软件包

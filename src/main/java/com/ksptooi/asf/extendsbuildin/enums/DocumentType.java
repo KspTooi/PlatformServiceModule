@@ -2,7 +2,8 @@ package com.ksptooi.asf.extendsbuildin.enums;
 
 public enum DocumentType {
 
-    APP_LIB("document_app_lib");
+    APP_LIB("document_app_lib"),
+    APP_ARCHIVE("app_archive");
 
 
     private String name;
