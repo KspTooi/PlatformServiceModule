@@ -2,7 +2,7 @@ package com.ksptooi.asf.extendsbuildin.entities;
 
 public class ApplicationData {
 
-    private final String metaVersion = "v1";
+    private final String metaVersion = "V2";
 
     private String path;
 
@@ -14,7 +14,27 @@ public class ApplicationData {
 
     private String md5;
 
-    public Boolean getDirectory() {
+    public String getMetaVersion() {
+        return metaVersion;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Boolean isDirectory() {
         return isDirectory;
     }
 
@@ -38,31 +58,5 @@ public class ApplicationData {
         this.md5 = md5;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public boolean isDirectory() {
-        return isDirectory;
-    }
-
-    public void setDirectory(boolean directory) {
-        isDirectory = directory;
-    }
-
-    public String getMetaVersion() {
-        return metaVersion;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 }

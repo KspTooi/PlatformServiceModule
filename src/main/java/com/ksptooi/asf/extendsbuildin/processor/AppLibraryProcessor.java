@@ -89,10 +89,7 @@ public class AppLibraryProcessor extends AbstractProcessor {
 
     @CommandMapping({"lib scan","lib s"})
     public void scanAppLibrary(){
-
-        
-
-
+        this.service.getMissingApp();
     }
 
     @CommandMapping({"lib fix","lib f"})

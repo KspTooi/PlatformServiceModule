@@ -10,9 +10,13 @@ import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.entities.PackLibrary;
 import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -100,6 +104,7 @@ public class ApplicationService {
         }
 
         boolean exists = Files.exists(Paths.get(path));
+        File file = new File(path);
 
         if(!exists){
             logger.info("应用安装失败,提供的Path不正确! \""+path+"\"");
@@ -107,14 +112,27 @@ public class ApplicationService {
         }
 
 
-        ApplicationData pack = new ApplicationData();
-        pack.setPath(path);
+        ApplicationData data = new ApplicationData();
+        data.setPath(path);
+        data.setFileName(file.getName());
+        data.setDirectory(file.isDirectory());
+        data.setLength(file.length());
+
+        if(!file.isDirectory()){
+            try {
+                data.setMd5(DigestUtils.md5Hex(new FileInputStream(file)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
 
 
         Command insert = new Command();
         insert.setName(name);
         insert.setExecutorName(BuildIn.APP_RUNNER.getProcessorName());
-        insert.setMetadata(new Gson().toJson(pack));
+        insert.setMetadata(new Gson().toJson(data));
         commandService.insert(insert);
 
         logger.info("应用安装完成,指令为: \""+name+"\"");
