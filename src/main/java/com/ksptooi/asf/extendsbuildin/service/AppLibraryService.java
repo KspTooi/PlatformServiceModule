@@ -11,6 +11,7 @@ import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
 import com.ksptooi.asf.extendsbuildin.enums.DocumentType;
+import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,6 @@ public class AppLibraryService {
     }
 
     public void getMissingApp(){
-
 
         //获取lib
         List<Document> libs = documentService.getDocumentByType(DocumentType.APP_LIB.getName());
@@ -100,12 +100,30 @@ public class AppLibraryService {
                     logger.info("已查询到应用:{}->{}", app.getName(),files.get(0).getPath());
                     applicationService.appRemove(app.getName());
                     applicationService.appInstall(app.getName(),files.get(0).getPath());
+                    missingApps.remove(item.getKey());
                 }
 
-                System.out.println(files.size());
             }
 
         }
+
+        //打印查找失败的应用
+        CommandLineTable cliTable = new CommandLineTable();
+        cliTable.setShowVerticalLines(true);
+        cliTable.setHeaders("name","path","status");
+
+
+        for(Map.Entry<String,Command> item: missingApps.entrySet()){
+            Command app = item.getValue();
+            ApplicationData appData = JSON.parseObject(app.getMetadata(), ApplicationData.class);
+            cliTable.addRow(item.getKey(),appData.getPath(),"missing");
+        }
+
+        if(missingApps.size()>0){
+            logger.info("以下应用查找失败!");
+            cliTable.print();
+        }
+
 
     }
 
