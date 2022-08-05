@@ -120,13 +120,13 @@ public class ApplicationService {
 
         if(!file.isDirectory()){
             try {
-                data.setMd5(DigestUtils.md5Hex(new FileInputStream(file)));
+                FileInputStream fis = new FileInputStream(file);
+                data.setMd5(DigestUtils.md5Hex(fis));
+                fis.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
 
 
         Command insert = new Command();

@@ -737,7 +737,7 @@ public class FileUtils extends org.apache.commons.io.FileUtils {
     
         if (dir == null || !isDir(dir)) return null;
         List<File> list = new ArrayList<>();
-        File[] files = dir.listFiles();
+        File[] files = dir.listFiles(new AppFileFilter());
         if (files != null && files.length != 0) {
     
             for (File file : files) {

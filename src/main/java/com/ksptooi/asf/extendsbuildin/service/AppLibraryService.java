@@ -31,6 +31,9 @@ public class AppLibraryService {
     @Inject
     private CommandService commandService;
 
+    @Inject
+    private ApplicationService applicationService;
+
     public void showAppLibraryList(){
 
         List<Document> documentByType = documentService.getDocumentByType(DocumentType.APP_LIB.getName());
@@ -84,13 +87,20 @@ public class AppLibraryService {
             //在AppLib中查找缺失的app
             for(Map.Entry<String,Command> item: missingApps.entrySet()){
 
-                ApplicationData data = JSON.parseObject(item.getValue().getMetadata(), ApplicationData.class);
+                Command app = item.getValue();
+                ApplicationData appData = JSON.parseObject(app.getMetadata(), ApplicationData.class);
 
-                if(data.isDirectory()){
+                if(appData.isDirectory()){
                     continue;
                 }
 
-                List<File> files = FileUtils.searchFileInDir(path, data.getFileName());
+                List<File> files = FileUtils.searchFileInDir(path, appData.getFileName());
+
+                if(files.size() > 0){
+                    logger.info("已查询到应用:{}->{}", app.getName(),files.get(0).getPath());
+                    applicationService.appRemove(app.getName());
+                    applicationService.appInstall(app.getName(),files.get(0).getPath());
+                }
 
                 System.out.println(files.size());
             }

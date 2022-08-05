@@ -8,11 +8,13 @@ public class ApplicationData {
 
     private String fileName;
 
-    private Boolean isDirectory;
+    private boolean isDirectory;
 
     private Long length;
 
     private String md5;
+
+    private String documentName;
 
     public String getMetaVersion() {
         return metaVersion;
@@ -34,11 +36,11 @@ public class ApplicationData {
         this.fileName = fileName;
     }
 
-    public Boolean isDirectory() {
+    public boolean isDirectory() {
         return isDirectory;
     }
 
-    public void setDirectory(Boolean directory) {
+    public void setDirectory(boolean directory) {
         isDirectory = directory;
     }
 
@@ -58,5 +60,11 @@ public class ApplicationData {
         this.md5 = md5;
     }
 
+    public String getDocumentName() {
+        return documentName;
+    }
 
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
+    }
 }
