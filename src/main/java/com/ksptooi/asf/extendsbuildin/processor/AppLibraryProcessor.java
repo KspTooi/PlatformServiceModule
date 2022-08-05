@@ -80,6 +80,14 @@ public class AppLibraryProcessor extends AbstractProcessor {
     @CommandMapping({"lib remove","lib rm"})
     public void removeAppLibrary(@Param("name") String name){
 
+        Document documentByName = documentService.getDocumentByName(name);
+
+        if(documentByName==null){
+            return;
+        }
+
+        documentService.removeById(documentByName.getDocId());
+
     }
 
     @CommandMapping({"lib scan","lib s"})
