@@ -3,6 +3,7 @@ package com.ksptooi.asf.extendsbuildin.service;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.ksptooi.asf.commons.CommandLineTable;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.Document;
 import com.ksptooi.asf.core.service.CommandService;
@@ -232,11 +233,15 @@ public class ApplicationService {
 
         List<Command> apps = commandService.getCommandByProcessorName(BuildIn.APP_RUNNER.getProcessorName());
 
+        CommandLineTable cliTable = new CommandLineTable();
+        cliTable.setShowVerticalLines(true);
+        cliTable.setHeaders("Name","Path");
+
         apps.forEach(item->{
-            logger.info("N:{} | P:{}",item.getName(),JSON.parseObject(item.getMetadata()).getString("path"));
+            cliTable.addRow(item.getName(),JSON.parseObject(item.getMetadata()).getString("path"));
         });
 
-
+        cliTable.print();
     }
 
 
