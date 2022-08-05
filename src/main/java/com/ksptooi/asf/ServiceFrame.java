@@ -21,7 +21,7 @@ public class ServiceFrame {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 
-    public static final String version = "3.2G-M1";
+    public static final String version = "3.2K-M2";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceFrame.class);
 
