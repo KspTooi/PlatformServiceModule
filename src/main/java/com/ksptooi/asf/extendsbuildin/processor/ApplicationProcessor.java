@@ -30,6 +30,8 @@ public class ApplicationProcessor extends AbstractProcessor {
                 "app rm",
                 "app list",
                 "app l",
+                "app install save",
+                "app i s",
         };
     }
 
