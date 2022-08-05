@@ -5,7 +5,7 @@ import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
-import com.ksptooi.asf.extendsbuildin.entities.Application;
+import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class ApplicationRunnerProcessor extends AbstractProcessor {
 
         logger.info("运行应用:" + preparedCommand);
 
-        Application application = new Gson().fromJson(command.getMetadata(), Application.class);
+        ApplicationData application = new Gson().fromJson(command.getMetadata(), ApplicationData.class);
 
         try {
 

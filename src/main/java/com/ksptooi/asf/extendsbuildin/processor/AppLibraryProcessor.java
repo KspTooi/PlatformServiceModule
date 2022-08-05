@@ -16,13 +16,11 @@ import com.ksptooi.asf.extendsbuildin.service.AppLibraryService;
 import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Processor("build-in-AppLibraryProcessor")
 public class AppLibraryProcessor extends AbstractProcessor {
-
 
     private final Logger logger = LoggerFactory.getLogger(AppLibraryProcessor.class);
 
@@ -87,11 +85,13 @@ public class AppLibraryProcessor extends AbstractProcessor {
         }
 
         documentService.removeById(documentByName.getDocId());
-
     }
 
     @CommandMapping({"lib scan","lib s"})
     public void scanAppLibrary(){
+
+        
+
 
     }
 

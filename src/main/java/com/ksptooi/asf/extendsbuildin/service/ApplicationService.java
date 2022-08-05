@@ -8,7 +8,7 @@ import com.ksptooi.asf.core.entities.Document;
 import com.ksptooi.asf.core.service.CommandService;
 import com.ksptooi.asf.core.service.DocumentService;
 import com.ksptooi.asf.extendsbuildin.entities.PackLibrary;
-import com.ksptooi.asf.extendsbuildin.entities.Application;
+import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +107,7 @@ public class ApplicationService {
         }
 
 
-        Application pack = new Application();
+        ApplicationData pack = new ApplicationData();
         pack.setPath(path);
 
 
