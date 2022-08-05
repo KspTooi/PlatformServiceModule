@@ -211,6 +211,18 @@ public class ApplicationService {
             return;
         }
 
+        ApplicationData appData = JSON.parseObject(commandByName.getMetadata(), ApplicationData.class);
+
+        if(appData.getDocumentName()!=null){
+
+            Document documentByName = documentService.getDocumentByName(appData.getDocumentName());
+
+            if(documentByName!=null){
+                documentService.removeById(documentByName.getDocId());
+                logger.info("删除关联归档:{}",appData.getDocumentName());
+            }
+        }
+
         commandService.removeById(commandByName.getCmdId()+"");
         logger.info("软件包\""+name+"\"移除成功!");
     }
