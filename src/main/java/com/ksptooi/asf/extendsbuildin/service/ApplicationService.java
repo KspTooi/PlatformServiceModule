@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.ksptooi.asf.commons.CommandLineTable;
+import com.ksptooi.asf.commons.Metadata;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.Document;
 import com.ksptooi.asf.core.service.CommandService;
@@ -13,6 +14,7 @@ import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
 import com.ksptooi.asf.extendsbuildin.enums.DocumentType;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,8 +114,8 @@ public class ApplicationService {
 
 
     public void saveAsDocument(Command app){
-
-        ApplicationData appData = JSON.parseObject(app.getMetadata(), ApplicationData.class);
+        
+        ApplicationData appData = Metadata.asAppdata(app);
 
         Document document = documentService.createDocument(appData.getMd5(), DocumentType.APP_ARCHIVE.getName());
         document.setDescription("archived:"+appData.getPath());
