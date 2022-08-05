@@ -73,7 +73,7 @@ public class AppLibraryProcessor extends AbstractProcessor {
 
     @CommandMapping({"lib list","lib l"})
     public void showLibList(){
-
+        this.service.showAppLibraryList();
     }
 
 
