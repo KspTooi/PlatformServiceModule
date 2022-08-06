@@ -25,6 +25,7 @@ public class CommandOperateProcessor extends AbstractProcessor {
         };
     }
 
+
     @CommandMapping({"cmd l","cmd list"})
     public void list(){
         service.listAll();
