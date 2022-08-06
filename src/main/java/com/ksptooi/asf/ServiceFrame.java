@@ -11,7 +11,7 @@ import com.ksptooi.asf.core.plugins.PluginLoader;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
-import org.reflections.Reflections;
+import com.ksptooi.asf.core.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,23 +21,26 @@ public class ServiceFrame {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 
-    public static final String version = "3.2G-M1";
+    public static final String version = "3.2K-M2";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceFrame.class);
 
     public static void main(String[] args) throws Exception {
 
+
+        DocumentService instance = injector.getInstance(DocumentService.class);
+
+
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
+
         pl.install(pl.getJarPlugin("plugins"));
 
         //epl.install(epl.getPlugin("plugins"));
 
         Map<String, Processor> scan = processorScanner.scan("com.ksptooi.asf");
         scheduler.register(scan);
-
-
 
 
         //注册基本命令

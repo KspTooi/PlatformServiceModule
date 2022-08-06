@@ -41,6 +41,11 @@ public class DocumentService {
 
     public Document createDocument(String name,String type){
 
+        if(this.getDocumentByName(name)!=null){
+            logger.info("文档名称已被占用:{}",name);
+            return null;
+        }
+
         Document dom = new Document();
         dom.setDocId(this.idWorker.nextId());
         dom.setName(name);

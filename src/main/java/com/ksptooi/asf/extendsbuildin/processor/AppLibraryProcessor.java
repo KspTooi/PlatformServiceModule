@@ -1,20 +1,26 @@
 package com.ksptooi.asf.extendsbuildin.processor;
 
+import com.alibaba.fastjson.JSON;
 import com.google.inject.Inject;
 import com.ksptooi.asf.core.annatatiotion.CommandMapping;
+import com.ksptooi.asf.core.annatatiotion.Param;
 import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
+import com.ksptooi.asf.core.entities.Document;
 import com.ksptooi.asf.core.processor.AbstractProcessor;
 import com.ksptooi.asf.core.service.DocumentService;
+import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
+import com.ksptooi.asf.extendsbuildin.enums.DocumentType;
 import com.ksptooi.asf.extendsbuildin.service.AppLibraryService;
 import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 @Processor("build-in-AppLibraryProcessor")
 public class AppLibraryProcessor extends AbstractProcessor {
-
 
     private final Logger logger = LoggerFactory.getLogger(AppLibraryProcessor.class);
 
@@ -27,9 +33,6 @@ public class AppLibraryProcessor extends AbstractProcessor {
     @Override
     public void onInit() {
 
-
-
-
     }
 
 
@@ -41,6 +44,8 @@ public class AppLibraryProcessor extends AbstractProcessor {
                  "lib a",
                  "lib remove",
                  "lib rm",
+                 "lib list",
+                 "lib l",
                  "lib scan",
                  "lib s",
                  "lib fix",
@@ -49,18 +54,42 @@ public class AppLibraryProcessor extends AbstractProcessor {
     }
 
     @CommandMapping({"lib add","lib a"})
-    public void addAppLibrary(){
+    public void addAppLibrary(@Param("name")String name,@Param("path")String path){
 
+        Document document = documentService.createDocument(name, DocumentType.APP_LIB.getName());
+
+        if(document==null){
+            return;
+        }
+
+        Map<String,String> metadata = new HashMap<>();
+        metadata.put("path",path);
+
+        documentService.updateMetadata(name,JSON.toJSONString(metadata));
     }
 
-    @CommandMapping({"lib remove","lib rm"})
-    public void removeAppLibrary(){
 
+    @CommandMapping({"lib list","lib l"})
+    public void showLibList(){
+        this.service.showAppLibraryList();
+    }
+
+
+    @CommandMapping({"lib remove","lib rm"})
+    public void removeAppLibrary(@Param("name") String name){
+
+        Document documentByName = documentService.getDocumentByName(name);
+
+        if(documentByName==null){
+            return;
+        }
+
+        documentService.removeById(documentByName.getDocId());
     }
 
     @CommandMapping({"lib scan","lib s"})
     public void scanAppLibrary(){
-
+        this.service.getMissingApp();
     }
 
     @CommandMapping({"lib fix","lib f"})
