@@ -28,9 +28,6 @@ public class ServiceFrame {
     public static void main(String[] args) throws Exception {
 
 
-        DocumentService instance = injector.getInstance(DocumentService.class);
-
-
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
