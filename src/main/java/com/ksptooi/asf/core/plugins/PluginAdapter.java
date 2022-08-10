@@ -1,6 +1,6 @@
 package com.ksptooi.asf.core.plugins;
 
-public abstract class AbstractPlugin implements Plugin {
+public abstract class PluginAdapter implements Plugin {
 
     @Override
     public void onEnabled() {
