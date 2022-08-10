@@ -4,14 +4,14 @@ import com.google.gson.Gson;
 import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
-import com.ksptooi.asf.core.processor.AbstractProcessor;
+import com.ksptooi.asf.core.processor.ProcessorAdapter;
 import com.ksptooi.asf.extendsbuildin.entities.ApplicationData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 @Processor("build-in-ApplicationRunnerProcessor")
-public class ApplicationRunnerProcessor extends AbstractProcessor {
+public class ApplicationRunnerProcessor extends ProcessorAdapter {
 
 
     private final Logger logger = LoggerFactory.getLogger(ApplicationRunnerProcessor.class);

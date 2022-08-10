@@ -21,7 +21,7 @@ public class ServiceFrame {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 
-    public static final String version = "3.2K-M2";
+    public static final String version = "3.2L-M2";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceFrame.class);
 
@@ -31,7 +31,7 @@ public class ServiceFrame {
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
-
+        
         pl.install(pl.getJarPlugin("plugins"));
 
         //epl.install(epl.getPlugin("plugins"));

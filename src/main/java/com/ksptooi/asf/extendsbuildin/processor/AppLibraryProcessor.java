@@ -8,19 +8,17 @@ import com.ksptooi.asf.core.annatatiotion.Processor;
 import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.entities.Document;
-import com.ksptooi.asf.core.processor.AbstractProcessor;
+import com.ksptooi.asf.core.processor.ProcessorAdapter;
 import com.ksptooi.asf.core.service.DocumentService;
-import com.ksptooi.asf.extendsbuildin.enums.BuildIn;
 import com.ksptooi.asf.extendsbuildin.enums.DocumentType;
 import com.ksptooi.asf.extendsbuildin.service.AppLibraryService;
-import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
 @Processor("build-in-AppLibraryProcessor")
-public class AppLibraryProcessor extends AbstractProcessor {
+public class AppLibraryProcessor extends ProcessorAdapter {
 
     private final Logger logger = LoggerFactory.getLogger(AppLibraryProcessor.class);
 

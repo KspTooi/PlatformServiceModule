@@ -1,6 +1,6 @@
 package com.ksptooi.asf.core.processor;
 
-public abstract class AbstractProcessor implements Processor {
+public abstract class ProcessorAdapter implements Processor {
 
     @Override
     public void onInit() {
