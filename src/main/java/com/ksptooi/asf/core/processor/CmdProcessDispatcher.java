@@ -7,7 +7,6 @@ import com.ksptooi.asf.core.entities.CliCommand;
 import com.ksptooi.asf.core.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 public class CmdProcessDispatcher implements ProcessorDispatcher {
@@ -75,13 +74,17 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
 
     @Override
-    public void getExclusive(Processor listener) {
-
+    public void getActivity(Processor listener) {
+        this.activity = listener;
     }
 
     @Override
-    public void removeExclusive() {
+    public void removeActivity() {
+        this.activity = null;
+    }
 
+    protected void setActivity(Processor in){
+        this.activity = in;
     }
 
     @Override

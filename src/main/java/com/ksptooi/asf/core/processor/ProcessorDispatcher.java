@@ -17,10 +17,10 @@ public interface ProcessorDispatcher {
     public void publish(CliCommand command);
 
     //获取命令独占调度
-    public void getExclusive(Processor proc);
+    public void getActivity(Processor proc);
 
     //取消命令独占
-    public void removeExclusive();
+    public void removeActivity();
 
     public List<String> getRegisteredProcessor();
 

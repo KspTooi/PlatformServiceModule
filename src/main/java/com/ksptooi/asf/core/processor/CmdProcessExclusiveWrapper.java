@@ -10,13 +10,13 @@ public class CmdProcessExclusiveWrapper extends CmdProcessDispatcher {
     }
 
     @Override
-    public void getExclusive(Processor listener) {
-        super.getExclusive(listener);
+    public void getActivity(Processor listener) {
+        super.getActivity(listener);
     }
 
     @Override
-    public void removeExclusive() {
-        super.removeExclusive();
+    public void removeActivity() {
+        super.removeActivity();
     }
 
 }
