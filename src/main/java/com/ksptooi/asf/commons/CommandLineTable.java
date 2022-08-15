@@ -49,7 +49,12 @@ public class CommandLineTable {
                 throw new IllegalArgumentException("Number of row-cells and headers should be consistent");
             }
             for (int i = 0; i < cells.length; i++) {
-                maxWidths[i] = Math.max(maxWidths[i], cells[i].length());
+                try{
+                    maxWidths[i] = Math.max(maxWidths[i], cells[i].length());
+                }catch (Exception e){
+                    maxWidths[i] = maxWidths[i];
+                }
+
             }
         }
 
