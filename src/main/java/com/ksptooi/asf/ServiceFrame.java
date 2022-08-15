@@ -4,6 +4,7 @@ package com.ksptooi.asf;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.asf.core.cli.CliBuilder;
+import com.ksptooi.asf.core.cli.CliLogger;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.entities.CliCommandDefine;
 import com.ksptooi.asf.core.modules.ApplicationModule;
@@ -15,6 +16,7 @@ import com.ksptooi.asf.core.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ServiceFrame {
@@ -23,7 +25,24 @@ public class ServiceFrame {
 
     public static final String version = "3.2M-M2";
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceFrame.class);
+    private static final Map<Class<?>,Logger> loggerMap = new HashMap<>();
+
+    public static Logger getLogger(){
+        return getLogger(ServiceFrame.class);
+    }
+
+    public static Logger getLogger(Class<?> clazz){
+
+        Logger logger = loggerMap.get(clazz);
+
+        if(logger == null){
+            Logger cliLogger = new CliLogger(LoggerFactory.getLogger(clazz));
+            loggerMap.put(clazz, cliLogger);
+            return cliLogger;
+        }
+
+        return logger;
+    }
 
     public static void main(String[] args) throws Exception {
 
@@ -41,7 +60,7 @@ public class ServiceFrame {
 
 
         //注册基本命令
-        logger.info("服务平台版本:{}",version);
+        getLogger().info("服务平台版本:{}",version);
 
         CommandLine cli = injector.getInstance(CommandLine.class);
         cli.run();

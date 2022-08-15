@@ -1,6 +1,7 @@
 package com.ksptooi.asf.core.processor;
 
 import com.ksptooi.asf.core.entities.CliCommand;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
