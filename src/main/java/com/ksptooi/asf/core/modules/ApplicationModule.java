@@ -5,11 +5,8 @@ import com.google.inject.Scopes;
 import com.ksptooi.asf.core.cli.CommandLine;
 import com.ksptooi.asf.core.cli.OperateCli;
 import com.ksptooi.asf.core.plugins.PluginLoader;
-import com.ksptooi.asf.core.processor.CmdAnnotationDispatcher;
-import com.ksptooi.asf.core.processor.ProcessorAnnotationScanner;
-import com.ksptooi.asf.core.processor.ProcessorDispatcher;
+import com.ksptooi.asf.core.processor.*;
 import com.ksptooi.asf.core.plugins.JarPluginLoader;
-import com.ksptooi.asf.core.processor.ProcessorScanner;
 import org.mybatis.guice.XMLMyBatisModule;
 
 public class ApplicationModule extends AbstractModule {
@@ -21,16 +18,16 @@ public class ApplicationModule extends AbstractModule {
 
         //install(new ComponentScanModule("com.ksptooi", Comp.class));
 
-        //命令调度器
-        bind(ProcessorDispatcher.class).to(CmdAnnotationDispatcher.class).in(Scopes.SINGLETON);
+        //PD
+        bind(ProcessorDispatcher.class).to(CmdBackgroundDispatcher.class).in(Scopes.SINGLETON);
 
         //Cli
         bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);
 
-        //EPL
+        //PL
         bind(PluginLoader.class).to(JarPluginLoader.class).in(Scopes.SINGLETON);
 
-        //PAS
+        //PS
         bind(ProcessorScanner.class).to(ProcessorAnnotationScanner.class).in(Scopes.SINGLETON);
 
         //

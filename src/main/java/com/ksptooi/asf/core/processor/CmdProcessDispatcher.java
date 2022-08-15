@@ -18,6 +18,10 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
     private final HashMap<String, Processor> processorMap = new HashMap<>();
 
+    //current activity processor(Background Processor)
+    private Processor activity = null;
+
+
     @Inject
     private CommandService service;
 
