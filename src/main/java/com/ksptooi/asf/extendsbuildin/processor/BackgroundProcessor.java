@@ -7,6 +7,4 @@ import com.ksptooi.asf.core.annatatiotion.ServiceProcessor;
 @ServiceProcessor
 public class BackgroundProcessor {
 
-
-
 }
