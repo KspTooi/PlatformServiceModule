@@ -1,6 +1,5 @@
 package com.ksptooi.asf;
 
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.asf.core.cli.CliBuilder;
@@ -15,7 +14,6 @@ import com.ksptooi.asf.core.processor.ProcessorScanner;
 import com.ksptooi.asf.core.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
