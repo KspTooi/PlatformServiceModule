@@ -12,10 +12,17 @@ import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
 import com.ksptooi.asf.core.service.DocumentService;
+import com.oracle.jrockit.jfr.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ServiceFrame {
 
@@ -56,13 +63,17 @@ public class ServiceFrame {
         Map<String, Processor> scan = processorScanner.scan("com.ksptooi.asf");
         scheduler.register(scan);
 
-
         //注册基本命令
         getLogger().info("服务平台版本:{}",version);
 
         CommandLine cli = injector.getInstance(CommandLine.class);
         cli.run();
 
+    }
+
+    public static String multi(){
+        System.out.println("MultiProcessor");
+        return "MultiProcessor";
     }
 
 
