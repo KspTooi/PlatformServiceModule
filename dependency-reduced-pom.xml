@@ -36,7 +36,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.ksptooi.asf.ServiceFrame</mainClass>
+                  <mainClass>com.ksptooi.uac.ServiceFrame</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -49,7 +49,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.ksptooi.asf.ServiceFrame</mainClass>
+              <mainClass>com.ksptooi.uac.ServiceFrame</mainClass>
             </manifest>
           </archive>
         </configuration>

@@ -32,7 +32,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="com.ksptooi.asf.core.mapper">
+    <logger name="com.ksptooi.uac.core.mapper">
         <level value="ERROR" />
         <appender-ref ref="STDOUT" />
     </logger>

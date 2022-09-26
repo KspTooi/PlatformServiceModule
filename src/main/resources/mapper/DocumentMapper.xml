@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ksptooi.asf.core.mapper.DocumentMapper">
+<mapper namespace="com.ksptooi.uac.core.mapper.DocumentMapper">
 
     <!-- 表实体出参映射-->
-    <resultMap id="poMap" type="com.ksptooi.asf.core.entities.Document">
+    <resultMap id="poMap" type="com.ksptooi.uac.core.entities.Document">
         <result column="DOC_ID" property="docId"/>
         <result column="NAME" property="name" />
         <result column="DOM_TYPE" property="domType" />
