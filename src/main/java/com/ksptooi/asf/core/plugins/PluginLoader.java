@@ -4,6 +4,7 @@ import com.ksptooi.asf.core.entities.JarPlugin;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public interface PluginLoader {
 
@@ -14,5 +15,7 @@ public interface PluginLoader {
     public boolean install(JarPlugin jarPlugin);
 
     public void install(List<JarPlugin> jarPlugins);
+
+    public Map<String, Plugin> getPluginList();
 
 }

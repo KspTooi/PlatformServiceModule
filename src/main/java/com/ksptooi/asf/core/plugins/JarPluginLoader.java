@@ -205,4 +205,9 @@ public class JarPluginLoader implements PluginLoader{
 
     }
 
+    @Override
+    public Map<String, Plugin> getPluginList() {
+        return this.loadedPlugins;
+    }
+
 }

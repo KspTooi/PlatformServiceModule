@@ -20,7 +20,6 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
     //current activity processor(Background Processor)
     private Processor activity = null;
 
-
     @Inject
     private CommandService service;
 
@@ -47,6 +46,13 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         listener.onInit();
         return true;
     }
+
+    @Override
+    public boolean remove(String procName) {
+        Processor remove = this.processorMap.remove(procName);
+        return remove!=null;
+    }
+
 
     @Override
     public void publish(CliCommand inVo) {

@@ -13,6 +13,9 @@ public interface ProcessorDispatcher {
     //注册命令处理器
     public boolean register(String procName, Processor proc);
 
+    //移除已经注册的命令处理器
+    public boolean remove(String procName);
+
     //发布命令
     public void publish(CliCommand command);
 

@@ -56,10 +56,5 @@ public class ServiceFrame {
 
     }
 
-    public static String multi(){
-        System.out.println("MultiProcessor");
-        return "MultiProcessor";
-    }
-
 
 }
