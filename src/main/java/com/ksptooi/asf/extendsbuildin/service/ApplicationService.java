@@ -168,6 +168,8 @@ public class ApplicationService {
             return null;
         }
 
+        path = path.replace("\"","");
+
         boolean exists = Files.exists(Paths.get(path));
         File file = new File(path);
 
