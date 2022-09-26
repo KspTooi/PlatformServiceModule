@@ -2,6 +2,7 @@ package com.ksptooi.asf.extendsbuildin.service;
 
 import com.google.inject.Inject;
 import com.ksptooi.asf.ServiceFrame;
+import com.ksptooi.asf.commons.CommandLineTable;
 import com.ksptooi.asf.core.entities.InstalledPlugin;
 import com.ksptooi.asf.core.plugins.Plugin;
 import com.ksptooi.asf.core.plugins.PluginLoader;
@@ -20,6 +21,32 @@ public class PluginOperateService {
 
     @Inject
     private ProcessorDispatcher processorDispatcher;
+
+
+    public void printPluginList(){
+
+        List<InstalledPlugin> pluginList = pluginLoader.getPluginList();
+
+        CommandLineTable cliTable = new CommandLineTable();
+        cliTable.setShowVerticalLines(true);
+        cliTable.setHeaders("pluginName","version");
+
+        pluginList.forEach(item->{
+            cliTable.addRow(item.getName(), item.getVersion());
+        });
+
+        cliTable.print();
+
+    }
+
+
+    /**
+     * 安装插件
+     */
+    public void installAll(){
+        pluginLoader.install(pluginLoader.getJarPlugin("plugins"));
+    }
+
 
     /**
      * 卸载所有插件
