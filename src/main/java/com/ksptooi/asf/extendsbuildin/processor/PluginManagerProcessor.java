@@ -28,8 +28,7 @@ public class PluginManagerProcessor extends ProcessorAdapter {
     @CommandMapping("plugin reload")
     public void pluginReload(){
 
-
-
+        service.uninstallAll();
 
     }
 

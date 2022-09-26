@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.ksptooi.asf.ServiceFrame;
 import com.ksptooi.asf.commons.JarFileFilter;
 import com.ksptooi.asf.core.annatatiotion.PluginEntry;
+import com.ksptooi.asf.core.entities.InstalledPlugin;
 import com.ksptooi.asf.core.entities.JarPlugin;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
@@ -22,7 +23,9 @@ public class JarPluginLoader implements PluginLoader{
 
     private final Logger logger = LoggerFactory.getLogger(JarPluginLoader.class);
 
-    private final Map<String, Plugin> loadedPlugins = new HashMap<>();
+    //private final Map<String, Plugin> loadedPlugins = new HashMap<>();
+
+    private final List<InstalledPlugin> loadedPlugins = new ArrayList<>();
 
     @Inject
     private ProcessorDispatcher processorDispatcher;
@@ -98,7 +101,7 @@ public class JarPluginLoader implements PluginLoader{
             logger.info("加载:"+item.getKey());
             ServiceFrame.injector.injectMembers(item.getValue());
             item.getValue().onEnabled();
-            this.loadedPlugins.put(item.getKey(),item.getValue());
+            //this.loadedPlugins.put(item.getKey(),item.getValue());
         }
 
     }
@@ -182,14 +185,25 @@ public class JarPluginLoader implements PluginLoader{
 
         logger.info("加载:{}[{}]",jarPlugin.getPluginName(),jarPlugin.getPluginVersion());
 
+        //组装installPlugin
+        InstalledPlugin installed = new InstalledPlugin();
+        installed.setName(jarPlugin.getPluginName());
+        installed.setVersion(jarPlugin.getPluginVersion());
+        installed.setEntry(jarPlugin.getEntry());
+        List<String> processNameList = new ArrayList<>();
+        installed.setProcessors(processNameList);
+
         ServiceFrame.injector.injectMembers(entry);
         entry.onEnabled();
-        this.loadedPlugins.put(jarPlugin.getPluginName(),entry);
+
+        this.loadedPlugins.add(installed);
+        //this.loadedPlugins.put(jarPlugin.getPluginName(),entry);
 
         for(Map.Entry<String,Processor> item:processors.entrySet()){
 
             logger.info("注册插件处理器:{}",item.getKey());
             this.processorDispatcher.register(item.getKey(),item.getValue());
+            processNameList.add(item.getKey());
 
         }
 
@@ -206,8 +220,22 @@ public class JarPluginLoader implements PluginLoader{
     }
 
     @Override
-    public Map<String, Plugin> getPluginList() {
+    public List<InstalledPlugin> getPluginList() {
         return this.loadedPlugins;
+    }
+
+    @Override
+    public void remove(String pluginName) {
+
+        for(int i=0;i<this.loadedPlugins.size();i++){
+
+            if(this.loadedPlugins.get(i).getName().equals(pluginName)){
+                this.loadedPlugins.remove(i);
+                break;
+            }
+
+        }
+
     }
 
 }

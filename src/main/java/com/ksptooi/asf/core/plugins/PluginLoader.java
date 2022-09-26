@@ -1,5 +1,6 @@
 package com.ksptooi.asf.core.plugins;
 
+import com.ksptooi.asf.core.entities.InstalledPlugin;
 import com.ksptooi.asf.core.entities.JarPlugin;
 
 import java.io.File;
@@ -16,6 +17,8 @@ public interface PluginLoader {
 
     public void install(List<JarPlugin> jarPlugins);
 
-    public Map<String, Plugin> getPluginList();
+    public List<InstalledPlugin> getPluginList();
+
+    public void remove(String pluginName);
 
 }
