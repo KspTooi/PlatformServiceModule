@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
-@Processor("build-in-ApplicationRunnerProcessor")
-public class ApplicationRunnerProcessor extends ProcessorAdapter {
+@Processor("build-in-AppRunnerProcessor")
+public class AppRunnerProcessor extends ProcessorAdapter {
 
 
-    private final Logger logger = LoggerFactory.getLogger(ApplicationRunnerProcessor.class);
+    private final Logger logger = LoggerFactory.getLogger(AppRunnerProcessor.class);
 
 
     @Override

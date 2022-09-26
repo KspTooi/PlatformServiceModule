@@ -11,11 +11,11 @@ import com.ksptooi.asf.extendsbuildin.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Processor("build-in-ApplicationProcessor")
-public class ApplicationProcessor extends ProcessorAdapter {
+@Processor("build-in-AppProcessor")
+public class AppProcessor extends ProcessorAdapter {
 
 
-    private final Logger logger = LoggerFactory.getLogger(ApplicationProcessor.class);
+    private final Logger logger = LoggerFactory.getLogger(AppProcessor.class);
 
     @Inject
     private ApplicationService service;

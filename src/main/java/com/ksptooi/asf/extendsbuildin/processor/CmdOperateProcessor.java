@@ -8,8 +8,8 @@ import com.ksptooi.asf.core.entities.Command;
 import com.ksptooi.asf.core.processor.ProcessorAdapter;
 import com.ksptooi.asf.extendsbuildin.service.CommandOperateService;
 
-@Processor("build-in-CommandOperateProcessor")
-public class CommandOperateProcessor extends ProcessorAdapter {
+@Processor("build-in-CmdOperateProcessor")
+public class CmdOperateProcessor extends ProcessorAdapter {
 
 
     @Inject

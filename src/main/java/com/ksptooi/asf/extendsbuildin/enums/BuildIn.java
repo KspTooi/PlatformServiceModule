@@ -3,8 +3,8 @@ package com.ksptooi.asf.extendsbuildin.enums;
 public enum BuildIn {
 
 
-    APP("build-in-ApplicationProcessor"),
-    APP_RUNNER("build-in-ApplicationRunnerProcessor");
+    APP("build-in-AppProcessor"),
+    APP_RUNNER("build-in-AppRunnerProcessor");
 
 
 

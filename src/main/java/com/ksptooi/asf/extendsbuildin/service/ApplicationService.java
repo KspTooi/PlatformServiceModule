@@ -212,7 +212,7 @@ public class ApplicationService {
         Command commandByName = commandService.getCommandByName(name);
 
         if(commandByName == null){
-            logger.info("软件包移除失败,指令\""+name+"\"不存在!");
+            logger.info("应用移除失败,指令\""+name+"\"不存在!");
             return;
         }
 
@@ -229,7 +229,7 @@ public class ApplicationService {
         }
 
         commandService.removeById(commandByName.getCmdId()+"");
-        logger.info("软件包\""+name+"\"移除成功!");
+        logger.info("应用\""+name+"\"移除成功!");
     }
 
     //显示所有已安装的应用
