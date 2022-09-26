@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.Collator;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -38,11 +39,13 @@ public class CommandOperateService {
 
         CommandLineTable clTable = new CommandLineTable();
 
-        clTable.setHeaders("Name","Processor","description","metadata");
+        clTable.setHeaders("Name","Processor","description","metadata","createTime");
         clTable.setShowVerticalLines(true);
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         commandList.forEach(item -> {
-            clTable.addRow(item.getName(),item.getExecutorName(),item.getDescription(),"N/A");
+            clTable.addRow(item.getName(),item.getExecutorName(),item.getDescription(),"N/A",sdf.format(item.getCreateTime()));
         });
 
         clTable.print();

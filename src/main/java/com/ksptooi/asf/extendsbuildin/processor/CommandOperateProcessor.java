@@ -21,7 +21,8 @@ public class CommandOperateProcessor extends ProcessorAdapter {
                 "cmd list",
                 "cmd l",
                 "cmd refresh",
-                "cmd r"
+                "cmd r",
+                "help",
         };
     }
 
@@ -34,6 +35,11 @@ public class CommandOperateProcessor extends ProcessorAdapter {
     @CommandMapping({"cmd refresh","cmd r"})
     public void refreshCommand(){
         service.refreshCommand();
+    }
+
+    @CommandMapping("help")
+    public void helpCommand(){
+        service.listAll();
     }
 
 

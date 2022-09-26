@@ -11,8 +11,6 @@ import com.ksptooi.asf.core.plugins.PluginLoader;
 import com.ksptooi.asf.core.processor.Processor;
 import com.ksptooi.asf.core.processor.ProcessorDispatcher;
 import com.ksptooi.asf.core.processor.ProcessorScanner;
-import com.ksptooi.asf.core.service.DocumentService;
-import com.oracle.jrockit.jfr.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,24 +26,11 @@ public class ServiceFrame {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 
-    public static final String version = "3.2M-M2";
+    public static final String version = "3.2NA-M2";
 
-    private static final Map<Class<?>,Logger> loggerMap = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(ServiceFrame.class);
 
     public static Logger getLogger(){
-        return getLogger(ServiceFrame.class);
-    }
-
-    public static Logger getLogger(Class<?> clazz){
-
-        Logger logger = loggerMap.get(clazz);
-
-        if(logger == null){
-            Logger cliLogger = new CliLogger(LoggerFactory.getLogger(clazz));
-            loggerMap.put(clazz, cliLogger);
-            return cliLogger;
-        }
-
         return logger;
     }
 
