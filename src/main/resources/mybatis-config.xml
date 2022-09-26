@@ -21,6 +21,7 @@
     <mappers>
         <mapper resource="mapper/CommandMapper.xml"></mapper>
         <mapper resource="mapper/DocumentMapper.xml"></mapper>
+        <mapper resource="mapper/DatabaseMapper.xml"></mapper>
     </mappers>
 
 </configuration>

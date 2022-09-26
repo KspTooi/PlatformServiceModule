@@ -8,18 +8,20 @@ import com.ksptooi.uac.core.plugins.PluginLoader;
 import com.ksptooi.uac.core.processor.Processor;
 import com.ksptooi.uac.core.processor.ProcessorDispatcher;
 import com.ksptooi.uac.core.processor.ProcessorScanner;
+import com.ksptooi.uac.core.service.CommandService;
+import com.ksptooi.uac.core.service.DatabaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class ServiceFrame {
+public class Application {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 
     public static final String version = "3.3A";
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceFrame.class);
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static Logger getLogger(){
         return logger;
@@ -31,7 +33,10 @@ public class ServiceFrame {
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);
-        
+
+        DatabaseService dbService = injector.getInstance(DatabaseService.class);
+        dbService.initTableStructure();
+
         pl.install(pl.getJarPlugin("plugins"));
 
         //epl.install(epl.getPlugin("plugins"));

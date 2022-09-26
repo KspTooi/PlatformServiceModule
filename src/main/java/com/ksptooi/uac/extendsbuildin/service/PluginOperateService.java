@@ -1,7 +1,7 @@
 package com.ksptooi.uac.extendsbuildin.service;
 
 import com.google.inject.Inject;
-import com.ksptooi.uac.ServiceFrame;
+import com.ksptooi.uac.Application;
 import com.ksptooi.uac.commons.CommandLineTable;
 import com.ksptooi.uac.core.entities.InstalledPlugin;
 import com.ksptooi.uac.core.plugins.PluginLoader;
@@ -49,7 +49,7 @@ public class PluginOperateService {
      */
     public void uninstallAll(){
 
-        Logger logger = ServiceFrame.getLogger();
+        Logger logger = Application.getLogger();
 
         List<InstalledPlugin> pluginList = new ArrayList<>(pluginLoader.getPluginList());
 

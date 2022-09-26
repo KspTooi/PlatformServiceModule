@@ -1,7 +1,7 @@
 package com.ksptooi.uac.core.processor;
 
 import com.google.inject.Inject;
-import com.ksptooi.uac.ServiceFrame;
+import com.ksptooi.uac.Application;
 import com.ksptooi.uac.core.entities.Command;
 import com.ksptooi.uac.core.entities.CliCommand;
 import com.ksptooi.uac.core.service.CommandService;
@@ -39,7 +39,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         }
 
         //注入内部组件
-        ServiceFrame.injector.injectMembers(listener);
+        Application.injector.injectMembers(listener);
         logger.info("已注册命令处理器:"+listenerName);
         //this.listenerList.add(listener);
         this.processorMap.put(listenerName,listener);

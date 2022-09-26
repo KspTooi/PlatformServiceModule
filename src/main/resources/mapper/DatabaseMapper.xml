@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.uac.core.mapper.DatabaseMapper">
+
+
+    <insert id="createCommandTable">
+        CREATE TABLE PUBLIC.COMMAND (
+                                        CMD_ID BIGINT NOT NULL,
+                                        EXECUTOR_NAME CHARACTER VARYING(64),
+                                        METADATA CHARACTER VARYING,
+                                        DESCRIPTION CHARACTER VARYING(3200),
+                                        NAME CHARACTER VARYING(64),
+                                        CREATE_TIME TIMESTAMP WITH TIME ZONE,
+                                        BINARYDATA BINARY LARGE OBJECT,
+                                        CONSTRAINT COMMAND_PK PRIMARY KEY (CMD_ID)
+        );
+        CREATE UNIQUE INDEX PRIMARY_KEY_CC ON PUBLIC.COMMAND (CMD_ID);
+    </insert>
+
+    <insert id="createDocumentTable">
+        CREATE TABLE PUBLIC.DOCUMENT (
+                                         DOC_ID BIGINT NOT NULL,
+                                         METADATA CHARACTER VARYING,
+                                         CREATE_TIME TIMESTAMP WITH TIME ZONE,
+                                         NAME CHARACTER VARYING(1024),
+                                         DESCRIPTION CHARACTER VARYING(2048),
+                                         BINARY_DATA BINARY LARGE OBJECT,
+                                         DOM_TYPE CHARACTER VARYING(512),
+                                         CONSTRAINT DOCUMENT_PK PRIMARY KEY (DOC_ID)
+        );
+        CREATE UNIQUE INDEX PRIMARY_KEY_F8 ON PUBLIC.DOCUMENT (DOC_ID);
+    </insert>
+
+    <select id="getTable" resultType="java.lang.Integer">
+        select count(*) from information_schema.TABLES where table_name = #{tableName}
+    </select>
+
+</mapper>

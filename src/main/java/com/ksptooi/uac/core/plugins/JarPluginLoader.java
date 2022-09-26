@@ -1,7 +1,7 @@
 package com.ksptooi.uac.core.plugins;
 
 import com.google.inject.Inject;
-import com.ksptooi.uac.ServiceFrame;
+import com.ksptooi.uac.Application;
 import com.ksptooi.uac.commons.JarFileFilter;
 import com.ksptooi.uac.core.annatatiotion.PluginEntry;
 import com.ksptooi.uac.core.entities.InstalledPlugin;
@@ -99,7 +99,7 @@ public class JarPluginLoader implements PluginLoader{
 
         for(Map.Entry<String, Plugin> item : pluginMap.entrySet()){
             logger.info("加载:"+item.getKey());
-            ServiceFrame.injector.injectMembers(item.getValue());
+            Application.injector.injectMembers(item.getValue());
             item.getValue().onEnabled();
             //this.loadedPlugins.put(item.getKey(),item.getValue());
         }
@@ -193,7 +193,7 @@ public class JarPluginLoader implements PluginLoader{
         List<String> processNameList = new ArrayList<>();
         installed.setProcessors(processNameList);
 
-        ServiceFrame.injector.injectMembers(entry);
+        Application.injector.injectMembers(entry);
         entry.onEnabled();
 
         this.loadedPlugins.add(installed);
