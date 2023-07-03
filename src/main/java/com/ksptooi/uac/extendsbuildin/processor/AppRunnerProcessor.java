@@ -26,7 +26,7 @@ public class AppRunnerProcessor extends ProcessorAdapter {
 
         try {
 
-            Runtime.getRuntime().exec("explorer " + application.getPath());
+            Process exec = Runtime.getRuntime().exec("explorer " + application.getPath());
 
         } catch (IOException e) {
             e.printStackTrace();

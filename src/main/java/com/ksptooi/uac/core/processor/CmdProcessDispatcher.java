@@ -11,7 +11,7 @@ import java.util.*;
 
 public class CmdProcessDispatcher implements ProcessorDispatcher {
 
-    private final Logger logger = LoggerFactory.getLogger(ProcessorDispatcher.class);
+    private final Logger logger = LoggerFactory.getLogger(CmdProcessDispatcher.class);
 
     //private final List<Listener> listenerList = new ArrayList<>();
 
@@ -61,7 +61,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
         Command commandByName = service.getCommandByName(inVo.getName());
 
         if(commandByName == null){
-            logger.info("指令推送失败,数据库无记录.");
+            logger.info("{} 不是一个UAC指令.",inVo.getName());
             return;
         }
 
@@ -70,7 +70,7 @@ public class CmdProcessDispatcher implements ProcessorDispatcher {
 
 
         if(proc == null){
-            logger.info("指令推送失败,该命令无处理器.");
+            logger.info("{} 没有对应的指令处理器.",inVo.getName());
             return;
         }
 

@@ -9,7 +9,6 @@ import com.ksptooi.uac.core.entities.Command;
 import com.ksptooi.uac.core.service.CommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -171,26 +170,6 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
             logger.info("指令参数不足>{}", Arrays.toString(this.getParamNameByAnnotation(targetMethod)));
             return;
         }
-
-/*
-        Object[] params = new Object[targetMethod.getParameterCount()];
-
-        Class<?>[] paramsTypes = targetMethod.getParameterTypes();
-
-        for (int i = 0; i < paramsTypes.length; i++) {
-
-            if(paramsTypes[i].isInstance(inVo)){
-                params[i] = inVo;
-                continue;
-            }
-            if(paramsTypes[i].isInstance(commandByName)){
-                params[i] = commandByName;
-                continue;
-            }
-
-            params[i] = null;
-        }
-*/
 
         try {
 

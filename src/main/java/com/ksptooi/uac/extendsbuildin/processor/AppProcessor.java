@@ -14,26 +14,11 @@ import org.slf4j.LoggerFactory;
 @Processor("build-in-AppProcessor")
 public class AppProcessor extends ProcessorAdapter {
 
-
     private final Logger logger = LoggerFactory.getLogger(AppProcessor.class);
 
     @Inject
     private ApplicationService service;
 
-
-    @Override
-    public String[] defaultCommand() {
-        return new String[]{
-                "app install",
-                "app i",
-                "app remove",
-                "app rm",
-                "app list",
-                "app l",
-                "app install save",
-                "app i s",
-        };
-    }
 
     @CommandMapping({"app i","app install"})
     public void appInstall(@Param("appName")String appName,
@@ -68,6 +53,20 @@ public class AppProcessor extends ProcessorAdapter {
     @CommandMapping({"app l","app list"})
     public void appList(CliCommand preparedCommand){
         service.appShow();
+    }
+
+    @Override
+    public String[] defaultCommand() {
+        return new String[]{
+                "app install",
+                "app i",
+                "app remove",
+                "app rm",
+                "app list",
+                "app l",
+                "app install save",
+                "app i s",
+        };
     }
 
 
