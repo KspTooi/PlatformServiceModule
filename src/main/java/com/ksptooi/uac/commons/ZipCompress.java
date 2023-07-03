@@ -4,12 +4,19 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipCompress {
 
+    private DecimalFormat decFmt = new DecimalFormat("0.0");
+
     private Path source = null;
+
+    private long sourceSize = 0L;
+
+    private long readSize = 0L;
 
     public ZipCompress(Path path){
         this.source = path;
@@ -18,31 +25,31 @@ public class ZipCompress {
     public byte[] compress(){
 
         if(!Files.isDirectory(source)){
-            throw new RuntimeException("执行压缩失败,目标不是文件夹! source:"+source.toString());
+            throw new RuntimeException("打包操作失败,目标不是文件夹! source:"+source.toString());
         }
 
-        //ByteArrayOutputStream os = new ByteArrayOutputStream();
+        sourceSize = FileUtils.sizeOfDirectory(source.toFile());
 
         try {
-            new File("E:\\zipfile.zip").createNewFile();
 
-            OutputStream os = Files.newOutputStream(Paths.get("E:\\zipfile.zip"));
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             ZipOutputStream zos = new ZipOutputStream(os);
-
             this.addFolderToZip(source,source,zos);
-            return null;
+            zos.close();
+            os.close();
+            return os.toByteArray();
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("压缩失败!");
+            throw new RuntimeException("文件夹转换为二进制流失败!");
         }
 
     }
 
+    //将文件夹递归压缩为二进制流
     private void addFolderToZip(Path path,Path sourceFolder, ZipOutputStream zos) throws IOException {
 
         File folder = path.toFile();
-
         File[] subFolder = folder.listFiles();
 
         if(subFolder == null){
@@ -61,17 +68,17 @@ public class ZipCompress {
 
                 String entryPath = filePath.replace(sourceFolder + File.separator, "");
 
-                System.out.println(entryPath);
+                //System.out.println(entryPath);
 
                 ZipEntry zipEntry = new ZipEntry(entryPath);
                 zos.putNextEntry(zipEntry);
-
                 FileInputStream is = new FileInputStream(item);
                 byte[] buffer = new byte[1024*1024];
 
                 while (true){
 
                     int read = is.read(buffer);
+                    readSize = readSize + read;
 
                     if(read < 1){
                         break;
@@ -82,10 +89,16 @@ public class ZipCompress {
 
                 is.close();
                 zos.closeEntry();
+
             }
 
+            System.out.println(toMb(readSize) + "MB of " + toMb(sourceSize)+"MB");
         }
 
+    }
+
+    private String toMb(long bytes){
+        return decFmt.format((double) bytes/1024/1024);
     }
 
 

@@ -19,12 +19,12 @@ public class ZipFolderExample1 {
 
         byte[] compress = zip.compress();
 
-        //File file = new File(zipFile);
-        //file.createNewFile();
-        //OutputStream os = Files.newOutputStream(file.toPath());
+        File file = new File(zipFile);
+        file.createNewFile();
+        OutputStream os = Files.newOutputStream(file.toPath());
 
-        //os.write(compress);
-        //os.close();
+        os.write(compress);
+        os.close();
 
     }
     
