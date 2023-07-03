@@ -23,7 +23,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
 
 
     //查找类上带有指定注解与value的方法
-    private Method getMethodByCommandMapping(Class<?> clazz,String inCommand){
+    private Method getMethodByCommandMapping(Class<?> clazz,String inCommand,int prmNumber){
 
         //拿到该Class里面带注解的方法列表
         Method[] methodByAnnotation = ReflectUtils.getMethodByAnnotation(clazz, CommandMapping.class);
@@ -32,19 +32,36 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
             return null;
         }
 
+        //参数最短的方法
+        Method minPrmMethod = null;
+
         //遍历class的方法
         for(Method item:methodByAnnotation){
 
             //拿到方法上CommandMapping注解的值
             String[] values = item.getAnnotation(CommandMapping.class).value();
 
-            //拿入参匹配注解上的值
+            //拿入参匹配注解上的值 并匹配参数数量
             for(String value : values){
                 if(value.equals(inCommand)){
-                    return item;
+                    if(minPrmMethod!=null){
+                        if(minPrmMethod.getParameterCount() > item.getParameterCount()){
+                            minPrmMethod = item;
+                        }
+                    }
+                    if(minPrmMethod==null){
+                        minPrmMethod = item;
+                    }
+                    if(item.getParameterCount() == prmNumber){
+                        return item;
+                    }
                 }
             }
 
+        }
+
+        if(minPrmMethod!=null){
+            return minPrmMethod;
         }
 
         return null;
@@ -154,7 +171,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
         }
 
         //获取类上带注解的方法
-        Method targetMethod = this.getMethodByCommandMapping(processor.getClass(), inVo.getName());
+        Method targetMethod = this.getMethodByCommandMapping(processor.getClass(), inVo.getName(),inVo.getParameter().size());
 
 
         //类上没有带有注解的方法
@@ -163,7 +180,7 @@ public class CmdAnnotationDispatcher extends CmdProcessRegisterWrapper{
             return;
         }
 
-        //类上存在带有注解的方法 准备参数
+        //类上存在带有注解的方法 组装参数
         Object[] params = this.assemblyParams(targetMethod, new Object[]{inVo, commandByName}, inVo.getParameter());
 
         if(params==null){
