@@ -8,12 +8,17 @@ import com.ksptooi.uac.core.entities.Command;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.processor.ProcessorAdapter;
 import com.ksptooi.uac.core.service.DocumentService;
+import com.ksptooi.uac.extendsbuildin.service.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @Processor("CacheProcessor")
 public class CacheProcessor extends ProcessorAdapter {
@@ -22,6 +27,9 @@ public class CacheProcessor extends ProcessorAdapter {
 
     @Inject
     private DocumentService documentService;
+
+    @Inject
+    private CacheService cacheService;
 
 
     @Override
@@ -34,7 +42,36 @@ public class CacheProcessor extends ProcessorAdapter {
     }
 
     @CommandMapping("cache")
-    public void cache(@Param("path")String path) {
+    public void cache(@Param("path")String filePath) {
+
+        Path path = Paths.get(filePath);
+
+        if(!Files.exists(path)){
+            logger.info("路径:{} 不存在!",path);
+            return;
+        }
+
+
+        if(!Files.isDirectory(path)){
+
+            Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
+            logger.info("正在分配空间..");
+
+            boolean isRead = cacheService.readToDocument(path, dom);
+
+            if(!isRead){
+                logger.info("因未知原因缓存失败.");
+                return;
+            }
+
+            documentService.update(dom);
+
+            logger.info("已缓存 {} 字节",dom.getBinaryData().length);
+            logger.info("UUID:{}",dom.getName());
+        }
+
+
+
 
         logger.info("执行:cache 参数:path");
     }
