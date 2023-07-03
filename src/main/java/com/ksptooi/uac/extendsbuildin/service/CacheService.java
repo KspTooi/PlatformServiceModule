@@ -8,15 +8,30 @@ import com.ksptooi.uac.extendsbuildin.processor.CacheProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+import java.util.zip.ZipOutputStream;
 
 public class CacheService {
 
     private final Logger logger = LoggerFactory.getLogger(CacheService.class);
+
+
+    /**
+     * 将文件夹压缩
+     */
+    public ByteArrayOutputStream compressDirectory(Path path,Document document){
+
+
+        return null;
+    }
+
+
 
     /**
      * 将文件读入Document
@@ -58,6 +73,7 @@ public class CacheService {
             metadata.setFileName(path.getFileName().toString());
             metadata.setPath(path.toString());
             metadata.setLength(size);
+            metadata.setDirectory(false);
             document.setMetadata(new Gson().toJson(metadata));
 
             is.close();

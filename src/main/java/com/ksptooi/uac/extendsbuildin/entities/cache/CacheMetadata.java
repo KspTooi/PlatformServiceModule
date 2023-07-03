@@ -10,6 +10,8 @@ public class CacheMetadata {
 
     private Long length;
 
+    private boolean isDirectory;
+
     public String getPath() {
         return path;
     }
@@ -40,5 +42,13 @@ public class CacheMetadata {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public boolean isDirectory() {
+        return isDirectory;
+    }
+
+    public void setDirectory(boolean directory) {
+        isDirectory = directory;
     }
 }
