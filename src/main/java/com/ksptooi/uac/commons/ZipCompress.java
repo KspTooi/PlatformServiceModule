@@ -39,7 +39,10 @@ public class ZipCompress {
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ZipOutputStream zos = new ZipOutputStream(os);
+
             this.addFolderToZip(source,source,zos);
+            System.out.print("\r\n");
+
             zos.close();
             os.close();
             return os.toByteArray();
