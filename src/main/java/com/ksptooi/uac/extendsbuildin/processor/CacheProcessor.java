@@ -43,6 +43,11 @@ public class CacheProcessor extends ProcessorAdapter {
 
     @CommandMapping("cache")
     public void cache(@Param("path")String filePath) {
+        this.cache(UUID.randomUUID().toString(),filePath);
+    }
+
+    @CommandMapping("cache")
+    public void cache(@Param("key") String key,@Param("path")String filePath){
 
         Path path = Paths.get(filePath);
 
@@ -51,8 +56,12 @@ public class CacheProcessor extends ProcessorAdapter {
             return;
         }
 
+        Document dom = documentService.createDocument(key, "cache_storage");
 
-        Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
+        if(dom == null){
+            return;
+        }
+
         logger.info("正在分配空间..");
 
         boolean isRead = cacheService.readToDocument(path, dom);
@@ -65,13 +74,8 @@ public class CacheProcessor extends ProcessorAdapter {
         documentService.update(dom);
 
         logger.info("已缓存 {} 字节",dom.getBinaryData().length);
-        logger.info("UUID:{}",dom.getName());
-    }
+        logger.info("资源标识:{}",dom.getName());
 
-    @CommandMapping("cache")
-    public void cache(@Param("key") String key,@Param("path")String path){
-
-        logger.info("执行:cache 参数值是:{} :: {}",key,path);
     }
 
 

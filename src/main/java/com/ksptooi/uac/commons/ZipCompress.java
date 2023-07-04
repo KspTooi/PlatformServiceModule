@@ -101,7 +101,7 @@ public class ZipCompress {
             }
 
 
-            CliProgressBar.updateProgressBar("进度",readSize/1024/1024,  sourceSize/1024/1024);
+            CliProgressBar.updateProgressBar("处理中",readSize/1024/1024,  sourceSize/1024/1024);
         }
 
     }
