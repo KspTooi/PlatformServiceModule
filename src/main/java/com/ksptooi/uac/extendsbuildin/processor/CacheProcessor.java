@@ -66,7 +66,6 @@ public class CacheProcessor extends ProcessorAdapter {
 
         logger.info("已缓存 {} 字节",dom.getBinaryData().length);
         logger.info("UUID:{}",dom.getName());
-        logger.info("执行:cache 参数:path");
     }
 
     @CommandMapping("cache")

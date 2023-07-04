@@ -23,7 +23,7 @@ public class ZipFolderExample1 {
         file.createNewFile();
         OutputStream os = Files.newOutputStream(file.toPath());
 
-        os.write(compress);
+        //os.write(compress);
         os.close();
 
     }

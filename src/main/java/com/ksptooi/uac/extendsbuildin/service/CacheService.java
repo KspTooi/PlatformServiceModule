@@ -2,6 +2,7 @@ package com.ksptooi.uac.extendsbuildin.service;
 
 
 import com.google.gson.Gson;
+import com.ksptooi.uac.commons.CliProgressBar;
 import com.ksptooi.uac.commons.ZipCompress;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.extendsbuildin.entities.cache.CacheMetadata;
@@ -46,6 +47,8 @@ public class CacheService {
 
             ZipCompress compress = new ZipCompress(path);
 
+            logger.info("将文件夹转换为二进制数据.");
+
             try{
                 document.setBinaryData(compress.compress());
             }catch (Exception e){
@@ -81,9 +84,12 @@ public class CacheService {
                     break;
                 }
                 count = count + len;
-                logger.info("已读取:{}/{}",count,size);
+
+                CliProgressBar.updateProgressBar("处理中",count/1024/1024,size/1024/1024);
                 document.appendBinaryData(read,len);
             }
+
+            System.out.print("\r\n");
 
             //创建metadata
             CacheMetadata metadata = new CacheMetadata();

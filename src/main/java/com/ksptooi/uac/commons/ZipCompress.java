@@ -73,8 +73,6 @@ public class ZipCompress {
 
                 String entryPath = filePath.replace(sourceFolder + File.separator, "");
 
-                //System.out.println(entryPath);
-
                 ZipEntry zipEntry = new ZipEntry(entryPath);
                 zos.putNextEntry(zipEntry);
                 FileInputStream is = new FileInputStream(item);
@@ -94,9 +92,13 @@ public class ZipCompress {
 
                 is.close();
                 zos.closeEntry();
-                logger.info("{}MB of {}MB",toMb(readSize),toMb(sourceSize));
+
+
+                //logger.info("{}MB of {}MB",toMb(readSize),toMb(sourceSize));
             }
 
+
+            CliProgressBar.updateProgressBar("进度",readSize/1024/1024,  sourceSize/1024/1024);
         }
 
     }
