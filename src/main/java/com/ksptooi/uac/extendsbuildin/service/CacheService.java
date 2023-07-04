@@ -130,7 +130,15 @@ public class CacheService {
     public boolean readPathToDocument(Path path,Document dom){
 
         if(Files.isDirectory(path)){
+
+            ZipCompress compress = new ZipCompress(path);
+
+
+
+
             return true;
+
+
         }
 
         try {
@@ -138,9 +146,7 @@ public class CacheService {
             long size = Files.size(path);
 
             InputStream is = new ProgressInputStream(size,Files.newInputStream(path));
-
             documentService.updateBinaryData(dom.getDocId(),is);
-
             is.close();
 
             //创建metadata
@@ -161,38 +167,6 @@ public class CacheService {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

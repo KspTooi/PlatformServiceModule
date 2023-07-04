@@ -27,6 +27,30 @@ public class ZipCompress {
         this.source = path;
     }
 
+
+    public InputStream streamCompress(){
+
+        if(!Files.isDirectory(source)){
+            throw new RuntimeException("打包操作失败,目标不是文件夹! source:"+source.toString());
+        }
+
+        PipedInputStream pis = new PipedInputStream();
+
+        PipedOutputStream os = null;
+        try {
+
+            os = new PipedOutputStream(pis);
+            ZipOutputStream zos = new ZipOutputStream(os);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return null;
+
+    }
+
     public byte[] compress(){
 
         if(!Files.isDirectory(source)){
