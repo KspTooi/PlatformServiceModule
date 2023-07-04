@@ -24,6 +24,8 @@ public interface DocumentMapper {
 
     public int remove(Long documentId);
 
-    public Blob getBinaryData(@Param("documentId") Long documentId);
+    public InputStream getBinaryData(@Param("documentId") Long documentId);
+
+    public void updateBinaryData(@Param("documentId")Long documentId,@Param("stream") InputStream os);
 
 }

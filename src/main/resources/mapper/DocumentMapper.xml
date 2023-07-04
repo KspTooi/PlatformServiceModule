@@ -9,7 +9,7 @@
         <result column="NAME" property="name" />
         <result column="DOM_TYPE" property="domType" />
         <result column="METADATA" property="metadata"/>
-        <result column="BINARY_DATA" property="binaryData" />
+        <!--<result column="BINARY_DATA" property="binaryData" />-->
         <result column="DESCRIPTION" property="description" />
         <result column="CREATE_TIME" property="createTime"/>
     </resultMap>
@@ -70,10 +70,13 @@
     </select>
 
 
-    <select id="getBinaryData" resultType="java.sql.Blob">
-        SELECT binaryData FROM DOCUMENT WHERE docId = #{documentId}
+    <select id="getBinaryData" resultType="java.io.InputStream">
+        SELECT BINARY_DATA FROM DOCUMENT WHERE DOC_ID = #{documentId}
     </select>
 
+    <update id="updateBinaryData">
+        UPDATE DOCUMENT SET BINARY_DATA = #{stream} WHERE doc_id = #{documentId,jdbcType=BLOB}
+    </update>
 
     <insert id="insert">
         INSERT INTO DOCUMENT (

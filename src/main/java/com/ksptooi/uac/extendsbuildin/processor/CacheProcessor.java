@@ -6,6 +6,7 @@ import com.ksptooi.uac.core.annatatiotion.Processor;
 import com.ksptooi.uac.core.entities.CliCommand;
 import com.ksptooi.uac.core.entities.Command;
 import com.ksptooi.uac.core.entities.Document;
+import com.ksptooi.uac.core.mapper.DocumentMapper;
 import com.ksptooi.uac.core.processor.ProcessorAdapter;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.service.CacheService;
@@ -13,11 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +33,9 @@ public class CacheProcessor extends ProcessorAdapter {
 
     @Inject
     private CacheService cacheService;
+
+    @Inject
+    private DocumentMapper mapper;
 
 
     @Override
@@ -51,7 +56,13 @@ public class CacheProcessor extends ProcessorAdapter {
 
     @CommandMapping({"cache get","c get"})
     public void cacheGet(@Param("key")String key){
-        cacheService.outputByKey(key);
+        //cacheService.outputByKey(key);
+
+        InputStream is = new ByteArrayInputStream(new byte[]{1,2,3,4});
+
+        int binaryData1 = mapper.getBinaryData1(6547117563754496L, is);
+
+
     }
 
 

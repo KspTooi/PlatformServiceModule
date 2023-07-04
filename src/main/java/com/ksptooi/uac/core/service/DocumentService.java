@@ -7,6 +7,7 @@ import com.ksptooi.uac.core.mapper.DocumentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +42,6 @@ public class DocumentService {
     }
 
     public Document createDocument(String name,String type){
-
 
         if(this.getDocumentByName(name)!=null){
             logger.info("文档名称已被占用:{}",name);
@@ -139,6 +139,14 @@ public class DocumentService {
         documentByName.setMetadata(metadata);
         this.update(documentByName);
         return true;
+    }
+
+    public InputStream getBinaryData(Long docId){
+        return mapper.getBinaryData(docId);
+    }
+
+    public void updateBinaryData(Long docId,InputStream is){
+        mapper.updateBinaryData(docId,is);
     }
 
 
