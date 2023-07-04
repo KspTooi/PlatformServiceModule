@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Processor("CacheProcessor")
@@ -37,16 +38,23 @@ public class CacheProcessor extends ProcessorAdapter {
         return new String[]{
                 "cache",
                 "cache list",
-                "cache get"
+                "cache get",
+                "cache rm",
+                "cache output",
+                "c",
+                "c list",
+                "c get",
+                "c rm",
+                "c output",
         };
     }
 
-    @CommandMapping("cache")
+    @CommandMapping({"cache","c"})
     public void cache(@Param("path")String filePath) {
         this.cache(UUID.randomUUID().toString(),filePath);
     }
 
-    @CommandMapping("cache")
+    @CommandMapping({"cache","c"})
     public void cache(@Param("key") String key,@Param("path")String filePath){
 
         Path path = Paths.get(filePath);
@@ -75,13 +83,52 @@ public class CacheProcessor extends ProcessorAdapter {
 
         logger.info("已缓存 {} 字节",dom.getBinaryData().length);
         logger.info("资源标识:{}",dom.getName());
-
     }
 
+    @CommandMapping({"cache list","c list"})
+    public void cacheList(){
+        cacheService.listAll();
+    }
 
 
     @Override
     public void onCommand(CliCommand preparedCommand, Command command) {
+
+        String name = preparedCommand.getName();
+
+        if(name.equals("cache output") || name.equals("c output")){
+
+            List<String> parameter = preparedCommand.getParameter();
+
+
+            if(parameter.size() < 1){
+
+                Path path = cacheService.getOutputPath();
+
+                if(path == null){
+                    logger.info("没有设定输出路径");
+                    return;
+                }
+
+                logger.info("当前输出路径:{}",path.toString());
+                return;
+            }
+
+            String paths = parameter.get(0);
+            Path path = Paths.get(paths);
+
+            if(!Files.exists(path)){
+                logger.info("输出路径在文件系统上不存在. {}",paths);
+                return;
+            }
+
+            if(!Files.isDirectory(path)){
+                logger.info("输出路径不是一个文件夹. {}",paths);
+                return;
+            }
+
+            cacheService.setOutputPath(paths);
+        }
 
 
     }

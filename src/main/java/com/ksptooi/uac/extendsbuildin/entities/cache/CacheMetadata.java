@@ -1,5 +1,7 @@
 package com.ksptooi.uac.extendsbuildin.entities.cache;
 
+import java.util.Date;
+
 public class CacheMetadata {
 
     private String version = "1";
@@ -11,6 +13,10 @@ public class CacheMetadata {
     private Long length;
 
     private boolean isDirectory;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public String getPath() {
         return path;
@@ -50,5 +56,21 @@ public class CacheMetadata {
 
     public void setDirectory(boolean directory) {
         isDirectory = directory;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
