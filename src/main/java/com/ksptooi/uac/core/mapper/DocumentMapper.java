@@ -3,6 +3,9 @@ package com.ksptooi.uac.core.mapper;
 import com.ksptooi.uac.core.entities.Document;
 import org.apache.ibatis.annotations.Param;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Blob;
 import java.util.List;
 
 public interface DocumentMapper {
@@ -20,5 +23,7 @@ public interface DocumentMapper {
     public int update(@Param("update") Document document);
 
     public int remove(Long documentId);
+
+    public Blob getBinaryData(@Param("documentId") Long documentId);
 
 }

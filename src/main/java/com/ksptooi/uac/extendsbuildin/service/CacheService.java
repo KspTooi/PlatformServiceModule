@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,6 +34,56 @@ public class CacheService {
 
     @Inject
     private DocumentService documentService;
+
+
+    public void outputByKey(String key){
+
+        Path outputPath = getOutputPath();
+
+        if(outputPath==null){
+           logger.info("获取输出路径出错!");
+           return;
+        }
+
+        Document dom = documentService.getDocumentByName(key);
+
+        if(dom == null){
+            logger.info("资源不存在!");
+            return;
+        }
+
+        CacheMetadata md = gson.fromJson(dom.getMetadata(), CacheMetadata.class);
+
+        if(!md.isDirectory()){
+
+            File tgt = new File(outputPath.toFile(),md.getFileName());
+
+            if(tgt.exists()){
+                logger.info("无法创建文件:{} 在文件系统中存在重复的文件名.",md.getFileName());
+                return;
+            }
+
+            try {
+
+                tgt.createNewFile();
+                OutputStream os = Files.newOutputStream(tgt.toPath());
+
+                os.write(dom.getBinaryData());
+                os.close();
+
+                logger.info("写出路径:{}",tgt);
+                return;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                logger.info("文件系统错误!");
+                return;
+            }
+
+
+        }
+
+    }
 
 
     public void setOutputPath(String path){

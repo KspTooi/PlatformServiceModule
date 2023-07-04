@@ -70,6 +70,11 @@
     </select>
 
 
+    <select id="getBinaryData" resultType="java.sql.Blob">
+        SELECT binaryData FROM DOCUMENT WHERE docId = #{documentId}
+    </select>
+
+
     <insert id="insert">
         INSERT INTO DOCUMENT (
             <include refid="tableColumns"/>

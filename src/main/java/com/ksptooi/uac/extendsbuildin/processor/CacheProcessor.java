@@ -49,6 +49,13 @@ public class CacheProcessor extends ProcessorAdapter {
         };
     }
 
+    @CommandMapping({"cache get","c get"})
+    public void cacheGet(@Param("key")String key){
+        cacheService.outputByKey(key);
+    }
+
+
+
     @CommandMapping({"cache","c"})
     public void cache(@Param("path")String filePath) {
         this.cache(UUID.randomUUID().toString(),filePath);

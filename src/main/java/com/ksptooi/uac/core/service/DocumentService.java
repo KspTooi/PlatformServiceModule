@@ -6,6 +6,8 @@ import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.mapper.DocumentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class DocumentService {
     }
 
     public Document createDocument(String name,String type){
+
 
         if(this.getDocumentByName(name)!=null){
             logger.info("文档名称已被占用:{}",name);
