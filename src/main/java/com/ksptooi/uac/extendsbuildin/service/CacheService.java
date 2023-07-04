@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.ksptooi.uac.commons.CliProgressBar;
 import com.ksptooi.uac.commons.CommandLineTable;
 import com.ksptooi.uac.commons.ZipCompress;
+import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.entities.cache.CacheMetadata;
@@ -120,6 +121,81 @@ public class CacheService {
 
         return path;
     }
+
+
+
+
+
+
+    public boolean readPathToDocument(Path path,Document dom){
+
+        if(Files.isDirectory(path)){
+            return true;
+        }
+
+        try {
+
+            long size = Files.size(path);
+
+            InputStream is = new ProgressInputStream(size,Files.newInputStream(path));
+
+            documentService.updateBinaryData(dom.getDocId(),is);
+
+            is.close();
+
+            //创建metadata
+            CacheMetadata metadata = new CacheMetadata();
+            metadata.setFileName(path.getFileName().toString());
+            metadata.setPath(path.toString());
+            metadata.setLength(size);
+            metadata.setDirectory(false);
+            metadata.setCreateTime(new Date());
+            metadata.setUpdateTime(new Date());
+            dom.setMetadata(new Gson().toJson(metadata));
+            documentService.update(dom);
+            return true;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**

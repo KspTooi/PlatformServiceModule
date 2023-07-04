@@ -97,7 +97,6 @@
         UPDATE DOCUMENT SET
         NAME = #{update.name},
         METADATA = #{update.metadata},
-        BINARY_DATA = #{update.binaryData},
         DESCRIPTION = #{update.description},
         DOM_TYPE = #{update.domType}
         WHERE DOC_ID = #{update.docId}

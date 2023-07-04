@@ -1,5 +1,6 @@
 package com.ksptooi.uac.extendsbuildin.processor;
 
+import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.annatatiotion.CommandMapping;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import com.ksptooi.uac.core.annatatiotion.Processor;
@@ -56,15 +57,13 @@ public class CacheProcessor extends ProcessorAdapter {
 
     @CommandMapping({"cache get","c get"})
     public void cacheGet(@Param("key")String key){
-        //cacheService.outputByKey(key);
 
-        InputStream is = new ByteArrayInputStream(new byte[]{1,2,3,4});
+        Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
 
-        int binaryData1 = mapper.getBinaryData1(6547117563754496L, is);
+        cacheService.readPathToDocument(Paths.get("E:\\InternalPack\\InternalPack.zip"),dom);
 
 
     }
-
 
 
     @CommandMapping({"cache","c"})
