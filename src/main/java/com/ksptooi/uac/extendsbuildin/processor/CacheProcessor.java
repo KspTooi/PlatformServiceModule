@@ -52,27 +52,20 @@ public class CacheProcessor extends ProcessorAdapter {
         }
 
 
-        if(!Files.isDirectory(path)){
+        Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
+        logger.info("正在分配空间..");
 
-            Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
-            logger.info("正在分配空间..");
+        boolean isRead = cacheService.readToDocument(path, dom);
 
-            boolean isRead = cacheService.readToDocument(path, dom);
-
-            if(!isRead){
-                logger.info("因未知原因缓存失败.");
-                return;
-            }
-
-            documentService.update(dom);
-
-            logger.info("已缓存 {} 字节",dom.getBinaryData().length);
-            logger.info("UUID:{}",dom.getName());
+        if(!isRead){
+            logger.info("因未知原因缓存失败.");
+            return;
         }
 
+        documentService.update(dom);
 
-
-
+        logger.info("已缓存 {} 字节",dom.getBinaryData().length);
+        logger.info("UUID:{}",dom.getName());
         logger.info("执行:cache 参数:path");
     }
 

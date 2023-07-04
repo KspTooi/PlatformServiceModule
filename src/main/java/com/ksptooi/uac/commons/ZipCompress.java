@@ -1,5 +1,8 @@
 package com.ksptooi.uac.commons;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,6 +12,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZipCompress {
+
+    private Logger logger = LoggerFactory.getLogger(ZipCompress.class);
 
     private DecimalFormat decFmt = new DecimalFormat("0.0");
 
@@ -89,10 +94,9 @@ public class ZipCompress {
 
                 is.close();
                 zos.closeEntry();
-
+                logger.info("{}MB of {}MB",toMb(readSize),toMb(sourceSize));
             }
 
-            System.out.println(toMb(readSize) + "MB of " + toMb(sourceSize)+"MB");
         }
 
     }

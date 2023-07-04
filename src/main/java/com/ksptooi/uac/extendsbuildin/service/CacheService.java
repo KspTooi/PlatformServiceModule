@@ -2,6 +2,7 @@ package com.ksptooi.uac.extendsbuildin.service;
 
 
 import com.google.gson.Gson;
+import com.ksptooi.uac.commons.ZipCompress;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.extendsbuildin.entities.cache.CacheMetadata;
 import com.ksptooi.uac.extendsbuildin.processor.CacheProcessor;
@@ -42,8 +43,24 @@ public class CacheService {
     public boolean readToDocument(Path path, Document document){
 
         if(Files.isDirectory(path)){
-            logger.info("读取失败。指定的目标是一个目录:{}",path);
-            return false;
+
+            ZipCompress compress = new ZipCompress(path);
+
+            try{
+                document.setBinaryData(compress.compress());
+            }catch (Exception e){
+                return false;
+            }
+
+            //创建metadata
+            CacheMetadata metadata = new CacheMetadata();
+            metadata.setFileName(path.getFileName().toString());
+            metadata.setPath(path.toString());
+            metadata.setLength((long) document.getBinaryData().length);
+            metadata.setDirectory(true);
+            document.setMetadata(new Gson().toJson(metadata));
+
+            return true;
         }
 
         try {
