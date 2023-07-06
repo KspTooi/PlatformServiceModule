@@ -145,8 +145,8 @@ public class DocumentService {
         return mapper.getBinaryData(docId);
     }
 
-    public void updateBinaryData(Long docId,InputStream is){
-        mapper.updateBinaryData(docId,is);
+    public long updateBinaryData(Long docId,InputStream is){
+        return mapper.updateBinaryData(docId,is);
     }
 
 

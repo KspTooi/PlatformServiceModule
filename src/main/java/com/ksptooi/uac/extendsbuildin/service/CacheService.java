@@ -9,7 +9,6 @@ import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.entities.cache.CacheMetadata;
-import com.ksptooi.uac.extendsbuildin.processor.CacheProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +20,6 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-import java.util.zip.ZipOutputStream;
 
 public class CacheService {
 
@@ -131,13 +128,30 @@ public class CacheService {
 
         if(Files.isDirectory(path)){
 
-            ZipCompress compress = new ZipCompress(path);
+            try{
 
+                ZipCompress compress = new ZipCompress(path);
 
+                InputStream is = compress.getInputStream();
 
+                long length = documentService.updateBinaryData(dom.getDocId(), is);
 
-            return true;
+                is.close();
 
+                //创建metadata
+                CacheMetadata metadata = new CacheMetadata();
+                metadata.setFileName(path.getFileName().toString());
+                metadata.setPath(path.toString());
+                metadata.setLength(length);
+                metadata.setDirectory(true);
+                metadata.setCreateTime(new Date());
+                metadata.setUpdateTime(new Date());
+                dom.setMetadata(new Gson().toJson(metadata));
+                return true;
+
+            }catch (Exception e){
+                throw new RuntimeException(e);
+            }
 
         }
 

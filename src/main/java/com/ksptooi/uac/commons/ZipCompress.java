@@ -8,6 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,32 +26,53 @@ public class ZipCompress {
 
     private long readSize = 0L;
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    private final AtomicBoolean streamIsReady = new AtomicBoolean(false);
+
+
     public ZipCompress(Path path){
         this.source = path;
     }
 
 
-    public InputStream streamCompress(){
+    public InputStream getInputStream(){
 
         if(!Files.isDirectory(source)){
             throw new RuntimeException("打包操作失败,目标不是文件夹! source:"+source.toString());
         }
 
+        sourceSize = FileUtils.sizeOfDirectory(source.toFile());
+
         PipedInputStream pis = new PipedInputStream();
 
-        PipedOutputStream os = null;
-        try {
+        executorService.submit(()->{
 
-            os = new PipedOutputStream(pis);
-            ZipOutputStream zos = new ZipOutputStream(os);
+            try {
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                PipedOutputStream os = new PipedOutputStream(pis);
+                ZipOutputStream zos = new ZipOutputStream(os);
+
+                this.addFolderToZip(source,source,zos);
+                System.out.print("\r\n");
+
+                zos.close();
+                os.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("文件夹转换为二进制流失败!");
+            }
+
+        });
+
+        while (true){
+            if(streamIsReady.get()){
+                break;
+            }
         }
 
-
-        return null;
-
+        return pis;
     }
 
     public byte[] compress(){
@@ -115,15 +139,19 @@ public class ZipCompress {
                     }
 
                     zos.write(buffer,0,read);
+
+                    //将流置为准备状态
+                    if(!this.streamIsReady.get()){
+                        this.streamIsReady.set(true);
+                    }
+
                 }
 
                 is.close();
                 zos.closeEntry();
 
-
                 //logger.info("{}MB of {}MB",toMb(readSize),toMb(sourceSize));
             }
-
 
             CliProgressBar.updateProgressBar("处理中",readSize/1024/1024,  sourceSize/1024/1024);
         }

@@ -60,8 +60,7 @@ public class CacheProcessor extends ProcessorAdapter {
 
         Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
 
-        cacheService.readPathToDocument(Paths.get("E:\\InternalPack\\InternalPack.zip"),dom);
-
+        cacheService.readPathToDocument(Paths.get("E:\\Services"),dom);
 
     }
 

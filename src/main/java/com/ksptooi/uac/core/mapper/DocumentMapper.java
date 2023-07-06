@@ -26,6 +26,6 @@ public interface DocumentMapper {
 
     public InputStream getBinaryData(@Param("documentId") Long documentId);
 
-    public void updateBinaryData(@Param("documentId")Long documentId,@Param("stream") InputStream is);
+    public long updateBinaryData(@Param("documentId")Long documentId,@Param("stream") InputStream is);
 
 }
