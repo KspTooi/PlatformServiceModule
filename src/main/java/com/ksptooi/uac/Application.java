@@ -19,7 +19,7 @@ public class Application {
 
     public static Injector injector = Guice.createInjector(new ApplicationModule());
 
-    public static final String version = "3.4.A";
+    public static final String version = "3.7.A";
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
