@@ -62,7 +62,7 @@ public class CacheProcessor extends ProcessorAdapter {
     public void cacheGet(@Param("key")String key){
 
         //cacheService.saveAsDocument(Paths.get("E:\\Services"),UUID.randomUUID().toString());
-        cacheService.saveAsDocument(Paths.get("E:\\InternalPack"),UUID.randomUUID().toString());
+        cacheService.saveAsDocument(Paths.get("F:\\model"),UUID.randomUUID().toString());
 
     }
 

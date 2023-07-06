@@ -144,11 +144,12 @@ public class CacheService {
 
             if(!Files.isDirectory(path)){
 
+                size = Files.size(path);
+
                 InputStream is = new ProgressInputStream(size,Files.newInputStream(path));
                 documentService.updateBinaryData(dom.getDocId(),is);
                 is.close();
 
-                size = Files.size(path);
             }
 
             //构建Metadata
