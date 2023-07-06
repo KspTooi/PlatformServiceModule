@@ -10,6 +10,7 @@ import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.entities.cache.CacheMetadata;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +122,55 @@ public class CacheService {
     }
 
 
+    @Transactional(rollbackOnly = true)
+    public void saveAsDocument(Path path,String key){
 
+        logger.info("正在分配空间..");
+        Document dom = documentService.createDocument(key, "cache_storage");
+
+        try{
+
+            long size = -1;
+
+            if(Files.isDirectory(path)){
+
+                ZipCompress compress = new ZipCompress(path);
+                MonitorInputStream mis = new MonitorInputStream(compress.getInputStream());
+                documentService.updateBinaryData(dom.getDocId(), mis);
+                mis.close();
+
+                size = mis.getTransferLength();
+            }
+
+            if(!Files.isDirectory(path)){
+
+                InputStream is = new ProgressInputStream(size,Files.newInputStream(path));
+                documentService.updateBinaryData(dom.getDocId(),is);
+                is.close();
+
+                size = Files.size(path);
+            }
+
+            //构建Metadata
+            CacheMetadata data = new CacheMetadata();
+            data.setFileName(path.getFileName().toString());
+            data.setPath(path.toString());
+            data.setLength(size);
+            data.setDirectory(false);
+            data.setCreateTime(new Date());
+            data.setUpdateTime(new Date());
+            dom.setMetadata(new Gson().toJson(data));
+            documentService.update(dom);
+
+            logger.info("已传输 {} 字节",size);
+            logger.info("资源标识:{}",dom.getName());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
 
 
 

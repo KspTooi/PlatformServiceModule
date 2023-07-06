@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.ksptooi.uac.commons.IdWorker;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.mapper.DocumentMapper;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,8 @@ public class DocumentService {
         return this.createDocument(name,null);
     }
 
+
+
     public Document createDocument(String name,String type){
 
         if(this.getDocumentByName(name)!=null){
@@ -76,7 +79,6 @@ public class DocumentService {
 
         return true;
     }
-
 
     public boolean insert(Document in){
 

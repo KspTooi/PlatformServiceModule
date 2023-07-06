@@ -11,6 +11,8 @@ import com.ksptooi.uac.core.mapper.DocumentMapper;
 import com.ksptooi.uac.core.processor.ProcessorAdapter;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.service.CacheService;
+import org.mybatis.guice.transactional.Isolation;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,12 +57,12 @@ public class CacheProcessor extends ProcessorAdapter {
         };
     }
 
+
     @CommandMapping({"cache get","c get"})
     public void cacheGet(@Param("key")String key){
 
-        Document dom = documentService.createDocument(UUID.randomUUID().toString(), "cache_storage");
-
-        cacheService.readPathToDocument(Paths.get("E:\\Services"),dom);
+        //cacheService.saveAsDocument(Paths.get("E:\\Services"),UUID.randomUUID().toString());
+        cacheService.saveAsDocument(Paths.get("E:\\InternalPack"),UUID.randomUUID().toString());
 
     }
 
