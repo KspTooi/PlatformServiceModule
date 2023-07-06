@@ -134,7 +134,7 @@ public class CacheService {
 
                 InputStream is = compress.getInputStream();
 
-                long length = documentService.updateBinaryData(dom.getDocId(), is);
+                documentService.updateBinaryData(dom.getDocId(), is);
 
                 is.close();
 
@@ -142,11 +142,12 @@ public class CacheService {
                 CacheMetadata metadata = new CacheMetadata();
                 metadata.setFileName(path.getFileName().toString());
                 metadata.setPath(path.toString());
-                metadata.setLength(length);
+                metadata.setLength(0L);
                 metadata.setDirectory(true);
                 metadata.setCreateTime(new Date());
                 metadata.setUpdateTime(new Date());
                 dom.setMetadata(new Gson().toJson(metadata));
+                documentService.update(dom);
                 return true;
 
             }catch (Exception e){

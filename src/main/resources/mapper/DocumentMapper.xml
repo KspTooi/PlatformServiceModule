@@ -74,6 +74,10 @@
         SELECT BINARY_DATA FROM DOCUMENT WHERE DOC_ID = #{documentId}
     </select>
 
+    <select id="getBinaryDataLength" resultType="java.lang.Long">
+        SELECT LENGTH(BINARY_DATA) FROM DOCUMENT WHERE doc_id = #{documentId}
+    </select>
+
     <update id="updateBinaryData">
         UPDATE DOCUMENT SET BINARY_DATA = #{stream} WHERE doc_id = #{documentId,jdbcType=BLOB}
     </update>
