@@ -30,6 +30,7 @@ public class ZipCompress {
 
     private final AtomicBoolean streamIsReady = new AtomicBoolean(false);
 
+    private final int buffSize = (1024*512);
 
     public ZipCompress(Path path){
         this.source = path;
@@ -44,7 +45,7 @@ public class ZipCompress {
 
         sourceSize = FileUtils.sizeOfDirectory(source.toFile());
 
-        PipedInputStream pis = new PipedInputStream();
+        PipedInputStream pis = new PipedInputStream(buffSize);
 
         executorService.submit(()->{
 
@@ -127,7 +128,7 @@ public class ZipCompress {
                 ZipEntry zipEntry = new ZipEntry(entryPath);
                 zos.putNextEntry(zipEntry);
                 FileInputStream is = new FileInputStream(item);
-                byte[] buffer = new byte[1024*1024];
+                byte[] buffer = new byte[buffSize];
 
                 while (true){
 
@@ -145,6 +146,8 @@ public class ZipCompress {
                         this.streamIsReady.set(true);
                     }
 
+                    CliProgressBar.updateProgressBar("处理中",readSize/1024/1024,  sourceSize/1024/1024);
+
                 }
 
                 is.close();
@@ -153,7 +156,7 @@ public class ZipCompress {
                 //logger.info("{}MB of {}MB",toMb(readSize),toMb(sourceSize));
             }
 
-            CliProgressBar.updateProgressBar("处理中",readSize/1024/1024,  sourceSize/1024/1024);
+
         }
 
     }

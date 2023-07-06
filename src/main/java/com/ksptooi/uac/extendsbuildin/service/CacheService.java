@@ -139,7 +139,6 @@ public class CacheService {
                 is.close();
 
 
-
                 //创建metadata
                 CacheMetadata metadata = new CacheMetadata();
                 metadata.setFileName(path.getFileName().toString());

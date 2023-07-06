@@ -88,7 +88,7 @@ public class CacheProcessor extends ProcessorAdapter {
 
         logger.info("正在分配空间..");
 
-        boolean isRead = cacheService.readToDocument(path, dom);
+        boolean isRead = cacheService.readPathToDocument(path, dom);
 
         if(!isRead){
             logger.info("因未知原因缓存失败.");
@@ -97,7 +97,7 @@ public class CacheProcessor extends ProcessorAdapter {
 
         documentService.update(dom);
 
-        logger.info("已缓存 {} 字节",dom.getBinaryData().length);
+        logger.info("已传输 {} 字节",dom.getBinaryData().length);
         logger.info("资源标识:{}",dom.getName());
     }
 
