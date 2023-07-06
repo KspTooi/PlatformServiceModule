@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.ksptooi.uac.commons.CliProgressBar;
 import com.ksptooi.uac.commons.CommandLineTable;
 import com.ksptooi.uac.commons.ZipCompress;
+import com.ksptooi.uac.commons.stream.MonitorInputStream;
 import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.service.DocumentService;
@@ -124,7 +125,7 @@ public class CacheService {
 
 
 
-    public boolean readPathToDocument(Path path,Document dom){
+    public long readPathToDocument(Path path,Document dom){
 
         if(Files.isDirectory(path)){
 
@@ -132,24 +133,23 @@ public class CacheService {
 
                 ZipCompress compress = new ZipCompress(path);
 
-                InputStream is = compress.getInputStream();
+                MonitorInputStream mis = new MonitorInputStream(compress.getInputStream());
 
-                documentService.updateBinaryData(dom.getDocId(), is);
+                documentService.updateBinaryData(dom.getDocId(), mis);
 
-                is.close();
-
+                mis.close();
 
                 //创建metadata
                 CacheMetadata metadata = new CacheMetadata();
                 metadata.setFileName(path.getFileName().toString());
                 metadata.setPath(path.toString());
-                metadata.setLength(documentService.getBinaryLength(dom.getDocId()));
+                metadata.setLength(mis.getTransferLength());
                 metadata.setDirectory(true);
                 metadata.setCreateTime(new Date());
                 metadata.setUpdateTime(new Date());
                 dom.setMetadata(new Gson().toJson(metadata));
                 documentService.update(dom);
-                return true;
+                return mis.getTransferLength();
 
             }catch (Exception e){
                 throw new RuntimeException(e);
@@ -175,7 +175,7 @@ public class CacheService {
             metadata.setUpdateTime(new Date());
             dom.setMetadata(new Gson().toJson(metadata));
             documentService.update(dom);
-            return true;
+            return size;
 
         } catch (IOException e) {
             throw new RuntimeException(e);
