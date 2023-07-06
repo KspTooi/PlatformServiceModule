@@ -149,6 +149,9 @@ public class DocumentService {
         mapper.updateBinaryData(docId,is);
     }
 
+    public Long getBinaryLength(Long docId){
+        return mapper.getBinaryDataLength(docId);
+    }
 
 
 }

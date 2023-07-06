@@ -138,11 +138,13 @@ public class CacheService {
 
                 is.close();
 
+
+
                 //创建metadata
                 CacheMetadata metadata = new CacheMetadata();
                 metadata.setFileName(path.getFileName().toString());
                 metadata.setPath(path.toString());
-                metadata.setLength(0L);
+                metadata.setLength(documentService.getBinaryLength(dom.getDocId()));
                 metadata.setDirectory(true);
                 metadata.setCreateTime(new Date());
                 metadata.setUpdateTime(new Date());
@@ -271,7 +273,7 @@ public class CacheService {
         List<Document> caches = documentService.getDocumentByType("cache_storage");
 
         CommandLineTable clTable = new CommandLineTable();
-        clTable.setHeaders("Key","FileName","Size","Directory","CrateTime");
+        clTable.setHeaders("Key","FileName","Size","Directory","Type","CrateTime");
         clTable.setShowVerticalLines(true);
 
 
@@ -280,7 +282,21 @@ public class CacheService {
 
             //获取metadata
             CacheMetadata metadata = gson.fromJson(item.getMetadata(), CacheMetadata.class);
-            clTable.addRow(item.getName(),metadata.getFileName(),metadata.getLength()/1024/1024+"MB", String.valueOf(metadata.isDirectory()),sdf.format(item.getCreateTime()));
+
+            String type = "File";
+
+            if(metadata.isDirectory()){
+                type = "Archive";
+            }
+
+            clTable.addRow(
+                    item.getName(),
+                    metadata.getFileName(),
+                    metadata.getLength()/1024/1024+"MB",
+                    String.valueOf(metadata.isDirectory()),
+                    type,
+                    sdf.format(item.getCreateTime())
+            );
         });
 
         clTable.print();
