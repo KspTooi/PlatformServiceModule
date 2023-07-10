@@ -20,7 +20,7 @@ public class AppRunnerProcessor extends ProcessorAdapter {
     @Override
     public void onCommand(CliCommand preparedCommand, Command command) {
 
-        logger.info("运行应用:" + preparedCommand);
+        //logger.info("运行应用:" + preparedCommand);
 
         ApplicationData application = new Gson().fromJson(command.getMetadata(), ApplicationData.class);
 

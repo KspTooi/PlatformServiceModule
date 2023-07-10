@@ -62,7 +62,7 @@ public class CacheProcessor extends ProcessorAdapter {
 
         cacheService.saveAsDocument(Paths.get("E:\\Services"),UUID.randomUUID().toString());
         //cacheService.saveAsDocument(Paths.get("F:\\model"),UUID.randomUUID().toString());
-        
+
     }
 
     @CommandMapping({"c rm"})
