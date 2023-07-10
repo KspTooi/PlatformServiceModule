@@ -9,7 +9,7 @@
 
             <dataSource type="POOLED">
                 <property name="driver" value="org.h2.Driver"/>
-                <property name="url" value="jdbc:h2:./uac_db;MAX_COMPACT_TIME=10000;DB_CLOSE_ON_EXIT=FALSE"/>
+                <property name="url" value="jdbc:h2:./uac_db;MAX_COMPACT_TIME=10000;CACHE_SIZE=0"/>
                 <property name="username" value=""/>
                 <property name="password" value=""/>
             </dataSource>

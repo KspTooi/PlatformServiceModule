@@ -27,7 +27,7 @@ public class DatabaseService {
 
         }
 
-        logger.info("数据库压缩完成!");
+        //logger.info("数据库压缩完成!");
     }
 
     public void export(Path path){
@@ -52,7 +52,7 @@ public class DatabaseService {
         logger.info("导出数据库失败!");
     }
 
-    @Transactional
+
     public void dbImport(Path path){
 
         if(!Files.exists(path)){

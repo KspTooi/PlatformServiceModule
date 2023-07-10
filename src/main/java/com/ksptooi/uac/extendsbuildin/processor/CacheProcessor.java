@@ -9,6 +9,7 @@ import com.ksptooi.uac.core.entities.Command;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.mapper.DocumentMapper;
 import com.ksptooi.uac.core.processor.ProcessorAdapter;
+import com.ksptooi.uac.core.service.DatabaseService;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.service.CacheService;
 import org.mybatis.guice.transactional.Isolation;
@@ -40,6 +41,9 @@ public class CacheProcessor extends ProcessorAdapter {
     @Inject
     private DocumentMapper mapper;
 
+    @Inject
+    private DatabaseService dbService;
+
 
     @Override
     public String[] defaultCommand() {
@@ -64,6 +68,8 @@ public class CacheProcessor extends ProcessorAdapter {
         cacheService.saveAsDocument(Paths.get("E:\\Services"),UUID.randomUUID().toString());
         //cacheService.saveAsDocument(Paths.get("F:\\model"),UUID.randomUUID().toString());
 
+
+
     }
 
     @CommandMapping({"c rm"})
@@ -77,6 +83,7 @@ public class CacheProcessor extends ProcessorAdapter {
         }
 
         documentService.removeById(dom.getDocId());
+        dbService.trim();
     }
 
 
@@ -95,25 +102,7 @@ public class CacheProcessor extends ProcessorAdapter {
             return;
         }
 
-        Document dom = documentService.createDocument(key, "cache_storage");
-
-        if(dom == null){
-            return;
-        }
-
-        logger.info("正在分配空间..");
-
-        long read = cacheService.readPathToDocument(path, dom);
-
-        if(read < 1){
-            logger.info("因未知原因传输失败.");
-            return;
-        }
-
-        documentService.update(dom);
-
-        logger.info("已传输 {} 字节",read);
-        logger.info("资源标识:{}",dom.getName());
+        cacheService.saveAsDocument(path,key);
     }
 
     @CommandMapping({"cache list","c list"})

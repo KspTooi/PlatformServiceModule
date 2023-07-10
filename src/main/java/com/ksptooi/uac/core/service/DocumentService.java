@@ -115,7 +115,14 @@ public class DocumentService {
     }
 
     public boolean removeById(Long id){
-        mapper.remove(id);
+
+        try{
+            mapper.remove(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
         return true;
     }
 

@@ -146,8 +146,7 @@ public class ZipCompress {
                         this.streamIsReady.set(true);
                     }
 
-                    CliProgressBar.updateProgressBar("处理中",readSize/1024/1024,  sourceSize/1024/1024);
-
+                    CliProgressBar.updateProgressBar("归档中",readSize/1024/1024,  sourceSize/1024/1024);
                 }
 
                 is.close();

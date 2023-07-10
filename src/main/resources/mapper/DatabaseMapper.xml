@@ -41,7 +41,7 @@
     </select>
 
     <select id="trim">
-        SHUTDOWN DEFRAG
+        SHUTDOWN COMPACT
     </select>
 
     <update id="export">

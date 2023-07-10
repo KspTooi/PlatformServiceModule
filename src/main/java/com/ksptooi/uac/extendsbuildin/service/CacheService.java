@@ -132,6 +132,8 @@ public class CacheService {
 
             long size = -1;
 
+            boolean isDirectory = false;
+
             if(Files.isDirectory(path)){
 
                 ZipCompress compress = new ZipCompress(path);
@@ -139,6 +141,7 @@ public class CacheService {
                 documentService.updateBinaryData(dom.getDocId(), mis);
                 mis.close();
 
+                isDirectory = true;
                 size = mis.getTransferLength();
             }
 
@@ -157,7 +160,7 @@ public class CacheService {
             data.setFileName(path.getFileName().toString());
             data.setPath(path.toString());
             data.setLength(size);
-            data.setDirectory(false);
+            data.setDirectory(isDirectory);
             data.setCreateTime(new Date());
             data.setUpdateTime(new Date());
             dom.setMetadata(new Gson().toJson(data));
@@ -171,149 +174,6 @@ public class CacheService {
         }
 
 
-    }
-
-
-
-    public long readPathToDocument(Path path,Document dom){
-
-        if(Files.isDirectory(path)){
-
-            try{
-
-                ZipCompress compress = new ZipCompress(path);
-
-                MonitorInputStream mis = new MonitorInputStream(compress.getInputStream());
-
-                documentService.updateBinaryData(dom.getDocId(), mis);
-
-                mis.close();
-
-                //创建metadata
-                CacheMetadata metadata = new CacheMetadata();
-                metadata.setFileName(path.getFileName().toString());
-                metadata.setPath(path.toString());
-                metadata.setLength(mis.getTransferLength());
-                metadata.setDirectory(true);
-                metadata.setCreateTime(new Date());
-                metadata.setUpdateTime(new Date());
-                dom.setMetadata(new Gson().toJson(metadata));
-                documentService.update(dom);
-                return mis.getTransferLength();
-
-            }catch (Exception e){
-                throw new RuntimeException(e);
-            }
-
-        }
-
-        try {
-
-            long size = Files.size(path);
-
-            InputStream is = new ProgressInputStream(size,Files.newInputStream(path));
-            documentService.updateBinaryData(dom.getDocId(),is);
-            is.close();
-
-            //创建metadata
-            CacheMetadata metadata = new CacheMetadata();
-            metadata.setFileName(path.getFileName().toString());
-            metadata.setPath(path.toString());
-            metadata.setLength(size);
-            metadata.setDirectory(false);
-            metadata.setCreateTime(new Date());
-            metadata.setUpdateTime(new Date());
-            dom.setMetadata(new Gson().toJson(metadata));
-            documentService.update(dom);
-            return size;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
-
-
-
-
-    /**
-     * 将文件或文件夹读入Document
-     * @param path 文件路径
-     * @param document doc
-     * @return 成功返回true 失败返回false
-     */
-    public boolean readToDocument(Path path, Document document){
-
-        if(Files.isDirectory(path)){
-
-            ZipCompress compress = new ZipCompress(path);
-
-            logger.info("将文件夹转换为二进制数据.");
-
-            try{
-                document.setBinaryData(compress.compress());
-            }catch (Exception e){
-                return false;
-            }
-
-            //创建metadata
-            CacheMetadata metadata = new CacheMetadata();
-            metadata.setFileName(path.getFileName().toString());
-            metadata.setPath(path.toString());
-            metadata.setLength((long) document.getBinaryData().length);
-            metadata.setDirectory(true);
-            metadata.setCreateTime(new Date());
-            metadata.setUpdateTime(new Date());
-            document.setMetadata(new Gson().toJson(metadata));
-
-            return true;
-        }
-
-        try {
-
-            InputStream is = Files.newInputStream(path);
-
-            byte[] read = new byte[1024*512];
-
-            long count = 0L;
-
-            long size = Files.size(path);
-
-            while (true){
-
-                int len = is.read(read);
-
-                if(len < 1){
-                    break;
-                }
-                count = count + len;
-
-                CliProgressBar.updateProgressBar("处理中",count/1024/1024,size/1024/1024);
-                document.appendBinaryData(read,len);
-            }
-
-            System.out.print("\r\n");
-
-            //创建metadata
-            CacheMetadata metadata = new CacheMetadata();
-            metadata.setFileName(path.getFileName().toString());
-            metadata.setPath(path.toString());
-            metadata.setLength(size);
-            metadata.setDirectory(false);
-            metadata.setCreateTime(new Date());
-            metadata.setUpdateTime(new Date());
-            document.setMetadata(new Gson().toJson(metadata));
-
-            is.close();
-            return true;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 
 
