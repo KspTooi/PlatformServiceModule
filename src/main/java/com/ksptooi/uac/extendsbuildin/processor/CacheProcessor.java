@@ -48,11 +48,6 @@ public class CacheProcessor extends ProcessorAdapter {
     @Override
     public String[] defaultCommand() {
         return new String[]{
-                "cache",
-                "cache list",
-                "cache get",
-                "cache rm",
-                "cache output",
                 "c",
                 "c list",
                 "c get",
@@ -62,14 +57,12 @@ public class CacheProcessor extends ProcessorAdapter {
     }
 
 
-    @CommandMapping({"cache get","c get"})
+    @CommandMapping({"c get"})
     public void cacheGet(@Param("key")String key){
 
         cacheService.saveAsDocument(Paths.get("E:\\Services"),UUID.randomUUID().toString());
         //cacheService.saveAsDocument(Paths.get("F:\\model"),UUID.randomUUID().toString());
-
-
-
+        
     }
 
     @CommandMapping({"c rm"})
@@ -87,12 +80,12 @@ public class CacheProcessor extends ProcessorAdapter {
     }
 
 
-    @CommandMapping({"cache","c"})
+    @CommandMapping("c")
     public void cache(@Param("path")String filePath) {
         this.cache(UUID.randomUUID().toString(),filePath);
     }
 
-    @CommandMapping({"cache","c"})
+    @CommandMapping("c")
     public void cache(@Param("key") String key,@Param("path")String filePath){
 
         Path path = Paths.get(filePath);
@@ -105,7 +98,7 @@ public class CacheProcessor extends ProcessorAdapter {
         cacheService.saveAsDocument(path,key);
     }
 
-    @CommandMapping({"cache list","c list"})
+    @CommandMapping("c list")
     public void cacheList(){
         cacheService.listAll();
     }
@@ -116,7 +109,7 @@ public class CacheProcessor extends ProcessorAdapter {
 
         String name = preparedCommand.getName();
 
-        if(name.equals("cache output") || name.equals("c output")){
+        if(name.equals("c output")){
 
             List<String> parameter = preparedCommand.getParameter();
 
