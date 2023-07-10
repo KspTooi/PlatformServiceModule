@@ -40,4 +40,8 @@
         SHUTDOWN DEFRAG
     </select>
 
+    <update id="export">
+        SCRIPT TO '${path}'
+    </update>
+
 </mapper>

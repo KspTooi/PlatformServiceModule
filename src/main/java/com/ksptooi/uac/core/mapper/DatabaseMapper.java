@@ -22,5 +22,7 @@ public interface DatabaseMapper {
 
     public void trim();
 
+    public void export(@Param("path") String path);
+
 
 }

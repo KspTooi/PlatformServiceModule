@@ -7,6 +7,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 
 public class DatabaseService {
 
@@ -16,8 +19,38 @@ public class DatabaseService {
     private final Logger logger = LoggerFactory.getLogger(DatabaseService.class);
 
     public void trim(){
-        mapper.trim();
+
+        try{
+            mapper.trim();
+        }catch (Exception e){
+
+        }
+
+        logger.info("数据库压缩完成!");
     }
+
+    public void export(Path path){
+
+        if(Files.isDirectory(path)){
+            logger.info("路径是文件夹:{}",path.toString());
+            return;
+        }
+
+        if(Files.exists(path)){
+            logger.info("文件已存在:{}",path.toString());
+            return;
+        }
+
+        mapper.export(path.toString());
+
+        if(Files.exists(path)){
+            logger.info("已导出到:{}",path.toAbsolutePath().toString());
+            return;
+        }
+
+        logger.info("导出数据库失败!");
+    }
+
 
     public void initTableStructure(){
 
