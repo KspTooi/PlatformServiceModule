@@ -5,6 +5,7 @@ import com.ksptooi.uac.Application;
 import com.ksptooi.uac.core.mapper.DatabaseMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DatabaseService {
@@ -12,6 +13,11 @@ public class DatabaseService {
     @Inject
     private DatabaseMapper mapper;
 
+    private final Logger logger = LoggerFactory.getLogger(DatabaseService.class);
+
+    public void trim(){
+        mapper.trim();
+    }
 
     public void initTableStructure(){
 

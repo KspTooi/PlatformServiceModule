@@ -122,7 +122,7 @@ public class CacheService {
     }
 
 
-    @Transactional(rollbackOnly = true)
+    @Transactional
     public void saveAsDocument(Path path,String key){
 
         logger.info("正在分配空间..");

@@ -36,4 +36,8 @@
         select count(*) from information_schema.TABLES where table_name = #{tableName}
     </select>
 
+    <select id="trim">
+        SHUTDOWN DEFRAG
+    </select>
+
 </mapper>

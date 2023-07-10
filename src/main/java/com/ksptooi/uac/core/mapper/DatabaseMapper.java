@@ -20,5 +20,7 @@ public interface DatabaseMapper {
 
     public void createDocumentTable();
 
+    public void trim();
+
 
 }
