@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.ksptooi.uac.Application;
 import com.ksptooi.uac.core.mapper.DatabaseMapper;
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,20 @@ public class DatabaseService {
         }
 
         logger.info("导出数据库失败!");
+    }
+
+    @Transactional
+    public void dbImport(Path path){
+
+        if(!Files.exists(path)){
+            logger.info("文件不存在:{}",path.toString());
+            return;
+        }
+
+        mapper.dropAll();
+        mapper.dbImport(path.toAbsolutePath().toString());
+        this.initTableStructure();
+        logger.info("执行完成");
     }
 
 

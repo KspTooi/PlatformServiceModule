@@ -32,6 +32,10 @@
         CREATE UNIQUE INDEX PRIMARY_KEY_F8 ON PUBLIC.DOCUMENT (DOC_ID);
     </insert>
 
+    <delete id="dropAll">
+        DROP ALL OBJECTS
+    </delete>
+
     <select id="getTable" resultType="java.lang.Integer">
         select count(*) from information_schema.TABLES where table_name = #{tableName}
     </select>
@@ -42,6 +46,10 @@
 
     <update id="export">
         SCRIPT TO '${path}'
+    </update>
+
+    <update id="dbImport">
+        RUNSCRIPT FROM '${path}';
     </update>
 
 </mapper>

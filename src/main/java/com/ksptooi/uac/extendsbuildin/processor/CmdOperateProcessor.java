@@ -35,7 +35,8 @@ public class CmdOperateProcessor extends ProcessorAdapter {
                 "cmd r",
                 "help",
                 "db trim",
-                "db export"
+                "db export",
+                "db import"
         };
     }
 
@@ -60,6 +61,24 @@ public class CmdOperateProcessor extends ProcessorAdapter {
         }
 
         dbService.export(p);
+    }
+
+    @CommandMapping("db import")
+    public void dbImport(@Param("path")String path){
+
+        Path p = null;
+
+        try{
+            p = Paths.get(path);
+        }catch (Exception e){
+            logger.info("无法解析路径:{}",path);
+        }
+
+        if(p == null){
+            return;
+        }
+
+        dbService.dbImport(p);
     }
 
     @CommandMapping({"cmd l","cmd list"})

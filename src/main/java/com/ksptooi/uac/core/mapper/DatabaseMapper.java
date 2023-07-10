@@ -24,5 +24,9 @@ public interface DatabaseMapper {
 
     public void export(@Param("path") String path);
 
+    public void dbImport(@Param("path")String path);
+
+    public void dropAll();
+
 
 }
