@@ -126,8 +126,9 @@ public class IdWorker {
     protected static long getDatacenterId(long maxDatacenterId) {
         long id = 0L;
         try {
-            InetAddress ip = InetAddress.getLocalHost();
-            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            //InetAddress ip = InetAddress.getLocalHost();
+            //NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            NetworkInterface network = null;
             if (network == null) {
                 id = 1L;
             } else {

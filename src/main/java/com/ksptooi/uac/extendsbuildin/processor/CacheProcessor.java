@@ -53,7 +53,7 @@ public class CacheProcessor extends ProcessorAdapter {
                 "c list",
                 "c get",
                 "c rm",
-                "c output",
+                "c output"
         };
     }
 
@@ -64,6 +64,19 @@ public class CacheProcessor extends ProcessorAdapter {
         cacheService.saveAsDocument(Paths.get("E:\\Services"),UUID.randomUUID().toString());
         //cacheService.saveAsDocument(Paths.get("F:\\model"),UUID.randomUUID().toString());
 
+    }
+
+    @CommandMapping({"c rm"})
+    public void cacheRemove(@Param("key")String key){
+
+        Document dom = documentService.getDocumentByName(key);
+
+        if(dom == null){
+            logger.info("指定的资源不存在!");
+            return;
+        }
+
+        documentService.removeById(dom.getDocId());
     }
 
 

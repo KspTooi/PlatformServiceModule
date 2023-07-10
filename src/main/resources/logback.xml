@@ -42,4 +42,9 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <logger name="org.mybatis.guice">
+        <level value="ERROR" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
 </configuration>

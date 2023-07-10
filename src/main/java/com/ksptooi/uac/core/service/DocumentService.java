@@ -91,7 +91,7 @@ public class DocumentService {
             return false;
         }
 
-        in.setDocId(new IdWorker().nextId());
+        in.setDocId(this.idWorker.nextId());
         in.setCreateTime(new Date());
 
         mapper.insert(in);

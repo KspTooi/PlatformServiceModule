@@ -30,6 +30,7 @@ public class Application {
     public static void main(String[] args) throws Exception {
 
 
+
         PluginLoader pl = injector.getInstance(PluginLoader.class);
         ProcessorDispatcher scheduler = injector.getInstance(ProcessorDispatcher.class);
         ProcessorScanner processorScanner = injector.getInstance(ProcessorScanner.class);

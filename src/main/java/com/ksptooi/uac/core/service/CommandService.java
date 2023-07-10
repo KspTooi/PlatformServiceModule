@@ -16,6 +16,8 @@ public class CommandService {
     @Inject
     private CommandMapper mapper;
 
+    private final IdWorker idWorker = new IdWorker();
+
     public Command getCommandByName(String name){
 
         Command query = new Command();
@@ -46,7 +48,7 @@ public class CommandService {
             return false;
         }
 
-        inVo.setCmdId(new IdWorker().nextId());
+        inVo.setCmdId(idWorker.nextId());
         inVo.setCreateTime(new Date());
 
         logger.info("命令\""+inVo.getName()+"\"新增成功!");
