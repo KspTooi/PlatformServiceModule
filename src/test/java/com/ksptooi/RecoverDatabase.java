@@ -1,4 +1,4 @@
-package com.ksptooi.uac;
+package com.ksptooi;
 
 import org.h2.tools.Recover;
 

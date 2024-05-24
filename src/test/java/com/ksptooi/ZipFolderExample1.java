@@ -1,12 +1,10 @@
-package com.ksptooi.uac;
+package com.ksptooi;
 
 import com.ksptooi.uac.commons.ZipCompress;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class ZipFolderExample1 {
     public static void main(String[] args) throws IOException {

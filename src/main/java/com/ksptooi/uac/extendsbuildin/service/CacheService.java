@@ -10,11 +10,10 @@ import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.entities.cache.CacheMetadata;
+import jakarta.inject.Inject;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;

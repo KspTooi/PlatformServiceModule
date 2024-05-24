@@ -1,4 +1,4 @@
-package com.ksptooi.uac;
+package com.ksptooi;
 
 import java.io.File;
 import java.io.FileInputStream;

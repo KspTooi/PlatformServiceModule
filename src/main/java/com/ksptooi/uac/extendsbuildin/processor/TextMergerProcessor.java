@@ -10,8 +10,8 @@ import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.processor.ProcessorAdapter;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.entities.textmerger.TextMergerMetadata;
+import jakarta.inject.Inject;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 

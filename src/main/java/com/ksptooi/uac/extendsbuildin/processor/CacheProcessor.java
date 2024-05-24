@@ -12,12 +12,11 @@ import com.ksptooi.uac.core.processor.ProcessorAdapter;
 import com.ksptooi.uac.core.service.DatabaseService;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.service.CacheService;
+import jakarta.inject.Inject;
 import org.mybatis.guice.transactional.Isolation;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;

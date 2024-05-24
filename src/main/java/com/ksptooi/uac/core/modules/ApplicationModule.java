@@ -18,16 +18,10 @@ public class ApplicationModule extends AbstractModule {
 
         //install(new ComponentScanModule("com.ksptooi", Comp.class));
 
-        //PD
+
         bind(ProcessorDispatcher.class).to(CmdBackgroundDispatcher.class).in(Scopes.SINGLETON);
-
-        //Cli
         bind(CommandLine.class).to(OperateCli.class).in(Scopes.SINGLETON);
-
-        //PL
         bind(PluginLoader.class).to(JarPluginLoader.class).in(Scopes.SINGLETON);
-
-        //PS
         bind(ProcessorScanner.class).to(ProcessorAnnotationScanner.class).in(Scopes.SINGLETON);
 
         //

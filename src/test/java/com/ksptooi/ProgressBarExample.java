@@ -1,4 +1,4 @@
-package com.ksptooi.uac;
+package com.ksptooi;
 
 public class ProgressBarExample {
     public static void main(String[] args) {
