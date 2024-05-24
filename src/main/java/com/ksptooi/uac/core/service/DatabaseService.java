@@ -1,10 +1,8 @@
 package com.ksptooi.uac.core.service;
 
 import com.google.inject.Inject;
-import com.ksptooi.uac.Application;
+import com.ksptooi.uac.ApplicationOld;
 import com.ksptooi.uac.core.mapper.DatabaseMapper;
-import org.apache.ibatis.session.SqlSession;
-import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +67,7 @@ public class DatabaseService {
 
     public void initTableStructure(){
 
-        Logger logger = Application.getLogger();
+        Logger logger = ApplicationOld.getLogger();
 
 
         Integer command = mapper.getTable("COMMAND");

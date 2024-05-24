@@ -1,7 +1,6 @@
 package com.ksptooi.uac.commons;
 
 import java.lang.management.ManagementFactory;
-import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Date;
 

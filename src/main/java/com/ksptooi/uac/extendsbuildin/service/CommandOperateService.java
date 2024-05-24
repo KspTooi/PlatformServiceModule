@@ -1,7 +1,7 @@
 package com.ksptooi.uac.extendsbuildin.service;
 
 import com.google.inject.Inject;
-import com.ksptooi.uac.Application;
+import com.ksptooi.uac.ApplicationOld;
 import com.ksptooi.uac.commons.CommandLineTable;
 import com.ksptooi.uac.core.entities.Command;
 import com.ksptooi.uac.core.mapper.CommandMapper;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CommandOperateService {
 
-    private final Logger logger = LoggerFactory.getLogger(Application.class);
+    private final Logger logger = LoggerFactory.getLogger(ApplicationOld.class);
 
     @Inject
     private CommandMapper mapper;

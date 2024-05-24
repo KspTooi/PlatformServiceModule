@@ -3,7 +3,6 @@ package com.ksptooi.guice.compomentscan;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.ksptooi.guice.annotations.MultiInstance;
-import com.ksptooi.uac.core.annatatiotion.Component;
 import com.ksptooi.guice.annotations.Unit;
 import org.reflections.Reflections;
 
@@ -46,7 +45,6 @@ public final class ComponentScanModule extends AbstractModule {
                 .flatMap(Set::stream)
                 .collect(Collectors.toList());
 
-
         for(Class<?> clazz : collect){
 
             MultiInstance multi = clazz.getAnnotation(MultiInstance.class);
@@ -57,6 +55,7 @@ public final class ComponentScanModule extends AbstractModule {
                 continue;
             }
 
+            //绑定为多例
             bind(clazz).in(Scopes.NO_SCOPE);
         }
 

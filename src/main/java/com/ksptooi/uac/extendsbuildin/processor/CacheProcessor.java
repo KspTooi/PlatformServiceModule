@@ -1,6 +1,5 @@
 package com.ksptooi.uac.extendsbuildin.processor;
 
-import com.ksptooi.uac.commons.stream.ProgressInputStream;
 import com.ksptooi.uac.core.annatatiotion.CommandMapping;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import com.ksptooi.uac.core.annatatiotion.Processor;
@@ -13,16 +12,12 @@ import com.ksptooi.uac.core.service.DatabaseService;
 import com.ksptooi.uac.core.service.DocumentService;
 import com.ksptooi.uac.extendsbuildin.service.CacheService;
 import jakarta.inject.Inject;
-import org.mybatis.guice.transactional.Isolation;
-import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.*;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 

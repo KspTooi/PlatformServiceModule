@@ -4,12 +4,10 @@ import com.google.inject.Inject;
 import com.ksptooi.uac.commons.IdWorker;
 import com.ksptooi.uac.core.entities.Document;
 import com.ksptooi.uac.core.mapper.DocumentMapper;
-import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 

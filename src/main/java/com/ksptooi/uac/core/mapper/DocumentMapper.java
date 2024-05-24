@@ -4,8 +4,6 @@ import com.ksptooi.uac.core.entities.Document;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Blob;
 import java.util.List;
 
 public interface DocumentMapper {

@@ -2,7 +2,6 @@ package com.ksptooi.uac.commons.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class ProgressInputStream extends InputStream{
 
