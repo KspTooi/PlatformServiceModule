@@ -9,7 +9,7 @@
 
             <dataSource type="POOLED">
                 <property name="driver" value="org.h2.Driver"/>
-                <property name="url" value="jdbc:h2:./uac_db;MAX_COMPACT_TIME=10000;CACHE_SIZE=0"/>
+                <property name="url" value="jdbc:h2:./database;MAX_COMPACT_TIME=10000;CACHE_SIZE=0"/>
                 <property name="username" value=""/>
                 <property name="password" value=""/>
             </dataSource>
@@ -19,9 +19,10 @@
 
 
     <mappers>
-        <mapper resource="mapper/CommandMapper.xml"></mapper>
-        <mapper resource="mapper/DocumentMapper.xml"></mapper>
-        <mapper resource="mapper/DatabaseMapper.xml"></mapper>
+        <mapper resource="mapper/CommandMapper.xml"/>
+        <mapper resource="mapper/DocumentMapper.xml"/>
+        <mapper resource="mapper/DatabaseMapper.xml"/>
+        <mapper resource="mapper/ProcessorMapper.xml"/>
     </mappers>
 
 </configuration>

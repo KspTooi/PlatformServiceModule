@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.psm.mapper.ProcessorMapper">
+
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.ProcessorVo">
+        <result column="ID" property="id"/>
+        <result column="NAME" property="name"/>
+        <result column="STATUS" property="status"/>
+        <result column="CREATE_TIME" property="createTime" />
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO PROCESSORS(ID,NAME,STATUS,CREATE_TIME)
+        VALUES (#{id},#{name},#{status},#{createTime})
+    </insert>
+
+    <select id="getByName" resultMap="poMap">
+        SELECT * FROM PROCESSORS
+        WHERE NAME = #{name}
+    </select>
+
+</mapper>

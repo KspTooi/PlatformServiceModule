@@ -13,6 +13,8 @@ public class ApplicationSSHD {
 
     public final static ComponentScanModule csm = new ComponentScanModule("com.ksptooi");
 
+
+
     public final static Injector injector = Guice.createInjector(new SshMod(),csm);
 
     public static void main(String[] args) throws InterruptedException {
