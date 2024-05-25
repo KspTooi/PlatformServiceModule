@@ -1,9 +1,5 @@
-<<<<<<< HEAD:src/main/java/com/ksptooi/psm/shell/SshServerProvider.java
-package com.ksptooi.psm.shell;
-=======
-package com.ksptooi.uac.modules;
->>>>>>> parent of ef43788 (﻿更新: SSHD):src/main/java/com/ksptooi/uac/modules/SshMod.java
 
+package com.ksptooi.uac.modules;
 import com.google.inject.*;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;

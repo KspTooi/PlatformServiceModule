@@ -1,6 +1,7 @@
 package com.ksptooi.psm.shell;
 
-import com.ksptooi.psm.utils.VK;
+import com.ksptooi.psm.vk.ShellVK;
+import com.ksptooi.psm.vk.VK;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -15,9 +16,11 @@ public class PSMShell implements Command,Runnable{
     private OutputStream eos;
     private OutputStream os;
     private InputStream is;
-
     private ChannelSession session;
     private Environment env;
+
+    private final StringBuffer vTextarea = new StringBuffer();
+    private int vCursor;
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
@@ -31,8 +34,6 @@ public class PSMShell implements Command,Runnable{
         PrintWriter pw = new PrintWriter(os);
         pw.println("Hello PSMShell Welcome " + session.getSession().getUsername());
         pw.flush();
-
-
     }
 
     @Override
@@ -69,16 +70,75 @@ public class PSMShell implements Command,Runnable{
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             PrintWriter pw = new PrintWriter(os);
+            ShellVK svk = new ShellVK(os);
 
-            StringBuilder sb = new StringBuilder();
-
-            char[] read = new char[24];
+            char[] read = new char[2400];
 
             while (true){
 
                 int len = br.read(read);
 
                 VK.print(read,len);
+
+                //输入字符/或特殊符号
+                if(VK.IS_INPUT(read,len)){
+
+                    //不允许键入CRLF
+                    if(VK.CONTAINS_CRLF(read,len)){
+                        pw.print("输入错误.");
+                        pw.flush();
+                        continue;
+                    }
+
+                    //光标不是在末尾 处理插入
+                    if(vCursor != vTextarea.length()){
+                        vTextarea.insert(vCursor,read,0,len);
+                    }else {
+                        //光标在末尾 附加
+                        vTextarea.append(read,0,len);
+                    }
+
+                    //vCursor++;
+                    vCursor = vCursor + len;
+                    //重新渲染当前行并同步光标位置
+                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    continue;
+                }
+
+                //处理光标左右移动
+                if(VK.IS_LEFT(read,len)){
+                    if(vCursor < 1){
+                        continue;
+                    }
+                    vCursor--;
+                    //svk.cursorLeft();
+                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    continue;
+                }
+
+                if(VK.IS_RIGHT(read,len)){
+                    if(vCursor >= vTextarea.length()){
+                        continue;
+                    }
+                    vCursor++;
+                    //svk.cursorRight();
+                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    continue;
+                }
+
+                //退格 处理字符删除
+                if(len == 1 && read[0] == VK.BACKSPACE){
+
+                    if(vCursor < 1){
+                        continue;
+                    }
+
+                    vTextarea.deleteCharAt(vCursor - 1);
+                    vCursor--;
+                    //重新渲染当前行并同步光标位置
+                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    continue;
+                }
 
                 //控制 UP (上一个命令)
                 if(VK.IS_UP(read,len)){
@@ -90,17 +150,25 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                //CTRL C
+                if(VK.IS_DELETE(read,len)){
+                    System.out.println("DELETE");
+                    continue;
+                }
+
+                //CTRL+C
                 if(len == 1 && read[0] == VK.CTRL_C){
                     //终止命令执行线程
                     pw.println("command abort");
+                    pw.flush();
+                    continue;
                 }
 
-                //回显输入字符
-                sb.append(read,0,len);
-                pw.print(sb.toString());
-                pw.flush();
-                sb.setLength(0);
+                //回车
+                if(len == 1 && read[0] == VK.ENTER){
+                    pw.println("executed:: " + vTextarea.toString());
+                    pw.flush();
+                    continue;
+                }
             }
 
         }catch (Exception ex){

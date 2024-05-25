@@ -160,6 +160,18 @@
 
     <build>
 
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.yaml</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.mmdb</include>
+                </includes>
+            </resource>
+        </resources>
+
         <!--<finalName>${project.artifactId}</finalName>--><!--修改编译出来的jar包名，仅为{artifactId}.jar-->
         <plugins>
 
@@ -208,17 +220,6 @@
             </plugin>
         </plugins>
 
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/**.xml</include>
-                    <include>**/**.yaml</include>
-                    <include>**/**.yml</include>
-                    <include>**/**.mmdb</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 
 </project>

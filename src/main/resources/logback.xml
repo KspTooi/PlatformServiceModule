@@ -10,9 +10,11 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <logger name="org.apache.sshd.common" level="OFF" />
 
     <logger name="java.sql.Connection">
         <level value="INFO" />
