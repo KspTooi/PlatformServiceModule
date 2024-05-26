@@ -2,7 +2,7 @@ package com.ksptooi;
 
 import com.ksptooi.psm.processor.ProcTools;
 import com.ksptooi.psm.processor.TestProcessor;
-import com.ksptooi.psm.processor.model.RequestDefine;
+import com.ksptooi.psm.processor.entity.RequestDefine;
 
 import java.util.List;
 

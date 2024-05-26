@@ -1,4 +1,4 @@
-package com.ksptooi.psm.processor.model;
+package com.ksptooi.psm.processor.entity;
 
 import com.ksptooi.psm.processor.Processor;
 import lombok.Data;

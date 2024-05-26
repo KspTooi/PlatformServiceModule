@@ -5,7 +5,7 @@ import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.ProcessorMapper;
 import com.ksptooi.psm.mapper.RequestMapper;
 import com.ksptooi.psm.modes.ProcessorVo;
-import com.ksptooi.psm.processor.model.ActiveProcessor;
+import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;

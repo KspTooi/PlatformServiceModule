@@ -1,8 +1,7 @@
 package com.ksptooi.psm.processor;
 
-import com.ksptooi.psm.processor.model.RequestDefine;
+import com.ksptooi.psm.processor.entity.RequestDefine;
 import com.ksptooi.uac.commons.ReflectUtils;
-import com.ksptooi.uac.core.annatatiotion.CommandMapping;
 import com.ksptooi.uac.core.annatatiotion.Param;
 
 import java.lang.annotation.Annotation;
