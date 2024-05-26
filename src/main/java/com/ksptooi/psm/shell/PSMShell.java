@@ -174,12 +174,16 @@ public class PSMShell implements Command,Runnable{
                 //回车
                 if(len == 1 && read[0] == VK.ENTER){
 
+                    if(vTextarea.isEmpty() || vTextarea.toString().trim().isEmpty()){
+                       continue;
+                    }
+
                     String statement = vTextarea.toString();
                     vTextarea.setLength(0);
                     vCursor = 0;
 
                     //svk.replaceCurrentLine("executed:: " + statement,0);
-                    //svk.nextLine();
+                    svk.nextLine();
 
                     //statement组装为请求
                     ProcRequest req = new ProcRequest();

@@ -13,9 +13,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 用于注册Processor
@@ -54,9 +52,13 @@ public class ProcessorManager {
      * @return
      */
     public Thread forward(ProcRequest request){
-
         PrintWriter pw = request.getPw();
-        pw.println("[ProcessorManager] 正在处理语句:"+request.getStatement());
+        pw.println("[ProcessorManager] 处理Statement:"+request.getStatement());
+        pw.flush();
+
+        resolverRequest(request);
+
+        pw.println("[ProcessorManager] 解析结果 Name:"+request.getName()+" Parameter:"+request.getParameter());
         pw.flush();
         return null;
     }
@@ -120,13 +122,45 @@ public class ProcessorManager {
 
     /**
      * 解析请求语句
-     * @param statement
+     * @param req
      * @return
      */
-    private ProcRequest resolverRequest(String statement){
+    private void resolverRequest(ProcRequest req){
 
+        String statement = req.getStatement();
 
-        return null;
+        String requestName = null;
+
+        //预处理
+        requestName = statement.trim();
+
+        //解析参数
+        String[] params = statement.split(">");
+
+        //无参数
+        if(params.length <= 1){
+            req.setName(requestName);
+            req.setParameter(new ArrayList<>());
+            return;
+        }
+
+        //有参数
+        List<String> paramList = new ArrayList<>();
+        String param = params[1];
+
+        String[] split = param.split(",");
+
+        for(String item:split){
+
+            if(item.trim().equals("")){
+                continue;
+            }
+
+            paramList.add(item.trim());
+        }
+
+        req.setName(params[0]);
+        req.setParameter(paramList);
     }
 
 
