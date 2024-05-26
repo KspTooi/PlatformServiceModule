@@ -3,7 +3,9 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.ProcessorMapper;
+import com.ksptooi.psm.mapper.RequestMapper;
 import com.ksptooi.psm.modes.ProcessorVo;
+import com.ksptooi.psm.processor.model.ActiveProcessor;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -29,9 +31,12 @@ public class ProcessorManager {
     private ProcessorMapper mapper;
 
     @Inject
+    private RequestMapper reqMapper;
+
+    @Inject
     private Snowflake snowflake;
 
-    private final Map<String,Processor> procMap = new HashMap<String,Processor>();
+    private final Map<String, ActiveProcessor> procMap = new HashMap<String,ActiveProcessor>();
 
     @Inject
     public ProcessorManager(ProcessorMapper mapper){
@@ -68,16 +73,38 @@ public class ProcessorManager {
             insert.setClassType(proc.getClass().getName());
             insert.setCreateTime(new Date());
             mapper.insert(insert);
-            procMap.put(name,proc);
+            ActiveProcessor ap = new ActiveProcessor();
+            ap.setProcId(insert.getId());
+            ap.setProcName(name);
+            ap.setProc(proc);
+            procMap.put(name,ap);
             proc.activated();
             return;
         }
 
         log.info("激活处理器:{} :: {}",name,proc.getClass().getName());
         byName.setStatus(0);
-        procMap.put(name, proc);
+        ActiveProcessor ap = new ActiveProcessor();
+        ap.setProcId(byName.getId());
+        ap.setProcName(name);
+        ap.setProc(proc);
+        procMap.put(name, ap);
         mapper.update(byName);
     }
+
+    /**
+     * 安装处理器指令
+     */
+    public void installProcRequest(){
+
+        for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
+
+
+
+        }
+
+    }
+
 
     /**
      * 向处理器转发请求

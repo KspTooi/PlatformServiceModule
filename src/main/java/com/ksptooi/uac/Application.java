@@ -7,6 +7,7 @@ import com.ksptooi.psm.modes.ProcessorVo;
 import com.ksptooi.psm.mybatis.DatabaseModule;
 import com.ksptooi.psm.processor.Processor;
 import com.ksptooi.psm.processor.ProcessorManager;
+import com.ksptooi.psm.processor.TestProcessor;
 import com.ksptooi.psm.shell.SshModules;
 import xyz.downgoon.snowflake.Snowflake;
 
@@ -23,6 +24,10 @@ public class Application {
 
         ProcessorManager instance = injector.getInstance(ProcessorManager.class);
         instance.scanFromPackage("com.ksptooi.psm");
+
+        TestProcessor tp = new TestProcessor();
+
+
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();

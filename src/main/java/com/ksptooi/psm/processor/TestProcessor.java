@@ -1,8 +1,6 @@
 package com.ksptooi.psm.processor;
 
-import com.ksptooi.uac.core.annatatiotion.CommandMapping;
 import com.ksptooi.uac.core.annatatiotion.Param;
-import com.ksptooi.uac.core.entities.CliCommand;
 
 @RequestProcessor("TestProcessor")
 public class TestProcessor implements Processor {
@@ -15,19 +13,19 @@ public class TestProcessor implements Processor {
 
     @Override
     public void newRequest(ProcRequest req, ProcResponse res) {
-
     }
 
     @Override
     public void destroy() {
-
     }
 
-    @RequestName("install")
-    @Alias({"i"})
-    public void appInstall(@Param("appName")String appName,@Param("path")String path, ProcRequest req){
+    @RequestName("ls")
+    @Alias({"Ls","lS"})
+    public void listFiles(@Param("p1")String p1,@Param("p2")String p2, ProcRequest req){
 
-        
+        String username = req.getSession().getSession().getUsername();
+
+        //获取用户当前目录
 
     }
 

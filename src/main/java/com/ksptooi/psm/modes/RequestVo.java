@@ -9,7 +9,7 @@ public class RequestVo {
 
     private Long id;
     private String name;
-    private Integer parameter_count;
+    private Integer parameterCount;
     private String parameters;
     private String metadata;
     private Long processorId;
