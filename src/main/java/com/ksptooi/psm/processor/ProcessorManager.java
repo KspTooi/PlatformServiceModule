@@ -3,13 +3,14 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.ProcessorMapper;
+import com.ksptooi.psm.modes.ProcessorVo;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.downgoon.snowflake.Snowflake;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,7 +28,21 @@ public class ProcessorManager {
     @Inject
     private ProcessorMapper mapper;
 
+    @Inject
+    private Snowflake snowflake;
+
     private final Map<String,Processor> procMap = new HashMap<String,Processor>();
+
+    @Inject
+    public ProcessorManager(ProcessorMapper mapper){
+        this.mapper = mapper;
+        shutdownAllProc();
+    }
+
+    public void shutdownAllProc(){
+        procMap.clear();
+        mapper.shutdown();
+    }
 
     public void register(Map<String, Processor> procMap) {
         for(Map.Entry<String, Processor> item:procMap.entrySet()){
@@ -37,13 +52,31 @@ public class ProcessorManager {
 
     public void register(String name,Processor proc){
 
-        if(procMap.containsKey(name)){
-            log.info("注册Processor失败 - 名称被占用 {}",name);
+        ProcessorVo byName = mapper.getByName(name);
+
+        if(byName != null && byName.getStatus() == 0){
+            log.info("无法激活处理器:{} :: {}",name,proc.getClass().getName());
             return;
         }
 
-        procMap.put(name,proc);
-        log.info("注册Processor:{}",name);
+        if(byName == null){
+            log.info("添加处理器:{} :: {}",name,proc.getClass().getName());
+            ProcessorVo insert = new ProcessorVo();
+            insert.setId(snowflake.nextId());
+            insert.setName(name);
+            insert.setStatus(0);
+            insert.setClassType(proc.getClass().getName());
+            insert.setCreateTime(new Date());
+            mapper.insert(insert);
+            procMap.put(name,proc);
+            proc.activated();
+            return;
+        }
+
+        log.info("激活处理器:{} :: {}",name,proc.getClass().getName());
+        byName.setStatus(0);
+        procMap.put(name, proc);
+        mapper.update(byName);
     }
 
     /**
@@ -60,6 +93,8 @@ public class ProcessorManager {
 
         pw.println("[ProcessorManager] 解析结果 Name:"+request.getName()+" Parameter:"+request.getParameter());
         pw.flush();
+
+
         return null;
     }
 
@@ -97,26 +132,18 @@ public class ProcessorManager {
     }
 
     private Map<String, Processor> getProcessorForClassSet(Set<Class<?>> classSet){
-
         if(classSet.size()<1){
             return new HashMap<>();
         }
-
         Map<String, Processor> retMap =  new HashMap<>();
-
         for(Class<?> item:classSet){
-
             try {
-
                 Processor processor = (Processor) item.newInstance();
-                retMap.put(item.getAnnotation(com.ksptooi.uac.core.annatatiotion.Processor.class).value(),processor);
-
+                retMap.put(item.getAnnotation(RequestProcessor.class).value(),processor);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
         return retMap;
     }
 

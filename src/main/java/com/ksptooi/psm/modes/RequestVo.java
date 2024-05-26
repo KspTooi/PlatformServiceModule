@@ -5,16 +5,14 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class ProcessorVo {
+public class RequestVo {
 
     private Long id;
-
     private String name;
-
-    private int status;
-
+    private Integer parameter_count;
+    private String parameters;
+    private String metadata;
+    private Long processorId;
     private Date createTime;
-
-    private String classType;
 
 }

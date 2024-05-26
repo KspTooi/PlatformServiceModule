@@ -45,6 +45,7 @@ public class ShellVK {
 
         String print = str;
 
+        //渲染的内容超出终端宽度(省略多余字符)
         if(print.length() >= columns - 11){
             int more = print.length() - (int)(columns - 11);
             print = print.substring(0, (int)(columns - 11));

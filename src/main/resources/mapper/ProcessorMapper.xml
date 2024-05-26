@@ -7,13 +7,29 @@
         <result column="ID" property="id"/>
         <result column="NAME" property="name"/>
         <result column="STATUS" property="status"/>
+        <result column="CLASS_TYPE" property="classType"/>
         <result column="CREATE_TIME" property="createTime" />
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO PROCESSORS(ID,NAME,STATUS,CREATE_TIME)
-        VALUES (#{id},#{name},#{status},#{createTime})
+        INSERT INTO PROCESSORS(ID,NAME,STATUS,CLASS_TYPE,CREATE_TIME)
+        VALUES (#{val.id},#{val.name},#{val.status},#{val.classType},#{val.createTime})
     </insert>
+
+    <update id="shutdown">
+        UPDATE PROCESSORS SET STATUS = 1
+        WHERE STATUS = 0
+    </update>
+
+    <update id="update">
+        UPDATE PROCESSORS
+        <set>
+            <if test="val.name != null">NAME = #{val.name},</if>
+            <if test="val.status != null">STATUS = #{val.status},</if>
+            <if test="val.classType != null">CLASS_TYPE = #{val.classType},</if>
+        </set>
+        WHERE ID = #{val.id}
+    </update>
 
     <select id="getByName" resultMap="poMap">
         SELECT * FROM PROCESSORS

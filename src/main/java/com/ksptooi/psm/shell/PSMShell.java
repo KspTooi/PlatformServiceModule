@@ -86,6 +86,10 @@ public class PSMShell implements Command,Runnable{
 
                 int len = br.read(read);
 
+                if(len < 1){
+                    break;
+                }
+
                 VK.print(read,len);
 
                 //输入字符/或特殊符号

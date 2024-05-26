@@ -21,6 +21,8 @@ public class Application {
 
     public static void main(String[] args) throws InterruptedException {
 
+        ProcessorManager instance = injector.getInstance(ProcessorManager.class);
+        instance.scanFromPackage("com.ksptooi.psm");
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();
