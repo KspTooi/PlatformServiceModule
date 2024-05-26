@@ -20,13 +20,15 @@ public class TestProcessor implements Processor {
     }
 
     @RequestName("ls")
+    public void listFiles(ProcRequest req){
+        System.out.println("ready");
+    }
+
+    @RequestName("ls")
     @Alias({"Ls","lS"})
     public void listFiles(@Param("p1")String p1,@Param("p2")String p2, ProcRequest req){
-
         String username = req.getSession().getSession().getUsername();
-
         //获取用户当前目录
-
     }
 
 }

@@ -31,5 +31,10 @@
         WHERE name = #{name}
     </select>
 
+    <select id="getByNameAndParameterCount" resultMap="poMap">
+        SELECT * FROM REQUEST_DEFINES
+        WHERE NAME = #{name} AND PARAMETER_COUNT = #{pCount}
+    </select>
+
 
 </mapper>

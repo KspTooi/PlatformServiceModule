@@ -14,6 +14,8 @@ public class ActiveProcessor {
 
     private Processor proc;
 
+    private String classType;
+
     private List<RequestDefine> requestDefines;
 
 }

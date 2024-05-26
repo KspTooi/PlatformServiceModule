@@ -42,16 +42,18 @@ public class ProcTools {
             define.setAlias(new ArrayList<>());
             define.setParameters(new ArrayList<>());
             define.setParameterCount(0);
+            define.setMethod(method);
 
             //拿到方法上RequestName注解的值
             String name = method.getAnnotation(RequestName.class).value();
             define.setName(name);
 
-            String[] alias = method.getAnnotation(Alias.class).value();
+
+            Alias annoAlias = method.getAnnotation(Alias.class);
 
             //请求有Alias
-            if(alias != null && alias.length > 0){
-                define.setAlias(Arrays.stream(alias).toList());
+            if(annoAlias != null && annoAlias.value().length > 0){
+                define.setAlias(Arrays.stream(annoAlias.value()).toList());
             }
 
             //获取请求参数
@@ -90,6 +92,56 @@ public class ProcTools {
         }
 
         return retString.toArray(new String[0]);
+    }
+
+    /**
+     * 组装方法参数
+     * @param method 需要组装参数的方法
+     * @param innerParam 需要注入的内部组件
+     * @param stringParam 外部入参
+     * @return 返回已组装好的参数组
+     */
+    public static Object[] assemblyParams(Method method, Object[] innerParam, List<String> stringParam){
+
+        if(stringParam==null){
+            stringParam = new ArrayList<>();
+        }
+
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+        //参数不足
+        if((parameterTypes.length - innerParam.length) > stringParam.size()){
+            return null;
+        }
+
+        Object[] params = new Object[method.getParameterCount()];
+
+        int paramCount = 0;
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+
+            boolean isInnerParam = false;
+
+            //判断当前参数类型是否为innerParam中的类型
+            for(Object item : innerParam){
+                if(parameterTypes[i].isInstance(item)){
+                    params[i] = item;
+                    isInnerParam = true;
+                }
+            }
+
+            try{
+                if(!isInnerParam){
+                    params[i] = stringParam.get(paramCount);
+                    paramCount ++;
+                }
+            }catch (IndexOutOfBoundsException e){
+                return null;
+            }
+
+        }
+
+        return params;
     }
 
 

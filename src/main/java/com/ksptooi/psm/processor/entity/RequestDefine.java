@@ -2,6 +2,7 @@ package com.ksptooi.psm.processor.entity;
 
 import lombok.Data;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -19,5 +20,7 @@ public class RequestDefine {
     private int parameterCount;
 
     private List<String> parameters;
+
+    private Method method;
 
 }

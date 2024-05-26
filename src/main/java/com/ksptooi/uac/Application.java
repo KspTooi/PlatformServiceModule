@@ -2,6 +2,7 @@ package com.ksptooi.uac;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.ksptooi.guice.compomentscan.ComponentScanModule;
 import com.ksptooi.psm.mapper.ProcessorMapper;
 import com.ksptooi.psm.modes.ProcessorVo;
 import com.ksptooi.psm.mybatis.DatabaseModule;
@@ -16,8 +17,9 @@ import java.util.concurrent.CountDownLatch;
 
 public class Application {
 
+    public final static ComponentScanModule csm = new ComponentScanModule("com.ksptooi");
 
-    public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule());
+    public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule(),csm);
 
 
     public static void main(String[] args) throws InterruptedException {

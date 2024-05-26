@@ -9,5 +9,7 @@ public interface RequestDefinesMapper {
 
     public RequestDefineVo getByName(@Param("name") String name);
 
+    public RequestDefineVo getByNameAndParameterCount(@Param("name") String name,@Param("pCount") int pCount);
+
     public int insert(@Param("val") RequestDefineVo vo);
 }

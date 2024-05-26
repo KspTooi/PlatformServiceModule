@@ -36,4 +36,9 @@
         WHERE NAME = #{name}
     </select>
 
+    <select id="getById" resultMap="poMap">
+        SELECT * FROM PROCESSORS
+        WHERE ID = #{id}
+    </select>
+
 </mapper>

@@ -205,6 +205,7 @@ public class PSMShell implements Command,Runnable{
                     req.setPw(pw);
                     req.setShellVk(svk);
                     processorManager.forward(req);
+                    System.out.println(processorManager);
                     continue;
                 }
 

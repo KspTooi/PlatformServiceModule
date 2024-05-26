@@ -9,6 +9,8 @@ public interface ProcessorMapper {
 
     public ProcessorVo getByName(@Param("name")String name);
 
+    public ProcessorVo getById(@Param("id")Long id);
+
     public int insert(@Param("val") ProcessorVo vo);
 
     public int shutdown();

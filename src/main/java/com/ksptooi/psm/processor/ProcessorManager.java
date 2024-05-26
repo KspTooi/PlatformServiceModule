@@ -9,6 +9,7 @@ import com.ksptooi.psm.modes.ProcessorVo;
 import com.ksptooi.psm.modes.RequestDefineVo;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import com.ksptooi.psm.processor.entity.RequestDefine;
+import com.ksptooi.uac.Application;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -16,9 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 用于注册Processor
@@ -33,23 +36,25 @@ public class ProcessorManager {
     private ProcessorMapper mapper;
 
     @Inject
-    private RequestDefinesMapper reqMapper;
+    private RequestDefinesMapper reqDefineMapper;
 
     @Inject
     private Snowflake snowflake;
 
-    private final Map<String, ActiveProcessor> procMap = new HashMap<String,ActiveProcessor>();
+    private final Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
 
 
     @Inject
     public ProcessorManager(ProcessorMapper mapper){
         this.mapper = mapper;
         shutdownAllProc();
+        System.out.println("ProcessorManager 初始化");
     }
 
     public void shutdownAllProc(){
         procMap.clear();
         mapper.shutdown();
+        log.info("下线处理器");
     }
 
     public void register(Map<String, Processor> procMap) {
@@ -81,7 +86,9 @@ public class ProcessorManager {
             ap.setProcName(name);
             ap.setProc(proc);
             ap.setRequestDefines(ProcTools.getRequestDefine(proc.getClass()));
+            ap.setClassType(proc.getClass().getName());
             procMap.put(name,ap);
+            Application.injector.injectMembers(proc);
             proc.activated();
             return;
         }
@@ -93,7 +100,10 @@ public class ProcessorManager {
         ap.setProcName(name);
         ap.setProc(proc);
         ap.setRequestDefines(ProcTools.getRequestDefine(proc.getClass()));
+        ap.setClassType(proc.getClass().getName());
         procMap.put(name, ap);
+        Application.injector.injectMembers(proc);
+        proc.activated();
         mapper.update(byName);
     }
 
@@ -111,7 +121,7 @@ public class ProcessorManager {
             for(RequestDefine def : defines){
 
                 //获取数据库RequestDefine
-                RequestDefineVo byName = reqMapper.getByName(def.getName());
+                RequestDefineVo byName = reqDefineMapper.getByNameAndParameterCount(def.getName(),def.getParameterCount());
 
                 if(byName == null){
 
@@ -136,7 +146,7 @@ public class ProcessorManager {
                     insert.setMetadata("");
                     insert.setProcessorId(proc.getId());
                     insert.setCreateTime(new Date());
-                    reqMapper.insert(insert);
+                    reqDefineMapper.insert(insert);
                 }
 
             }
@@ -152,12 +162,48 @@ public class ProcessorManager {
      * @return
      */
     public Thread forward(ProcRequest request){
-
+        //解析Statement
         resolverRequest(request);
 
         //根据指令名+指令参数数量 找到数据库RequestDefine
+        RequestDefineVo defVo = reqDefineMapper.getByNameAndParameterCount(request.getName(), request.getParameter().size());
 
-
+        if(defVo == null){
+            return null;
+        }
+        ProcessorVo procVo = mapper.getById(defVo.getProcessorId());
+        if(procVo == null){
+            return null;
+        }
+        //查找已加载的处理器
+        ActiveProcessor activeProc = procMap.get(procVo.getName());
+        if(!procVo.getClassType().equals(activeProc.getClassType())){
+            log.warn("处理器已损坏,可尝试重新加载修复问题. 预计类型 {} 实际类型 {}",procVo.getClassType(),activeProc.getClassType());
+            return null;
+        }
+        //匹配处理器中的Define
+        RequestDefine targetDef = null;
+        for(RequestDefine d : activeProc.getRequestDefines()){
+            if(d.getName().equals(request.getName()) && d.getParameterCount() == request.getParameter().size()){
+                targetDef = d;
+            }
+        }
+        if(targetDef != null){
+            //注入Define所需要的入参
+            Object[] innerPar = { request };
+            Object[] params = ProcTools.assemblyParams(targetDef.getMethod(), innerPar, request.getParameter());
+            try {
+                //执行处理器函数
+                targetDef.getMethod().invoke(activeProc.getProc(),params);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }
+        //如果没有找到注解 则执行默认处理器函数
+        activeProc.getProc().newRequest(request,new ProcResponse());
         return null;
     }
 
