@@ -1,13 +1,18 @@
 package com.ksptooi.psm.shell;
 
+import com.ksptooi.psm.processor.ProcRequest;
+import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
+import jakarta.inject.Inject;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class PSMShell implements Command,Runnable{
@@ -15,12 +20,16 @@ public class PSMShell implements Command,Runnable{
     private ExitCallback exitCallback;
     private OutputStream eos;
     private OutputStream os;
+    private PrintWriter pw;
     private InputStream is;
     private ChannelSession session;
     private Environment env;
 
     private final StringBuffer vTextarea = new StringBuffer();
     private int vCursor;
+
+    @Inject
+    private ProcessorManager processorManager;
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
@@ -59,8 +68,8 @@ public class PSMShell implements Command,Runnable{
     @Override
     public void setOutputStream(OutputStream os) {
         this.os = os;
+        this.pw = new PrintWriter(os);
     }
-
 
 
     @Override
@@ -69,7 +78,6 @@ public class PSMShell implements Command,Runnable{
         try{
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            PrintWriter pw = new PrintWriter(os);
             ShellVK svk = new ShellVK(os);
 
             char[] read = new char[2400];
@@ -165,8 +173,27 @@ public class PSMShell implements Command,Runnable{
 
                 //回车
                 if(len == 1 && read[0] == VK.ENTER){
-                    pw.println("executed:: " + vTextarea.toString());
-                    pw.flush();
+
+                    String statement = vTextarea.toString();
+                    vTextarea.setLength(0);
+                    vCursor = 0;
+
+                    //svk.replaceCurrentLine("executed:: " + statement,0);
+                    //svk.nextLine();
+
+                    //statement组装为请求
+                    ProcRequest req = new ProcRequest();
+                    req.setStatement(statement);
+                    req.setName(null);
+                    req.setParameter(new ArrayList<>());
+                    req.setParameters(new HashMap<>());
+                    req.setSession(session);
+                    req.setIs(is);
+                    req.setOs(os);
+                    req.setEos(eos);
+                    req.setPw(pw);
+                    req.setShellVk(svk);
+                    processorManager.forward(req);
                     continue;
                 }
 

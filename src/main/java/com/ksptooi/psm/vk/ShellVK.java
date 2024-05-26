@@ -55,6 +55,11 @@ public class ShellVK {
         pw.flush();
     }
 
+    public void nextLine(){
+        pw.write("\r\n");
+        pw.flush();
+    }
+
     public void backspace(){
         pw.print("\b \b"); // 使用 ANSI 控制序列删除当前位置字
         // 发送光标左移的控制序列
