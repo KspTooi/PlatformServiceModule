@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ksptooi.psm.mapper.RequestMapper">
+<mapper namespace="com.ksptooi.psm.mapper.RequestDefinesMapper">
 
-    <resultMap id="poMap" type="com.ksptooi.psm.modes.RequestVo">
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.RequestDefineVo">
         <result column="ID" property="id"/>
         <result column="NAME" property="name"/>
-        <result column="PARAMETER_COUNT" property="parameter_count"/>
+        <result column="PARAMETER_COUNT" property="parameterCount"/>
         <result column="PARAMETERS" property="parameters" />
         <result column="METADATA" property="metadata" />
         <result column="PROCESSOR_ID" property="processorId" />
@@ -14,11 +14,11 @@
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO REQUESTS(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROCESSOR_ID,CREATE_TIME)
+        INSERT INTO REQUEST_DEFINES(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROCESSOR_ID,CREATE_TIME)
         VALUES (
                 #{val.id}
                ,#{val.name}
-               ,#{val.parameters}
+               ,#{val.parameterCount}
                ,#{val.parameters}
                ,#{val.metadata}
                ,#{val.processorId}
@@ -27,7 +27,7 @@
     </insert>
 
     <select id="getByName" resultMap="poMap">
-        SELECT * FROM REQUESTS
+        SELECT * FROM REQUEST_DEFINES
         WHERE name = #{name}
     </select>
 

@@ -24,10 +24,7 @@ public class Application {
 
         ProcessorManager instance = injector.getInstance(ProcessorManager.class);
         instance.scanFromPackage("com.ksptooi.psm");
-
-        TestProcessor tp = new TestProcessor();
-
-
+        instance.installProcRequest();
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();

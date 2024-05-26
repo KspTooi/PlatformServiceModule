@@ -18,6 +18,13 @@ public class ProcTools {
      */
     public static List<RequestDefine> getRequestDefine(Class<?> proc){
 
+        //获取处理器名称
+        RequestProcessor annotation = proc.getAnnotation(RequestProcessor.class);
+
+        if(annotation == null){
+            return new ArrayList<>();
+        }
+
         //拿到该Class里面带注解的方法列表
         Method[] methodByAnnotation = ReflectUtils.getMethodByAnnotation(proc, RequestName.class);
 
@@ -31,6 +38,7 @@ public class ProcTools {
 
             RequestDefine define = new RequestDefine();
             define.setName(null);
+            define.setProcName(annotation.value());
             define.setAlias(new ArrayList<>());
             define.setParameters(new ArrayList<>());
             define.setParameterCount(0);

@@ -12,6 +12,8 @@ public class RequestDefine {
 
     private String name;
 
+    private String procName;
+
     private List<String> alias;
 
     private int parameterCount;

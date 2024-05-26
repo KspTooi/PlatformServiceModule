@@ -1,11 +1,14 @@
 package com.ksptooi.psm.processor;
 
 
+import com.alibaba.fastjson.JSON;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.ProcessorMapper;
-import com.ksptooi.psm.mapper.RequestMapper;
+import com.ksptooi.psm.mapper.RequestDefinesMapper;
 import com.ksptooi.psm.modes.ProcessorVo;
+import com.ksptooi.psm.modes.RequestDefineVo;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
+import com.ksptooi.psm.processor.entity.RequestDefine;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -13,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -31,12 +33,13 @@ public class ProcessorManager {
     private ProcessorMapper mapper;
 
     @Inject
-    private RequestMapper reqMapper;
+    private RequestDefinesMapper reqMapper;
 
     @Inject
     private Snowflake snowflake;
 
     private final Map<String, ActiveProcessor> procMap = new HashMap<String,ActiveProcessor>();
+
 
     @Inject
     public ProcessorManager(ProcessorMapper mapper){
@@ -77,6 +80,7 @@ public class ProcessorManager {
             ap.setProcId(insert.getId());
             ap.setProcName(name);
             ap.setProc(proc);
+            ap.setRequestDefines(ProcTools.getRequestDefine(proc.getClass()));
             procMap.put(name,ap);
             proc.activated();
             return;
@@ -88,6 +92,7 @@ public class ProcessorManager {
         ap.setProcId(byName.getId());
         ap.setProcName(name);
         ap.setProc(proc);
+        ap.setRequestDefines(ProcTools.getRequestDefine(proc.getClass()));
         procMap.put(name, ap);
         mapper.update(byName);
     }
@@ -99,7 +104,42 @@ public class ProcessorManager {
 
         for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
 
+            List<RequestDefine> defines = item.getValue().getRequestDefines();
 
+            String procClassType = item.getValue().getProc().getClass().getName();
+
+            for(RequestDefine def : defines){
+
+                //获取数据库RequestDefine
+                RequestDefineVo byName = reqMapper.getByName(def.getName());
+
+                if(byName == null){
+
+                    ProcessorVo proc = mapper.getByName(def.getProcName());
+
+                    if(proc == null){
+                        log.warn("无法为处理器 {} 安装指令 {}. 该处理器不存在于数据库中.",def.getProcName(),def.getName());
+                        continue;
+                    }
+
+                    if(!proc.getClassType().equals(procClassType)){
+                        log.warn("无法为处理器 {} 安装指令 {}. 处理器ClassType校验失败. 应为 {} 实际 {}",def.getProcName(),def.getName(),proc.getClassType(),procClassType);
+                        continue;
+                    }
+
+                    log.info("安装处理器指令:{}->{}",def.getProcName(),def.getName());
+                    RequestDefineVo insert = new RequestDefineVo();
+                    insert.setId(snowflake.nextId());
+                    insert.setName(def.getName());
+                    insert.setParameterCount(def.getParameterCount());
+                    insert.setParameters(JSON.toJSONString(def.getParameters()));
+                    insert.setMetadata("");
+                    insert.setProcessorId(proc.getId());
+                    insert.setCreateTime(new Date());
+                    reqMapper.insert(insert);
+                }
+
+            }
 
         }
 
@@ -112,14 +152,10 @@ public class ProcessorManager {
      * @return
      */
     public Thread forward(ProcRequest request){
-        PrintWriter pw = request.getPw();
-        pw.println("[ProcessorManager] 处理Statement:"+request.getStatement());
-        pw.flush();
 
         resolverRequest(request);
 
-        pw.println("[ProcessorManager] 解析结果 Name:"+request.getName()+" Parameter:"+request.getParameter());
-        pw.flush();
+        //根据指令名+指令参数数量 找到数据库RequestDefine
 
 
         return null;
