@@ -21,7 +21,7 @@ public class TestProcessor implements Processor {
 
     @RequestName("ls")
     public void listFiles(ProcRequest req){
-        System.out.println("ready");
+
     }
 
     @RequestName("ls")
