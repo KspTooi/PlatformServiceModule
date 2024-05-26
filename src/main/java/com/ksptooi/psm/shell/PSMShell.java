@@ -78,7 +78,7 @@ public class PSMShell implements Command,Runnable{
         try{
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            ShellVK svk = new ShellVK(os);
+            ShellVK svk = new ShellVK(os,env);
 
             char[] read = new char[2400];
 
@@ -108,6 +108,7 @@ public class PSMShell implements Command,Runnable{
 
                     //vCursor++;
                     vCursor = vCursor + len;
+
                     //重新渲染当前行并同步光标位置
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;
@@ -119,7 +120,7 @@ public class PSMShell implements Command,Runnable{
                         continue;
                     }
                     vCursor--;
-                    //svk.cursorLeft();
+
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;
                 }
@@ -130,6 +131,7 @@ public class PSMShell implements Command,Runnable{
                     }
                     vCursor++;
                     //svk.cursorRight();
+
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;
                 }
@@ -143,6 +145,7 @@ public class PSMShell implements Command,Runnable{
 
                     vTextarea.deleteCharAt(vCursor - 1);
                     vCursor--;
+
                     //重新渲染当前行并同步光标位置
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;

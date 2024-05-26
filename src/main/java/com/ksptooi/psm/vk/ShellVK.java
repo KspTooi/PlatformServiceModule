@@ -1,5 +1,7 @@
 package com.ksptooi.psm.vk;
 
+import org.apache.sshd.server.Environment;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -9,10 +11,12 @@ public class ShellVK {
     private OutputStream os;
     private PrintWriter pw;
     private StringBuffer sb = new StringBuffer();
+    private Environment env;
 
-    public ShellVK(OutputStream os){
+    public ShellVK(OutputStream os, Environment env){
         this.os = os;
         this.pw = new PrintWriter(os);
+        this.env = env;
     }
 
     public void press(char[] c,int len) throws IOException {
@@ -34,8 +38,20 @@ public class ShellVK {
     public void replaceCurrentLine(String str,int cursor){
         pw.write("\r");
         pw.write("\033[K");
-        pw.write(str);
+        pw.write("\033[2K");
 
+        //获取终端大小
+        int columns = Integer.parseInt(env.getEnv().get("COLUMNS"));
+
+        String print = str;
+
+        if(print.length() >= columns - 11){
+            int more = print.length() - (int)(columns - 11);
+            print = print.substring(0, (int)(columns - 11));
+            print = print + ">>more("+more+")";
+        }
+
+        pw.write(print);
         pw.write("\r");
 
         for (int i = 0; i < cursor; i++) {
@@ -69,8 +85,10 @@ public class ShellVK {
         pw.flush();
     }
 
-    public void back(){
-
+    public void deleteDoubleWidth(){
+        pw.print("\b \b");
+        pw.print("\b \b");
+        pw.flush();
     }
 
     public void cursorLeft() {
@@ -83,9 +101,29 @@ public class ShellVK {
         pw.flush();
     }
 
+    public void synCursor(String text,int vCursor){
+        pw.write("\r");
+
+        for (int i = 0; i < vCursor; i++) {
+            //pw.write("\033[C"); //右移同步光标
+
+            char c = text.charAt(i);
+
+            //双宽字符需要移动两次光标
+            if(isDoubleWidth(c)){
+                pw.write("\033[C\033[C");  //中文字符在控制台上占两个位置
+            }else {
+                pw.write("\033[C"); // 其他字符占一个位置
+            }
+
+        }
+
+        pw.flush();
+    }
+
 
     //判断字符是否是双宽字符
-    public static boolean isDoubleWidth(char c) {
+    public boolean isDoubleWidth(char c) {
 
         if ((int) c <= 127) {
             return false;
