@@ -195,8 +195,8 @@ public class PSMShell implements Command,Runnable{
                     //statement组装为请求
                     ProcRequest req = new ProcRequest();
                     req.setStatement(statement);
-                    req.setName(null);
-                    req.setParameter(new ArrayList<>());
+                    req.setPattern(null);
+                    req.setParams(new ArrayList<>());
                     req.setParameters(new HashMap<>());
                     req.setSession(session);
                     req.setIs(is);

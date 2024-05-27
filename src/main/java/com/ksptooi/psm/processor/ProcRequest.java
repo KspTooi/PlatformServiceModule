@@ -16,11 +16,11 @@ public class ProcRequest {
     //请求原始语句
     private String statement;
 
-    //请求名称
-    private String name;
+    //请求Pattern
+    private String pattern;
 
     //请求参数
-    private List<String> parameter;
+    private List<String> params;
 
     //请求参数组
     private Map<String,String> parameters;
