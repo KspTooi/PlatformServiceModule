@@ -12,7 +12,8 @@ public class TestProcessor implements Processor {
     }
 
     @Override
-    public void newRequest(ProcRequest req, ProcResponse res) {
+    public void newRequest(ProcRequest req) {
+
     }
 
     @Override

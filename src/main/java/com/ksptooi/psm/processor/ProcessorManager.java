@@ -3,20 +3,16 @@ package com.ksptooi.psm.processor;
 
 import com.alibaba.fastjson.JSON;
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.psm.mapper.ProcessorMapper;
 import com.ksptooi.psm.mapper.RequestDefinesMapper;
-import com.ksptooi.psm.modes.ProcessorVo;
 import com.ksptooi.psm.modes.RequestDefineVo;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
-import com.ksptooi.psm.processor.entity.RequestDefine;
-import com.ksptooi.uac.Application;
+import com.ksptooi.psm.processor.entity.ProcDefine;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
-
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -33,9 +29,6 @@ public class ProcessorManager {
     private static final Logger log = LoggerFactory.getLogger(ProcessorManager.class);
 
     @Inject
-    private ProcessorMapper mapper;
-
-    @Inject
     private RequestDefinesMapper reqDefineMapper;
 
     @Inject
@@ -45,17 +38,10 @@ public class ProcessorManager {
 
 
     @Inject
-    public ProcessorManager(ProcessorMapper mapper){
-        this.mapper = mapper;
-        shutdownAllProc();
+    public ProcessorManager(){
         System.out.println("ProcessorManager 初始化");
     }
 
-    public void shutdownAllProc(){
-        procMap.clear();
-        mapper.shutdown();
-        log.info("下线处理器");
-    }
 
     public void register(Map<String, Processor> procMap) {
         for(Map.Entry<String, Processor> item:procMap.entrySet()){
@@ -63,48 +49,13 @@ public class ProcessorManager {
         }
     }
 
+    /**
+     * 注册处理器
+     */
     public void register(String name,Processor proc){
 
-        ProcessorVo byName = mapper.getByName(name);
 
-        if(byName != null && byName.getStatus() == 0){
-            log.info("无法激活处理器:{} :: {}",name,proc.getClass().getName());
-            return;
-        }
 
-        if(byName == null){
-            log.info("添加处理器:{} :: {}",name,proc.getClass().getName());
-            ProcessorVo insert = new ProcessorVo();
-            insert.setId(snowflake.nextId());
-            insert.setName(name);
-            insert.setStatus(0);
-            insert.setClassType(proc.getClass().getName());
-            insert.setCreateTime(new Date());
-            mapper.insert(insert);
-            ActiveProcessor ap = new ActiveProcessor();
-            ap.setProcId(insert.getId());
-            ap.setProcName(name);
-            ap.setProc(proc);
-            ap.setRequestDefines(ProcTools.getRequestDefine(proc.getClass()));
-            ap.setClassType(proc.getClass().getName());
-            procMap.put(name,ap);
-            Application.injector.injectMembers(proc);
-            proc.activated();
-            return;
-        }
-
-        log.info("激活处理器:{} :: {}",name,proc.getClass().getName());
-        byName.setStatus(0);
-        ActiveProcessor ap = new ActiveProcessor();
-        ap.setProcId(byName.getId());
-        ap.setProcName(name);
-        ap.setProc(proc);
-        ap.setRequestDefines(ProcTools.getRequestDefine(proc.getClass()));
-        ap.setClassType(proc.getClass().getName());
-        procMap.put(name, ap);
-        Application.injector.injectMembers(proc);
-        proc.activated();
-        mapper.update(byName);
     }
 
     /**
@@ -114,39 +65,39 @@ public class ProcessorManager {
 
         for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
 
-            List<RequestDefine> defines = item.getValue().getRequestDefines();
+            List<ProcDefine> defines = item.getValue().getProcDefines();
 
             String procClassType = item.getValue().getProc().getClass().getName();
 
-            for(RequestDefine def : defines){
+            for(ProcDefine def : defines){
 
                 //获取数据库RequestDefine
-                RequestDefineVo byName = reqDefineMapper.getByNameAndParameterCount(def.getName(),def.getParameterCount());
+                RequestDefineVo byName = reqDefineMapper.getByNameAndParameterCount(def.getPattern(),def.getParamCount());
 
                 if(byName == null){
 
-                    ProcessorVo proc = mapper.getByName(def.getProcName());
-
-                    if(proc == null){
-                        log.warn("无法为处理器 {} 安装指令 {}. 该处理器不存在于数据库中.",def.getProcName(),def.getName());
-                        continue;
-                    }
-
-                    if(!proc.getClassType().equals(procClassType)){
-                        log.warn("无法为处理器 {} 安装指令 {}. 处理器ClassType校验失败. 应为 {} 实际 {}",def.getProcName(),def.getName(),proc.getClassType(),procClassType);
-                        continue;
-                    }
-
-                    log.info("安装处理器指令:{}->{}",def.getProcName(),def.getName());
-                    RequestDefineVo insert = new RequestDefineVo();
-                    insert.setId(snowflake.nextId());
-                    insert.setName(def.getName());
-                    insert.setParameterCount(def.getParameterCount());
-                    insert.setParameters(JSON.toJSONString(def.getParameters()));
-                    insert.setMetadata("");
-                    insert.setProcessorId(proc.getId());
-                    insert.setCreateTime(new Date());
-                    reqDefineMapper.insert(insert);
+                    //ProcessorVo proc = mapper.getByName(def.getProcName());
+//
+                    //if(proc == null){
+                    //    log.warn("无法为处理器 {} 安装指令 {}. 该处理器不存在于数据库中.",def.getProcName(),def.getPattern());
+                    //    continue;
+                    //}
+//
+                    //if(!proc.getClassType().equals(procClassType)){
+                    //    log.warn("无法为处理器 {} 安装指令 {}. 处理器ClassType校验失败. 应为 {} 实际 {}",def.getProcName(),def.getPattern(),proc.getClassType(),procClassType);
+                    //    continue;
+                    //}
+//
+                    //log.info("安装处理器指令:{}->{}",def.getProcName(),def.getPattern());
+                    //RequestDefineVo insert = new RequestDefineVo();
+                    //insert.setId(snowflake.nextId());
+                    //insert.setName(def.getPattern());
+                    //insert.setParameterCount(def.getParamCount());
+                    //insert.setParameters(JSON.toJSONString(def.getParams()));
+                    //insert.setMetadata("");
+                    //insert.setProcessorId(proc.getId());
+                    //insert.setCreateTime(new Date());
+                    //reqDefineMapper.insert(insert);
                 }
 
             }
@@ -162,8 +113,9 @@ public class ProcessorManager {
      * @return
      */
     public Thread forward(ProcRequest request){
+
         //解析Statement
-        resolverRequest(request);
+/*        resolverRequest(request);
 
         //根据指令名+指令参数数量 找到数据库RequestDefine
         RequestDefineVo defVo = reqDefineMapper.getByNameAndParameterCount(request.getName(), request.getParameter().size());
@@ -182,9 +134,9 @@ public class ProcessorManager {
             return null;
         }
         //匹配处理器中的Define
-        RequestDefine targetDef = null;
-        for(RequestDefine d : activeProc.getRequestDefines()){
-            if(d.getName().equals(request.getName()) && d.getParameterCount() == request.getParameter().size()){
+        ProcDefine targetDef = null;
+        for(ProcDefine d : activeProc.getProcDefines()){
+            if(d.getPattern().equals(request.getName()) && d.getParamCount() == request.getParameter().size()){
                 targetDef = d;
             }
         }
@@ -203,7 +155,7 @@ public class ProcessorManager {
             return null;
         }
         //如果没有找到注解 则执行默认处理器函数
-        activeProc.getProc().newRequest(request,new ProcResponse());
+        activeProc.getProc().newRequest(request);*/
         return null;
     }
 

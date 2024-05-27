@@ -12,7 +12,8 @@ public class RequestDefineVo {
     private Integer parameterCount;
     private String parameters;
     private String metadata;
-    private Long processorId;
+    private String procName;
+    private String procClassType;
     private Date createTime;
 
 }

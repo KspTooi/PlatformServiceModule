@@ -9,19 +9,21 @@
         <result column="PARAMETER_COUNT" property="parameterCount"/>
         <result column="PARAMETERS" property="parameters" />
         <result column="METADATA" property="metadata" />
-        <result column="PROCESSOR_ID" property="processorId" />
+        <result column="PROC_NAME" property="procName" />
+        <result column="PROC_CLASS_TYPE" property="procClassType" />
         <result column="CREATE_TIME" property="createTime" />
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO REQUEST_DEFINES(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROCESSOR_ID,CREATE_TIME)
+        INSERT INTO REQUEST_DEFINES(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROC_NAME,PROC_CLASS_TYPE,CREATE_TIME)
         VALUES (
                 #{val.id}
                ,#{val.name}
                ,#{val.parameterCount}
                ,#{val.parameters}
                ,#{val.metadata}
-               ,#{val.processorId}
+               ,#{val.procName}
+               ,#{val.procClassType}
                ,#{val.createTime}
                )
     </insert>
@@ -35,6 +37,8 @@
         SELECT * FROM REQUEST_DEFINES
         WHERE NAME = #{name} AND PARAMETER_COUNT = #{pCount}
     </select>
+
+
 
 
 </mapper>

@@ -16,6 +16,6 @@ public class ActiveProcessor {
 
     private String classType;
 
-    private List<RequestDefine> requestDefines;
+    private List<ProcDefine> procDefines;
 
 }

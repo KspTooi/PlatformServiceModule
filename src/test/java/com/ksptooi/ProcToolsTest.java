@@ -1,8 +1,9 @@
 package com.ksptooi;
 
-import com.ksptooi.psm.processor.ProcTools;
-import com.ksptooi.psm.processor.TestProcessor;
-import com.ksptooi.psm.processor.entity.RequestDefine;
+import com.ksptooi.psm.processor.*;
+import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.uac.core.annatatiotion.Param;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -12,10 +13,46 @@ public class ProcToolsTest {
 
         TestProcessor tp = new TestProcessor();
 
-        List<RequestDefine> requestDefine = ProcTools.getRequestDefine(TestProcessor.class);
+        List<ProcDefine> procDefine = ProcTools.getRequestDefine(TestProcessor.class);
 
-        System.out.println(requestDefine);
+        System.out.println(procDefine);
 
+    }
+
+    @Test
+    public void getProcDefine() throws ProcDefineException {
+
+        List<ProcDefine> procDefine = ProcTools.getProcDefine(TestProc.class);
+
+        System.out.println(procDefine);
+
+    }
+
+}
+
+@RequestProcessor("TestProc")
+class TestProc{
+
+    @RequestHandler("*")
+    public void newRequest(ProcRequest request){
+    }
+
+    @OnActivated
+    public void start(){
+
+    }
+
+    @OnDestroy
+    public void close(){
+
+    }
+
+    @RequestHandler("ls")
+    public void listFiles(){
+    }
+
+    @RequestHandler("ls")
+    public void listFiles(@Param("directory")String dir, ProcRequest request){
     }
 
 }
