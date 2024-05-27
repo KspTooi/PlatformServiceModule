@@ -1,10 +1,9 @@
 package com.ksptooi.psm.processor;
 
 
-import com.alibaba.fastjson.JSON;
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.psm.mapper.RequestDefinesMapper;
-import com.ksptooi.psm.modes.RequestDefineVo;
+import com.ksptooi.psm.mapper.RequestHandlerMapper;
+import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import com.ksptooi.psm.processor.entity.ProcDefine;
 import jakarta.inject.Inject;
@@ -29,7 +28,7 @@ public class ProcessorManager {
     private static final Logger log = LoggerFactory.getLogger(ProcessorManager.class);
 
     @Inject
-    private RequestDefinesMapper reqDefineMapper;
+    private RequestHandlerMapper reqDefineMapper;
 
     @Inject
     private Snowflake snowflake;
@@ -74,7 +73,6 @@ public class ProcessorManager {
             procMap.put(procName,p);
             log.info("已注册处理器:{} 包含{}个子系统",procName,procDefine.size());
 
-
             ProcDefine hook = DefineTools.getHook(ProcDefType.HOOK_ACTIVATED, procDefine);
 
             if(hook!=null){
@@ -104,7 +102,7 @@ public class ProcessorManager {
             for(ProcDefine def : defines){
 
                 //获取数据库RequestDefine
-                RequestDefineVo byName = reqDefineMapper.getByNameAndParameterCount(def.getPattern(),def.getParamCount());
+                RequestHandlerVo byName = reqDefineMapper.getByNameAndParameterCount(def.getPattern(),def.getParamCount());
 
                 if(byName == null){
 

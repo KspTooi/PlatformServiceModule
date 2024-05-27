@@ -22,7 +22,7 @@
         <mapper resource="mapper/CommandMapper.xml"/>
         <mapper resource="mapper/DocumentMapper.xml"/>
         <mapper resource="mapper/DatabaseMapper.xml"/>
-        <mapper resource="mapper/RequestDefinesMapper.xml"/>
+        <mapper resource="mapper/RequestHandlerMapper.xml"/>
     </mappers>
 
 </configuration>

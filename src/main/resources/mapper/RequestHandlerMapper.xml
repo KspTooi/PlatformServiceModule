@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ksptooi.psm.mapper.RequestDefinesMapper">
+<mapper namespace="com.ksptooi.psm.mapper.RequestHandlerMapper">
 
-    <resultMap id="poMap" type="com.ksptooi.psm.modes.RequestDefineVo">
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.RequestHandlerVo">
         <result column="ID" property="id"/>
         <result column="NAME" property="name"/>
         <result column="PARAMETER_COUNT" property="parameterCount"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO REQUEST_DEFINES(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROC_NAME,PROC_CLASS_TYPE,CREATE_TIME)
+        INSERT INTO REQUEST_HANDLER(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROC_NAME,PROC_CLASS_TYPE,CREATE_TIME)
         VALUES (
                 #{val.id}
                ,#{val.name}
@@ -29,12 +29,12 @@
     </insert>
 
     <select id="getByName" resultMap="poMap">
-        SELECT * FROM REQUEST_DEFINES
+        SELECT * FROM REQUEST_HANDLER
         WHERE name = #{name}
     </select>
 
     <select id="getByNameAndParameterCount" resultMap="poMap">
-        SELECT * FROM REQUEST_DEFINES
+        SELECT * FROM REQUEST_HANDLER
         WHERE NAME = #{name} AND PARAMETER_COUNT = #{pCount}
     </select>
 

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class RequestDefineVo {
+public class RequestHandlerVo {
 
     private Long id;
     private String name;
