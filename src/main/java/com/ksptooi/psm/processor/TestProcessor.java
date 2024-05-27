@@ -1,5 +1,7 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.psm.processor.hook.EventHandler;
+import com.ksptooi.psm.processor.hook.OnActivated;
 import com.ksptooi.uac.core.annatatiotion.Param;
 
 import java.io.PrintWriter;
@@ -30,6 +32,11 @@ public class TestProcessor {
         PrintWriter w = req.getPw();
         w.println("执行有参Handler 参数为:"+p1);
         w.flush();
+    }
+
+    @EventHandler
+    public void onStatementCommit(){
+
     }
 
 }

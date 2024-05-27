@@ -96,7 +96,7 @@ public class ProcessorManager {
     /**
      * 安装处理器指令
      */
-    public void installProcRequest(){
+    public void installProcHandler(){
 
         for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
 

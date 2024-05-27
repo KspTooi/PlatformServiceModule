@@ -1,4 +1,4 @@
-package com.ksptooi.psm.processor;
+package com.ksptooi.psm.processor.hook;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

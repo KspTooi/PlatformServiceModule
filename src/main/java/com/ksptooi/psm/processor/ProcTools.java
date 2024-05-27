@@ -1,6 +1,8 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.hook.OnActivated;
+import com.ksptooi.psm.processor.hook.OnDestroy;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.apache.commons.lang3.StringUtils;
