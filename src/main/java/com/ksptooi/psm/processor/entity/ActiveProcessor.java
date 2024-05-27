@@ -10,9 +10,7 @@ public class ActiveProcessor {
 
     private String procName;
 
-    private long procId;
-
-    private Processor proc;
+    private Object proc;
 
     private String classType;
 

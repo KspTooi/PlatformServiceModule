@@ -85,8 +85,17 @@ public class ProcTools {
         return ret;
     }
 
+    public static String getProcName(Class<?> proc){
 
+        //获取处理器名称
+        RequestProcessor annoProc = proc.getAnnotation(RequestProcessor.class);
 
+        if(annoProc == null){
+            return null;
+        }
+
+        return annoProc.value();
+    }
 
     /**
      * 查找该处理器中的请求映射(定义)

@@ -43,18 +43,50 @@ public class ProcessorManager {
     }
 
 
-    public void register(Map<String, Processor> procMap) {
-        for(Map.Entry<String, Processor> item:procMap.entrySet()){
-            this.register(item.getKey(),item.getValue());
+    public void register(List<Object> procMap) {
+        for(Object obj : procMap){
+            register(obj);
         }
     }
 
     /**
      * 注册处理器
      */
-    public void register(String name,Processor proc){
+    public void register(Object proc){
+
+        String procName = ProcTools.getProcName(proc.getClass());
+        String classType = proc.getClass().getName();
+
+        try {
+
+            List<ProcDefine> procDefine = ProcTools.getProcDefine(proc.getClass());
+
+            if(procMap.containsKey(procName)){
+                log.warn("无法注册处理器:{} 处理器名称冲突,当前已注册了一个相同名字的处理器.",procName);
+                return;
+            }
+
+            ActiveProcessor p = new ActiveProcessor();
+            p.setProcName(procName);
+            p.setProc(proc);
+            p.setClassType(classType);
+            p.setProcDefines(procDefine);
+            procMap.put(procName,p);
+            log.info("已注册处理器:{} 包含{}个子系统",procName,procDefine.size());
 
 
+            ProcDefine hook = DefineTools.getHook(ProcDefType.HOOK_ACTIVATED, procDefine);
+
+            if(hook!=null){
+                hook.getMethod().invoke(proc);
+            }
+
+        } catch (ProcDefineException e) {
+            //e.printStackTrace();
+            log.warn("无法注册处理器:{} - {} 因为处理器已损坏.",procName,classType);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -192,20 +224,24 @@ public class ProcessorManager {
         register(getProcessorForClassSet(typesAnnotatedWith));
     }
 
-    private Map<String, Processor> getProcessorForClassSet(Set<Class<?>> classSet){
-        if(classSet.size()<1){
-            return new HashMap<>();
+    private List<Object> getProcessorForClassSet(Set<Class<?>> classSet){
+
+        if(classSet.isEmpty()){
+            return new ArrayList<>();
         }
-        Map<String, Processor> retMap =  new HashMap<>();
+
+        List<Object> ret = new ArrayList<>();
+
         for(Class<?> item:classSet){
             try {
-                Processor processor = (Processor) item.newInstance();
-                retMap.put(item.getAnnotation(RequestProcessor.class).value(),processor);
+                Object processor = item.getDeclaredConstructor().newInstance();
+                ret.add(processor);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return retMap;
+
+        return ret;
     }
 
     /**
