@@ -1,19 +1,36 @@
 package com.ksptooi.psm.modes;
 
 import lombok.Data;
-
 import java.util.Date;
 
 @Data
 public class RequestHandlerVo {
 
+    //ID
     private Long id;
-    private String name;
-    private Integer parameterCount;
-    private String parameters;
-    private String metadata;
+
+    //匹配模式
+    private String pattern;
+
+    //参数
+    private String params;
+
+    //参数长度
+    private Integer paramsCount;
+
+    //处理器名称
     private String procName;
+
+    //处理器ClassType
     private String procClassType;
+
+    //状态 0:正常 1:被删除
+    private Integer status;
+
+    //元数据
+    private String metadata;
+
+    //创建时间
     private Date createTime;
 
 }

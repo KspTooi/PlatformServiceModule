@@ -102,7 +102,7 @@ public class ProcessorManager {
             for(ProcDefine def : defines){
 
                 //获取数据库RequestDefine
-                RequestHandlerVo byName = reqDefineMapper.getByNameAndParameterCount(def.getPattern(),def.getParamCount());
+                RequestHandlerVo byName = reqDefineMapper.getByPatternAndParamsCount(def.getPattern(),def.getParamCount());
 
                 if(byName == null){
 

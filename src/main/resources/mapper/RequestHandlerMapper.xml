@@ -5,40 +5,45 @@
 
     <resultMap id="poMap" type="com.ksptooi.psm.modes.RequestHandlerVo">
         <result column="ID" property="id"/>
-        <result column="NAME" property="name"/>
-        <result column="PARAMETER_COUNT" property="parameterCount"/>
-        <result column="PARAMETERS" property="parameters" />
-        <result column="METADATA" property="metadata" />
-        <result column="PROC_NAME" property="procName" />
-        <result column="PROC_CLASS_TYPE" property="procClassType" />
-        <result column="CREATE_TIME" property="createTime" />
+        <result column="PATTERN" property="pattern"/>
+        <result column="PARAMS" property="params"/>
+        <result column="PARAMS_COUNT" property="paramsCount"/>
+        <result column="PROC_NAME" property="procName"/>
+        <result column="PROC_CLASS_TYPE" property="procClassType"/>
+        <result column="STATUS" property="status"/>
+        <result column="METADATA" property="metadata"/>
+        <result column="CREATE_TIME" property="createTime"/>
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO REQUEST_HANDLER(ID,NAME,PARAMETER_COUNT,PARAMETERS,METADATA,PROC_NAME,PROC_CLASS_TYPE,CREATE_TIME)
+        INSERT INTO REQUEST_HANDLER(ID,PATTERN,PARAMS,PARAMS_COUNT,PROC_NAME,PROC_CLASS_TYPE,STATUS,METADATA,CREATE_TIME)
         VALUES (
                 #{val.id}
-               ,#{val.name}
-               ,#{val.parameterCount}
-               ,#{val.parameters}
-               ,#{val.metadata}
+               ,#{val.pattern}
+               ,#{val.params}
+               ,#{val.paramsCount}
                ,#{val.procName}
                ,#{val.procClassType}
+               ,#{val.status}
+               ,#{val.metadata}
                ,#{val.createTime}
                )
     </insert>
 
-    <select id="getByName" resultMap="poMap">
+    <select id="getByPattern" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
-        WHERE name = #{name}
+        WHERE PATTERN = #{pattern}
     </select>
 
-    <select id="getByNameAndParameterCount" resultMap="poMap">
+    <select id="getByPatternAndParamsCount" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
-        WHERE NAME = #{name} AND PARAMETER_COUNT = #{pCount}
+        WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount}
     </select>
 
-
+    <select id="getById" resultMap="poMap">
+        SELECT * FROM REQUEST_HANDLER
+        WHERE ID = #{id}
+    </select>
 
 
 </mapper>

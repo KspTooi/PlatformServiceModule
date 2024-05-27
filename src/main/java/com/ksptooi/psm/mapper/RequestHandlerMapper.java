@@ -7,9 +7,11 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface RequestHandlerMapper {
 
-    public RequestHandlerVo getByName(@Param("name") String name);
+    public RequestHandlerVo getByPattern(@Param("pattern") String name);
 
-    public RequestHandlerVo getByNameAndParameterCount(@Param("name") String name, @Param("pCount") int pCount);
+    public RequestHandlerVo getByPatternAndParamsCount(@Param("pattern") String name, @Param("pCount") int pCount);
 
     public int insert(@Param("val") RequestHandlerVo vo);
+
+    public RequestHandlerVo getById(@Param("id")Long id);
 }
