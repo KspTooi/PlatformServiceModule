@@ -1,6 +1,7 @@
 package com.ksptooi.psm.processor;
 
 
+import com.alibaba.fastjson.JSON;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
@@ -28,7 +29,7 @@ public class ProcessorManager {
     private static final Logger log = LoggerFactory.getLogger(ProcessorManager.class);
 
     @Inject
-    private RequestHandlerMapper reqDefineMapper;
+    private RequestHandlerMapper requestHandlerMapper;
 
     @Inject
     private Snowflake snowflake;
@@ -102,12 +103,34 @@ public class ProcessorManager {
 
             for(ProcDefine def : defines){
 
-                //获取数据库RequestDefine
-                RequestHandlerVo byName = reqDefineMapper.getByPatternAndParamsCount(def.getPattern(),def.getParamCount());
-
-                if(byName == null){
-
+                //不能安装hook
+                if(!def.getDefType().equals(ProcDefType.REQ_HANDLER)){
+                    continue;
                 }
+                //不能安装通配符执行器
+
+
+                //获取数据库RequestDefine
+                RequestHandlerVo byName = requestHandlerMapper.getByPatternAndParamsCount(def.getPattern(),def.getParamCount());
+
+                //数据库已经注册过Handler
+                if(byName!=null){
+                    log.info("激活请求执行器 {}:{}({})",procName,byName.getPattern(),byName.getParamsCount());
+                    continue;
+                }
+
+                RequestHandlerVo insert = new RequestHandlerVo();
+                insert.setId(snowflake.nextId());
+                insert.setPattern(def.getPattern());
+                insert.setParams(JSON.toJSONString(def.getParams()));
+                insert.setParamsCount(def.getParamCount());
+                insert.setProcName(procName);
+                insert.setProcClassType(procClassType);
+                insert.setStatus(0);
+                insert.setMetadata("");
+                insert.setCreateTime(new Date());
+                requestHandlerMapper.insert(insert);
+                log.info("注册请求执行器 {}:{}({})",procName,def.getPattern(),def.getParamCount());
 
             }
 
