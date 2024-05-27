@@ -30,19 +30,24 @@
                )
     </insert>
 
+    <delete id="deleteById">
+        UPDATE REQUEST_HANDLER SET STATUS = 1
+        WHERE ID = #{id} AND STATUS = 0
+    </delete>
+
     <select id="getByPattern" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
-        WHERE PATTERN = #{pattern}
+        WHERE PATTERN = #{pattern} AND STATUS = 0
     </select>
 
     <select id="getByPatternAndParamsCount" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
-        WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount}
+        WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount} AND STATUS = 0
     </select>
 
     <select id="getById" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
-        WHERE ID = #{id}
+        WHERE ID = #{id} AND STATUS = 0
     </select>
 
 

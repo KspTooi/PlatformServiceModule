@@ -97,7 +97,8 @@ public class ProcessorManager {
 
             List<ProcDefine> defines = item.getValue().getProcDefines();
 
-            String procClassType = item.getValue().getProc().getClass().getName();
+            final String procName = item.getKey();
+            final String procClassType = item.getValue().getProc().getClass().getName();
 
             for(ProcDefine def : defines){
 
@@ -106,28 +107,6 @@ public class ProcessorManager {
 
                 if(byName == null){
 
-                    //ProcessorVo proc = mapper.getByName(def.getProcName());
-//
-                    //if(proc == null){
-                    //    log.warn("无法为处理器 {} 安装指令 {}. 该处理器不存在于数据库中.",def.getProcName(),def.getPattern());
-                    //    continue;
-                    //}
-//
-                    //if(!proc.getClassType().equals(procClassType)){
-                    //    log.warn("无法为处理器 {} 安装指令 {}. 处理器ClassType校验失败. 应为 {} 实际 {}",def.getProcName(),def.getPattern(),proc.getClassType(),procClassType);
-                    //    continue;
-                    //}
-//
-                    //log.info("安装处理器指令:{}->{}",def.getProcName(),def.getPattern());
-                    //RequestDefineVo insert = new RequestDefineVo();
-                    //insert.setId(snowflake.nextId());
-                    //insert.setName(def.getPattern());
-                    //insert.setParameterCount(def.getParamCount());
-                    //insert.setParameters(JSON.toJSONString(def.getParams()));
-                    //insert.setMetadata("");
-                    //insert.setProcessorId(proc.getId());
-                    //insert.setCreateTime(new Date());
-                    //reqDefineMapper.insert(insert);
                 }
 
             }
