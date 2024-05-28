@@ -1,6 +1,8 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.event.*;
+import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
 import com.ksptooi.psm.processor.hook.OnDestroy;
 import com.ksptooi.uac.commons.ReflectUtils;
@@ -11,6 +13,17 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class ProcTools {
+
+    public static final List<String> eventDefine = new ArrayList<>();
+
+    static {
+        eventDefine.add(BadRequestEvent.class.getName());
+        eventDefine.add(InstallProcHandlerEvent.class.getName());
+        eventDefine.add(ProcRegisterEvent.class.getName());
+        eventDefine.add(RequestForwardEvent.class.getName());
+        eventDefine.add(ShellInputEvent.class.getName());
+        eventDefine.add(StatementCommitEvent.class.getName());
+    }
 
     /**
      * 查找该处理器中的映射
@@ -83,6 +96,9 @@ public class ProcTools {
         if(!checkRepeatMapping(ret)){
             throw new ProcDefineException("处理器已损坏 原因:处理器中有两个相同的映射 位于:"+procName);
         }
+
+        //获取处理器中的事件处理器
+        ret.addAll(getProcEventHandler(proc));
 
         return ret;
     }
@@ -321,6 +337,68 @@ public class ProcTools {
         }
 
         return true;
+    }
+
+    /**
+     * 获取处理器中的事件处理器
+     */
+    public static List<ProcDefine> getProcEventHandler(Class<?> proc) throws ProcDefineException{
+
+        //获取处理器名称
+        final String procName = proc.getAnnotation(RequestProcessor.class).value();
+
+        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(proc, EventHandler.class);
+
+        List<ProcDefine> ret = new ArrayList<>();
+
+        for(Method m : annoEventHandler){
+
+            //事件处理器要处理的事件类型
+            final String eventHandlerType = getEventHandlerType(m);
+
+            if(eventHandlerType == null){
+                throw new ProcDefineException("事件处理器已损坏. ProcName:"+procName + " FuncName:"+m.getName());
+            }
+
+            ProcDefine def = new ProcDefine();
+            def.setDefType(ProcDefType.EVENT_HANDLER);
+            def.setProcName(procName);
+            def.setMethod(m);
+            def.setEventHandlerOrder(m.getAnnotation(EventHandler.class).order());
+            def.setEventHandlerType(eventHandlerType);
+            ret.add(def);
+        }
+
+        return ret;
+    }
+
+
+    public static String getEventHandlerType(Method m){
+
+        //获取第一个形参
+        if(m.getParameterCount() < 1){
+            return null;
+        }
+
+        final Class<?> firstParam = m.getParameterTypes()[0];
+        final String firstParamTN = firstParam.getName();
+
+        for(String def : eventDefine){
+            if(def.equals(firstParamTN)){
+                return firstParamTN;
+            }
+        }
+
+        return null;
+    }
+
+
+    public static void main(String[] args) throws ProcDefineException {
+
+        List<ProcDefine> procDefine = ProcTools.getProcDefine(TestProcessor.class);
+
+        System.out.println(procDefine);
+
     }
 
 

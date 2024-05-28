@@ -1,5 +1,7 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.psm.processor.event.ShellInputEvent;
+import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
 import com.ksptooi.uac.core.annatatiotion.Param;
@@ -9,6 +11,16 @@ import java.io.PrintWriter;
 @RequestProcessor("TestProcessor")
 public class TestProcessor {
 
+
+    @EventHandler
+    public void onStatementCommit(StatementCommitEvent event){
+        event.cancel();
+    }
+
+    @EventHandler
+    public void onUserShellInput(ShellInputEvent event){
+
+    }
 
     @OnActivated
     public void activated() {
@@ -34,9 +46,6 @@ public class TestProcessor {
         w.flush();
     }
 
-    @EventHandler
-    public void onStatementCommit(){
 
-    }
 
 }

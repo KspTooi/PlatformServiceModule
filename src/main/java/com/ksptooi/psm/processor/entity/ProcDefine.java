@@ -31,4 +31,10 @@ public class ProcDefine {
     //处理器名称
     private String procName;
 
+    //事件处理器序列(如果有)
+    private int eventHandlerOrder;
+
+    //事件处理器类型
+    private String eventHandlerType;
+
 }
