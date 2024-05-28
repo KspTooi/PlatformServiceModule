@@ -70,5 +70,10 @@
         WHERE ACCOUNT = #{val} AND STATUS = 0
     </select>
 
+    <select id="getById" resultMap="poMap">
+        SELECT * FROM USERS
+        WHERE UID = #{val} AND STATUS = 0
+    </select>
+
 
 </mapper>

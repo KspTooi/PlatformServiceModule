@@ -1,8 +1,10 @@
 package com.ksptooi.psm.shell;
 
 import com.ksptooi.guice.annotations.Unit;
+import com.ksptooi.psm.mapper.LoginHistoryMapper;
 import com.ksptooi.psm.mapper.UsersMapper;
 import com.ksptooi.psm.modes.UserVo;
+import com.ksptooi.psm.services.LoginHistoryService;
 import com.ksptooi.psm.services.UserAccountService;
 import jakarta.inject.Inject;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -25,13 +27,14 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
 
     private final static Logger log = LoggerFactory.getLogger(SimplePasswordAuthenticator.class);
 
-
     @Inject
     private UserAccountService accountService;
 
+    @Inject
+    private LoginHistoryService historyService;
+
     @Override
     public boolean authenticate(String username, String inPassPt, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
-
         try {
             //数据库里面没有任何用户
             if (accountService.getTotal() < 1) {
@@ -51,6 +54,7 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
 
         if(vo == null || vo.getStatus() != 0){
             log.warn("源:{} 提供了一个无效的账户 {}.",origin,username);
+            historyService.newLoginFailedRecord(username,origin,"未知的账户");
             return false;
         }
 
@@ -58,9 +62,12 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
 
         if(!vo.getPassword().equals(inPassCt)){
             log.warn("源:{} 账户:{} 因密码错误登录失败.",username,origin);
+            historyService.newLoginFailedRecord(username,origin,"凭据错误");
             return false;
         }
 
+        historyService.newLoginSuccessRecord(username,origin);
+        accountService.updateLastLoginTime(vo.getUid());
         return true;
     }
 

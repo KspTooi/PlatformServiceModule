@@ -19,6 +19,8 @@ public interface UsersMapper {
 
     public UserVo getByAccount(@Param("val") String account);
 
+    public UserVo getById(@Param("val") Long id);
+
     public int count(@Param("val") UserVo user);
 
 }

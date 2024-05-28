@@ -12,4 +12,5 @@ public class LoginHistoryVo {
     private String result;
     private String reason;
     private Date atTime;
+    private String origin;
 }

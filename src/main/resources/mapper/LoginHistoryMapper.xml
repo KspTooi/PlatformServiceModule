@@ -12,9 +12,9 @@
         <result column="AT_TIME" property="atTime"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.ksptooi.psm.modes.UserVo">
-        INSERT INTO LOGIN_HISTORY (ID, ACCOUNT, OPERATE, RESULT, REASON, AT_TIME)
-        VALUES (#{val.id}, #{val.account}, #{val.operate}, #{val.result}, #{val.reason}, #{val.atTime})
+    <insert id="insert" parameterType="com.ksptooi.psm.modes.LoginHistoryVo">
+        INSERT INTO LOGIN_HISTORY (ID, ACCOUNT, OPERATE, RESULT, REASON, AT_TIME, ORIGIN)
+        VALUES (#{val.id}, #{val.account}, #{val.operate}, #{val.result}, #{val.reason}, #{val.atTime},#{val.origin})
     </insert>
 
 

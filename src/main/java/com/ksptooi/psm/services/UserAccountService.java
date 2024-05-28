@@ -27,6 +27,12 @@ public class UserAccountService {
         return userMapper.getByAccount(account);
     }
 
+    public void updateLastLoginTime(Long id){
+        UserVo byId = userMapper.getById(id);
+        byId.setLastLoginTime(new Date());
+        userMapper.update(byId);
+    }
+
     public boolean createUser(String account,String password) throws Exception{
 
         UserVo query = new UserVo();
