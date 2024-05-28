@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.psm.mapper.LoginHistoryMapper">
+
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.LoginHistoryVo">
+        <result column="ID" property="id"/>
+        <result column="ACCOUNT" property="account"/>
+        <result column="OPERATE" property="operate"/>
+        <result column="RESULT" property="result"/>
+        <result column="REASON" property="reason"/>
+        <result column="AT_TIME" property="atTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.ksptooi.psm.modes.UserVo">
+        INSERT INTO LOGIN_HISTORY (ID, ACCOUNT, OPERATE, RESULT, REASON, AT_TIME)
+        VALUES (#{val.id}, #{val.account}, #{val.operate}, #{val.result}, #{val.reason}, #{val.atTime})
+    </insert>
+
+
+</mapper>

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 
+import java.net.SocketAddress;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -45,17 +46,18 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
             return false;
         }
 
-        UserVo vo = accountService.getByAccount(username);
+        final UserVo vo = accountService.getByAccount(username);
+        final SocketAddress origin = session.getClientAddress();
 
         if(vo == null || vo.getStatus() != 0){
-            log.warn("源:{} 提供了一个无效的账户 {}.",session.getClientAddress(),username);
+            log.warn("源:{} 提供了一个无效的账户 {}.",origin,username);
             return false;
         }
 
         final String inPassCt = DigestUtils.sha512Hex(vo.getUid() + inPassPt);
 
         if(!vo.getPassword().equals(inPassCt)){
-            log.warn("账户:{} 因密码错误登录失败.",username);
+            log.warn("源:{} 账户:{} 因密码错误登录失败.",username,origin);
             return false;
         }
 
