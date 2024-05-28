@@ -20,7 +20,8 @@ public class Application {
 
         ProcessorManager instance = injector.getInstance(ProcessorManager.class);
         instance.scanFromPackage("com.ksptooi.psm");
-        instance.installProcHandler();
+        instance.installRequestHandler();
+        instance.installEventHandler();
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();

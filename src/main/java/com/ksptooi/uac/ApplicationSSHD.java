@@ -2,7 +2,6 @@ package com.ksptooi.uac;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.guice.compomentscan.ComponentScanModule;
 import com.ksptooi.uac.modules.SshMod;
 

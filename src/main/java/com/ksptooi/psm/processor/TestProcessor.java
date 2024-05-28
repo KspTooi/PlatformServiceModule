@@ -1,9 +1,11 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
+import com.ksptooi.psm.shell.Colors;
 import com.ksptooi.uac.core.annatatiotion.Param;
 
 import java.io.PrintWriter;
@@ -13,13 +15,35 @@ public class TestProcessor {
 
 
     @EventHandler
-    public void onStatementCommit(StatementCommitEvent event){
-        event.cancel();
+    public void badRequestNotify(BadRequestEvent event){
+
+        ProcRequest request = event.getRequest();
+        PrintWriter w = request.getPw();
+
+        if(event.getErrorCode().equals(BadRequestEvent.ERR_INVOKE_EXCEPTION)){
+            return;
+        }
+
+        if(event.getErrorCode().equals(BadRequestEvent.ERR_HANDLER_TYPE_INCONSISTENT)){
+            w.print("fatal: ");
+            w.print(request.getPattern());
+            w.print(" ");
+            w.print("无法处理请求,处理器与标定的不一致.\r\n");
+            w.flush();
+            return;
+        }
+        w.print(Colors.RED);
+        w.print(request.getPattern());
+        w.print(": 无法处理请求,匹配处理器失败.\r\n");
+        w.print(Colors.RESET);
+        w.flush();
     }
 
-    @EventHandler
-    public void onUserShellInput(ShellInputEvent event){
-
+    @RequestHandler("test")
+    public void test(ProcRequest req){
+        PrintWriter p = req.getPw();
+        p.print("这是一个测试命令");
+        p.flush();
     }
 
     @OnActivated
@@ -32,19 +56,6 @@ public class TestProcessor {
 
     }
 
-    @RequestHandler("test")
-    public void testHandler(ProcRequest req){
-        PrintWriter w = req.getPw();
-        w.println("执行无参Handler");
-        w.flush();
-    }
-
-    @RequestHandler("test")
-    public void testHandler(@Param("p1")String p1,ProcRequest req){
-        PrintWriter w = req.getPw();
-        w.println("执行有参Handler 参数为:"+p1);
-        w.flush();
-    }
 
 
 

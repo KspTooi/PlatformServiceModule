@@ -8,7 +8,7 @@ import java.util.List;
  * 处理器中的请求映射实体
  */
 @Data
-public class ProcDefine {
+public class ProcDefine implements Comparable<ProcDefine>{
 
     //定义类型(PROC中包含Hook与请求处理器(映射))
     private String defType;
@@ -37,4 +37,11 @@ public class ProcDefine {
     //事件处理器类型
     private String eventHandlerType;
 
+    //事件名称
+    private String eventName;
+
+    @Override
+    public int compareTo(ProcDefine o) {
+        return Integer.compare(this.eventHandlerOrder, o.eventHandlerOrder);
+    }
 }

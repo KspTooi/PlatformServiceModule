@@ -2,6 +2,9 @@ package com.ksptooi.psm.shell;
 
 import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.ProcessorManager;
+import com.ksptooi.psm.processor.event.CancellableEvent;
+import com.ksptooi.psm.processor.event.ShellInputEvent;
+import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
@@ -87,6 +90,14 @@ public class PSMShell implements Command,Runnable{
                 int len = br.read(read);
 
                 if(len < 1){
+                    break;
+                }
+
+                //Shell原始输入事件
+                ShellInputEvent event = new ShellInputEvent(read,len);
+                wrapEvent(event);
+                processorManager.forward(event);
+                if(event.isCanceled()){
                     break;
                 }
 
@@ -185,6 +196,15 @@ public class PSMShell implements Command,Runnable{
                        continue;
                     }
 
+                    StatementCommitEvent commitEvent = new StatementCommitEvent(vTextarea.toString());
+                    wrapEvent(commitEvent);
+                    processorManager.forward(commitEvent);
+                    if(commitEvent.isCanceled()){
+                        //重新渲染当前行并同步光标位置
+                        svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                        continue;
+                    }
+
                     String statement = vTextarea.toString();
                     vTextarea.setLength(0);
                     vCursor = 0;
@@ -213,6 +233,16 @@ public class PSMShell implements Command,Runnable{
         }catch (Exception ex){
             ex.printStackTrace();
         }
+    }
+
+
+    private void wrapEvent(CancellableEvent e){
+        e.setEos(eos);
+        e.setOs(os);
+        e.setPw(pw);
+        e.setIs(is);
+        e.setSession(session);
+        e.setEnv(env);
     }
 
 }

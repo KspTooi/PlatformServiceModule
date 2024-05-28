@@ -99,7 +99,6 @@ public class ProcTools {
 
         //获取处理器中的事件处理器
         ret.addAll(getProcEventHandler(proc));
-
         return ret;
     }
 
@@ -149,7 +148,6 @@ public class ProcTools {
             //拿到方法上RequestName注解的值
             String name = method.getAnnotation(RequestName.class).value();
             define.setPattern(name);
-
 
             Alias annoAlias = method.getAnnotation(Alias.class);
 
@@ -366,6 +364,9 @@ public class ProcTools {
             def.setMethod(m);
             def.setEventHandlerOrder(m.getAnnotation(EventHandler.class).order());
             def.setEventHandlerType(eventHandlerType);
+
+            String eventHandlerEventName = getEventHandlerEventName(m);
+            def.setEventName(eventHandlerEventName);
             ret.add(def);
         }
 
@@ -374,7 +375,6 @@ public class ProcTools {
 
 
     public static String getEventHandlerType(Method m){
-
         //获取第一个形参
         if(m.getParameterCount() < 1){
             return null;
@@ -390,6 +390,16 @@ public class ProcTools {
         }
 
         return null;
+    }
+    public static String getEventHandlerEventName(Method m){
+
+        //获取第一个形参
+        if(m.getParameterCount() < 1){
+            return null;
+        }
+
+        final Class<?> firstParam = m.getParameterTypes()[0];
+        return firstParam.getSimpleName();
     }
 
 
