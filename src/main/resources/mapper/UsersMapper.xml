@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.psm.mapper.UsersMapper">
+
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.UserVo">
+        <result column="UID" property="uid"/>
+        <result column="ACCOUNT" property="account"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="STATUS" property="status"/>
+        <result column="LAST_LOGIN_TIME" property="lastLoginTime"/>
+        <result column="CREATE_TIME" property="createTime"/>
+    </resultMap>
+
+    <!-- Insert -->
+    <insert id="insert">
+        INSERT INTO USERS (UID, ACCOUNT, PASSWORD, STATUS, LAST_LOGIN_TIME, CREATE_TIME)
+        VALUES (#{val.uid}, #{val.account}, #{val.password}, #{val.status}, #{val.lastLoginTime}, #{val.createTime})
+    </insert>
+
+    <!-- Update -->
+    <update id="update">
+        UPDATE USERS
+        <set>
+            <if test="val.account != null">ACCOUNT = #{val.account},</if>
+            <if test="val.password != null">PASSWORD = #{val.password},</if>
+            <if test="val.status != null and val.status != 2">STATUS = #{val.status},</if>
+            <if test="val.lastLoginTime != null">LAST_LOGIN_TIME = #{val.lastLoginTime},</if>
+            <if test="val.createTime != null">CREATE_TIME = #{val.createTime},</if>
+        </set>
+        WHERE UID = #{val.uid} AND STATUS = 0
+    </update>
+
+    <!-- Delete (逻辑删除) -->
+    <update id="delete">
+        UPDATE USERS SET STATUS = 2
+        WHERE UID = #{val} AND STATUS = 0
+    </update>
+
+    <!-- GetList -->
+    <select id="getList" resultMap="poMap">
+        SELECT * FROM USERS
+        <where>
+            <if test="val.uid != null">AND UID = #{val.uid}</if>
+            <if test="val.account != null">AND ACCOUNT = #{val.account}</if>
+            <if test="val.password != null">AND PASSWORD = #{val.password}</if>
+            <if test="val.lastLoginTime != null">AND LAST_LOGIN_TIME = #{val.lastLoginTime}</if>
+            <if test="val.createTime != null">AND CREATE_TIME = #{val.createTime}</if>
+            AND STATUS = 0
+        </where>
+    </select>
+
+    <!-- Count -->
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM USERS
+        <if test="val != null">
+            <where>
+                <if test="val.uid != null">AND UID = #{val.uid}</if>
+                <if test="val.account != null">AND ACCOUNT = #{val.account}</if>
+                <if test="val.password != null">AND PASSWORD = #{val.password}</if>
+                <if test="val.lastLoginTime != null">AND LAST_LOGIN_TIME = #{val.lastLoginTime}</if>
+                <if test="val.createTime != null">AND CREATE_TIME = #{val.createTime}</if>
+                AND STATUS = 0
+            </where>
+        </if>
+    </select>
+
+
+
+
+</mapper>

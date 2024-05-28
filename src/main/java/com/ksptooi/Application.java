@@ -1,4 +1,4 @@
-package com.ksptooi.uac;
+package com.ksptooi;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

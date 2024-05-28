@@ -15,6 +15,9 @@ public class SshServerProvider implements Provider<SshServer> {
     @Inject
     private PSMShellFactory psmShellFactory;
 
+    @Inject
+    private PSMPasswordAuthenticator authenticator;
+
 
     @Override
     public SshServer get() {
@@ -24,12 +27,7 @@ public class SshServerProvider implements Provider<SshServer> {
             SshServer sshd = SshServer.setUpDefaultServer();
             sshd.setPort(1100);
             sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
-            sshd.setPasswordAuthenticator(new PasswordAuthenticator() {
-                @Override
-                public boolean authenticate(String username, String password, ServerSession session) {
-                    return "1".equals(username) && "1".equals(password);  // 简单的用户名密码验证
-                }
-            });
+            sshd.setPasswordAuthenticator(authenticator);
             sshd.setShellFactory(psmShellFactory);
             sshd.start();
 

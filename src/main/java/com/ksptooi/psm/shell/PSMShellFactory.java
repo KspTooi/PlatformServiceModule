@@ -1,7 +1,7 @@
 package com.ksptooi.psm.shell;
 
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.uac.Application;
+import com.ksptooi.Application;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.shell.ShellFactory;

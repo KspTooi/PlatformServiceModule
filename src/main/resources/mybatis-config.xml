@@ -23,6 +23,7 @@
         <mapper resource="mapper/DocumentMapper.xml"/>
         <mapper resource="mapper/DatabaseMapper.xml"/>
         <mapper resource="mapper/RequestHandlerMapper.xml"/>
+        <mapper resource="mapper/UsersMapper.xml"/>
     </mappers>
 
 </configuration>

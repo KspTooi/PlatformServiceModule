@@ -28,13 +28,13 @@ public class TestProcessor {
             w.print("fatal: ");
             w.print(request.getPattern());
             w.print(" ");
-            w.print("无法处理请求,处理器与标定的不一致.\r\n");
+            w.print("无法处理请求,处理器与标定的不一致.");
             w.flush();
             return;
         }
         w.print(Colors.RED);
         w.print(request.getPattern());
-        w.print(": 无法处理请求,匹配处理器失败.\r\n");
+        w.print(": 无法处理请求,匹配处理器失败.");
         w.print(Colors.RESET);
         w.flush();
     }
