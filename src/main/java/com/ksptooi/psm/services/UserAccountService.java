@@ -24,14 +24,14 @@ public class UserAccountService {
         UserVo query = new UserVo();
         query.setAccount(account);
 
-        if(userMapper.getList(query) > 0){
+        if(!userMapper.getList(query).isEmpty()){
             throw new Exception("账户名称重复.");
         }
 
         UserVo u = new UserVo();
         u.setUid(snowflake.nextId());
         u.setAccount(account);
-        final String passwordCt = DigestUtils.md5Hex(u.getUid() + password);
+        final String passwordCt = DigestUtils.sha512Hex(u.getUid() + password);
         u.setPassword(passwordCt);
         u.setStatus(0); // Active
         u.setLastLoginTime(new Date());

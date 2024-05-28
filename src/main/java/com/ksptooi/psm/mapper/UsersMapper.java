@@ -4,6 +4,8 @@ import com.ksptooi.psm.modes.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface UsersMapper {
 
@@ -13,7 +15,7 @@ public interface UsersMapper {
 
     public int delete(@Param("val") Long id);
 
-    public int getList(@Param("val") UserVo id);
+    public List<UserVo> getList(@Param("val") UserVo id);
 
     public int count(@Param("val") UserVo user);
 
