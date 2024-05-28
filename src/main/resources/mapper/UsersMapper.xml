@@ -65,7 +65,10 @@
         </if>
     </select>
 
-
+    <select id="getByAccount" resultMap="poMap">
+        SELECT * FROM USERS
+        WHERE ACCOUNT = #{val} AND STATUS = 0
+    </select>
 
 
 </mapper>

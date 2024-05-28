@@ -5,6 +5,7 @@ import com.ksptooi.psm.mapper.UsersMapper;
 import com.ksptooi.psm.modes.UserVo;
 import com.ksptooi.psm.services.UserAccountService;
 import jakarta.inject.Inject;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.PasswordChangeRequiredException;
@@ -14,43 +15,49 @@ import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 @Unit
-public class PSMPasswordAuthenticator implements PasswordAuthenticator {
+public class SimplePasswordAuthenticator implements PasswordAuthenticator {
 
-    private final static Logger log = LoggerFactory.getLogger(PSMPasswordAuthenticator.class);
+    private final static Logger log = LoggerFactory.getLogger(SimplePasswordAuthenticator.class);
 
-    @Inject
-    private UsersMapper userMapper;
 
     @Inject
     private UserAccountService accountService;
 
-    @Inject
-    private Snowflake snowflake;
-
     @Override
-    public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
+    public boolean authenticate(String username, String inPassPt, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
+
         try {
-
-
-            if (userMapper.count(null) < 1) {
+            //数据库里面没有任何用户
+            if (accountService.getTotal() < 1) {
                 final String account = "default";
                 final String pwdPt = generatePassword();
                 accountService.createUser(account,pwdPt);
                 log.info("已创建默认用户:{} 密码:{}",account,pwdPt);
                 return false;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
+        UserVo vo = accountService.getByAccount(username);
+
+        if(vo == null || vo.getStatus() != 0){
+            log.warn("源:{} 提供了一个无效的账户 {}.",session.getClientAddress(),username);
+            return false;
+        }
+
+        final String inPassCt = DigestUtils.sha512Hex(vo.getUid() + inPassPt);
+
+        if(!vo.getPassword().equals(inPassCt)){
+            log.warn("账户:{} 因密码错误登录失败.",username);
+            return false;
+        }
 
         return true;
     }

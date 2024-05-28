@@ -3,9 +3,7 @@ package com.ksptooi.psm.shell;
 import com.google.inject.Provider;
 import jakarta.inject.Inject;
 import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.session.ServerSession;
 
 import java.io.IOException;
 
@@ -16,7 +14,7 @@ public class SshServerProvider implements Provider<SshServer> {
     private PSMShellFactory psmShellFactory;
 
     @Inject
-    private PSMPasswordAuthenticator authenticator;
+    private SimplePasswordAuthenticator authenticator;
 
 
     @Override

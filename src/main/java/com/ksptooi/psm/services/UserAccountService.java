@@ -19,6 +19,14 @@ public class UserAccountService {
     private Snowflake snowflake;
 
 
+    public int getTotal(){
+        return userMapper.count(null);
+    }
+
+    public UserVo getByAccount(String account){
+        return userMapper.getByAccount(account);
+    }
+
     public boolean createUser(String account,String password) throws Exception{
 
         UserVo query = new UserVo();

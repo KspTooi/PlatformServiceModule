@@ -17,6 +17,8 @@ public interface UsersMapper {
 
     public List<UserVo> getList(@Param("val") UserVo id);
 
+    public UserVo getByAccount(@Param("val") String account);
+
     public int count(@Param("val") UserVo user);
 
 }
