@@ -3,6 +3,7 @@ package com.ksptooi.psm.shell;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.UsersMapper;
 import com.ksptooi.psm.modes.UserVo;
+import com.ksptooi.psm.services.UserAccountService;
 import jakarta.inject.Inject;
 import org.apache.sshd.server.auth.AsyncAuthException;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
@@ -27,31 +28,22 @@ public class PSMPasswordAuthenticator implements PasswordAuthenticator {
     private UsersMapper userMapper;
 
     @Inject
+    private UserAccountService accountService;
+
+    @Inject
     private Snowflake snowflake;
 
     @Override
     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException, AsyncAuthException {
         try {
-            // Check if there are any users in the database
-            int userCount = userMapper.count(null);
 
-            if (userCount < 1) {
-                // Create default user
-                String defaultUsername = "default";
-                String randomPassword = generatePassword();
 
-                // Insert default user into the database
-                UserVo defaultUser = new UserVo();
-                defaultUser.setUid(snowflake.nextId());
-                defaultUser.setAccount(defaultUsername);
-                defaultUser.setPassword(randomPassword);
-                defaultUser.setStatus(0); // Active
-                defaultUser.setLastLoginTime(new Date());
-                defaultUser.setCreateTime(new Date());
-                userMapper.insert(defaultUser);
-
-                // Display default user and password in terminal
-                log.info("已创建默认用户:{} 密码:{}",defaultUsername,randomPassword);
+            if (userMapper.count(null) < 1) {
+                final String account = "default";
+                final String pwdPt = generatePassword();
+                accountService.createUser(account,pwdPt);
+                log.info("已创建默认用户:{} 密码:{}",account,pwdPt);
+                return false;
             }
 
         } catch (Exception e) {
@@ -59,8 +51,7 @@ public class PSMPasswordAuthenticator implements PasswordAuthenticator {
             return false;
         }
 
-        // Authenticate user
-        // Implementation of authentication logic here
+
         return true;
     }
 
