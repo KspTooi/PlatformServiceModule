@@ -5,7 +5,6 @@ import com.ksptooi.psm.processor.entity.ProcTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,7 +20,7 @@ public class TaskManager {
 
     public void commit(ProcTask task){
 
-        final String tName = "task-"+task.getUser().getSession().getSession().getUsername()+"-"+task.getMethod().getName();
+        final String tName = "task-"+task.getShell().getSession().getSession().getUsername()+"-"+task.getMethod().getName();
 
         task.setPid(takePid());
         task.setStage(ProcTask.STAGE_RUNNING);

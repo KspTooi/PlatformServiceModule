@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor.entity;
 
-import com.ksptooi.psm.shell.ShellUser;
+import com.ksptooi.psm.shell.ShellInstance;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,20 +10,23 @@ import java.lang.reflect.Method;
 @Getter
 public class ProcTask {
 
-    public ProcTask(ShellUser u, Method m, ActiveProcessor p, HookTaskFinished finishHook){
-        this.user = u;
+    public ProcTask(ShellInstance u, Method m, ActiveProcessor p, HookTaskFinished finishHook, HookTaskToggle taskToggle){
+        this.shell = u;
         this.method = m;
         this.processor = p;
         this.finishHook = finishHook;
+        this.taskToggle = taskToggle;
     }
 
-    private final ShellUser user;
+    @Setter
+    private ShellInstance shell;
     private final Method method;
     private final ActiveProcessor processor;
     private Object[] params;
     @Getter(AccessLevel.NONE)
     private boolean isSetParams = false;
     private final HookTaskFinished finishHook;
+    private final HookTaskToggle taskToggle;
 
     @Setter
     private int pid;
@@ -45,5 +48,14 @@ public class ProcTask {
             isSetParams = true;
         }
     }
+
+    public void toggleBackground(){
+        taskToggle.toggle(true,this);
+    }
+
+    public void toggleForeground(){
+        taskToggle.toggle(false,this);
+    }
+
 
 }

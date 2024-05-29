@@ -1,17 +1,16 @@
 package com.ksptooi.psm.processor.event;
 
-import com.ksptooi.psm.shell.ShellUser;
+import com.ksptooi.psm.shell.ShellInstance;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class ShellInputEvent extends CancellableEvent{
 
-    private ShellUser user;
+    private ShellInstance user;
     private final char[] rawInput;
     private final int length;
 
-    public ShellInputEvent(ShellUser u, char[] c, int len){
+    public ShellInputEvent(ShellInstance u, char[] c, int len){
         this.user = u;
         this.rawInput = c;
         this.length = len;

@@ -4,6 +4,7 @@ import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
+import com.ksptooi.psm.processor.entity.HookTaskToggle;
 import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.CancellableEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
@@ -30,7 +31,7 @@ public class PSMShell implements Command,Runnable{
     private InputStream is;
     private ChannelSession session;
     private Environment env;
-    private ShellUser user;
+    private ShellInstance shell;
 
     private final StringBuffer vTextarea = new StringBuffer();
     private int vCursor;
@@ -56,7 +57,7 @@ public class PSMShell implements Command,Runnable{
         pw.println("Hello PSMShell Welcome " + session.getSession().getUsername());
         pw.flush();
 
-        user = new ShellUser(exitCallback,eos,os,pw,is,session,env);
+        shell = new ShellInstance(exitCallback,eos,os,pw,is,session,env);
     }
 
     @Override
@@ -105,7 +106,7 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 //Shell原始输入事件
-                ShellInputEvent event = new ShellInputEvent(user,read,len);
+                ShellInputEvent event = new ShellInputEvent(shell,read,len);
                 wrapEvent(event);
                 processorManager.forward(event);
                 if(event.isCanceled()){
@@ -215,7 +216,7 @@ public class PSMShell implements Command,Runnable{
                        continue;
                     }
 
-                    StatementCommitEvent commitEvent = new StatementCommitEvent(user,vTextarea.toString());
+                    StatementCommitEvent commitEvent = new StatementCommitEvent(shell,vTextarea.toString());
                     wrapEvent(commitEvent);
                     processorManager.forward(commitEvent);
 
@@ -238,7 +239,7 @@ public class PSMShell implements Command,Runnable{
                     req.setPattern(null);
                     req.setParams(new ArrayList<>());
                     req.setParameters(new HashMap<>());
-                    req.setUser(user);
+                    req.setShellInstance(shell);
                     req.setShellVk(svk);
 
                     HookTaskFinished hook = ()->{
@@ -247,7 +248,15 @@ public class PSMShell implements Command,Runnable{
                         System.out.println("exit hook");
                     };
 
-                    ProcTask forward = processorManager.forward(req, hook);
+                    HookTaskToggle hookToggle = (background,task)->{
+
+                        if(background){
+                            task.setShell(null);
+                        }
+
+                    };
+
+                    ProcTask forward = processorManager.forward(req, hook,hookToggle);
 
                     //置顶任务到前台
                     triggerStickyTask(forward);

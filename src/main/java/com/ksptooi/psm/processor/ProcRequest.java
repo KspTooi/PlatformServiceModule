@@ -1,13 +1,9 @@
 package com.ksptooi.psm.processor;
 
-import com.ksptooi.psm.shell.ShellUser;
+import com.ksptooi.psm.shell.ShellInstance;
 import com.ksptooi.psm.vk.ShellVK;
 import lombok.Data;
-import org.apache.sshd.server.channel.ChannelSession;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +22,7 @@ public class ProcRequest {
     //请求参数组
     private Map<String,String> parameters;
 
-    private ShellUser user;
+    private ShellInstance shellInstance;
 
     private ShellVK shellVk;
 

@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 @Getter
-public class ShellUser {
+public class ShellInstance {
 
     private final ExitCallback exitCallback;
     private final OutputStream eos;
@@ -20,7 +20,7 @@ public class ShellUser {
     private final ChannelSession session;
     private final Environment env;
 
-    public ShellUser(ExitCallback ecb,OutputStream eos,OutputStream os,PrintWriter pw,InputStream is,ChannelSession session,Environment env){
+    public ShellInstance(ExitCallback ecb, OutputStream eos, OutputStream os, PrintWriter pw, InputStream is, ChannelSession session, Environment env){
         this.exitCallback = ecb;
         this.eos = eos;
         this.os = os;

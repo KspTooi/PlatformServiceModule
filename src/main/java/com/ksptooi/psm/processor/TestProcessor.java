@@ -2,12 +2,8 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
-import com.ksptooi.psm.processor.event.ShellInputEvent;
-import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
-import com.ksptooi.psm.processor.hook.OnActivated;
 import com.ksptooi.psm.shell.Colors;
-import com.ksptooi.uac.core.annatatiotion.Param;
 
 import java.io.PrintWriter;
 
@@ -19,7 +15,7 @@ public class TestProcessor {
     public void badRequestNotify(BadRequestEvent event){
 
         ProcRequest request = event.getRequest();
-        PrintWriter w = request.getUser().getPw();
+        PrintWriter w = request.getShellInstance().getPw();
 
         if(event.getErrorCode().equals(BadRequestEvent.ERR_INVOKE_EXCEPTION)){
             return;
@@ -42,15 +38,17 @@ public class TestProcessor {
 
     @RequestHandler("test")
     public void test(ProcRequest req , ProcTask task) throws InterruptedException {
-        PrintWriter p = req.getUser().getPw();
+
+        PrintWriter p = task.getShell().getPw();
         p.print("这是一个测试命令 任务PID:"+task.getPid());
         p.flush();
-        Thread.sleep(5000);
-    }
 
-    @OnActivated
-    public void activated() {
-        System.out.println("处理器激活回调");
+        for (int i = 0; i < 5000; i++) {
+            Thread.sleep(500);
+            p.println(i);
+            p.flush();
+        }
+
     }
 
     @RequestHandler("*")

@@ -1,6 +1,5 @@
 package com.ksptooi.inner;
 
-import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.StatementHistoryMapper;
 import com.ksptooi.psm.mapper.UsersMapper;
 import com.ksptooi.psm.modes.StatementHistoryVo;
@@ -8,7 +7,7 @@ import com.ksptooi.psm.modes.UserVo;
 import com.ksptooi.psm.processor.RequestProcessor;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
-import com.ksptooi.psm.shell.ShellUser;
+import com.ksptooi.psm.shell.ShellInstance;
 import jakarta.inject.Inject;
 import org.apache.commons.codec.binary.Hex;
 import xyz.downgoon.snowflake.Snowflake;
@@ -30,7 +29,7 @@ public class UserStatementProcessor {
     @EventHandler
     public void saveUserStatement(StatementCommitEvent event){
 
-        final ShellUser u = event.getUser();
+        final ShellInstance u = event.getUser();
         final String account = u.getSession().getSession().getUsername();
         final UserVo userVo = usersMapper.getByAccount(account);
         final String statement = event.getStatement();

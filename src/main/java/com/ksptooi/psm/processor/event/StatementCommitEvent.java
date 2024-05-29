@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor.event;
 
-import com.ksptooi.psm.shell.ShellUser;
+import com.ksptooi.psm.shell.ShellInstance;
 import lombok.Getter;
 
 @Getter
@@ -8,9 +8,9 @@ public class StatementCommitEvent extends CancellableEvent{
 
     public final String statement;
 
-    public final ShellUser user;
+    public final ShellInstance user;
 
-    public StatementCommitEvent(ShellUser user,String statement){
+    public StatementCommitEvent(ShellInstance user, String statement){
         this.user = user;
         this.statement = statement;
     }
