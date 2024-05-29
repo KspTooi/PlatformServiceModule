@@ -4,7 +4,6 @@ import com.google.inject.Provider;
 import jakarta.inject.Inject;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-
 import java.io.IOException;
 
 public class SshServerProvider implements Provider<SshServer> {

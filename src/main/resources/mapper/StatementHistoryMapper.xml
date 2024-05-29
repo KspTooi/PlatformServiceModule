@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.psm.mapper.StatementHistoryMapper">
+
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.StatementHistoryVo">
+        <result column="ID" property="id" />
+        <result column="USER_ID" property="userId" />
+        <result column="STATEMENT" property="statement" />
+        <result column="SESSION_ID" property="sessionId" />
+        <result column="IP_ADDRESS" property="ipAddress" />
+        <result column="AT_TIME" property="atTime" />
+    </resultMap>
+
+
+    <!-- Insert Statement -->
+    <insert id="insert" parameterType="com.ksptooi.psm.modes.StatementHistoryVo">
+        INSERT INTO STATEMENT_HISTORY (ID, USER_ID, STATEMENT, SESSION_ID, IP_ADDRESS, AT_TIME)
+        VALUES (#{val.id}, #{val.userId}, #{val.statement}, #{val.sessionId}, #{val.ipAddress}, #{val.atTime})
+    </insert>
+
+    <!-- Select Statement -->
+    <select id="getByUserId" resultMap="poMap" parameterType="java.lang.Long">
+        SELECT * FROM STATEMENT_HISTORY
+        WHERE USER_ID = #{val}
+    </select>
+
+    <select id="getRecentByUserId" resultMap="poMap">
+        SELECT * FROM STATEMENT_HISTORY
+        WHERE USER_ID = #{val}
+        ORDER BY AT_TIME DESC
+        LIMIT 1000
+    </select>
+
+    <!-- Delete Statement -->
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM STATEMENT_HISTORY
+        WHERE ID = #{val}
+    </delete>
+
+</mapper>

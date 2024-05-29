@@ -13,15 +13,15 @@ public class H2Server {
             System.out.println("H2 TCP server started and listening on port 1101.");
 
             // 启动Web服务器（可选）
-            Server webServer = Server.createWebServer("-webPort", "8082", "-webAllowOthers").start();
-            System.out.println("H2 Web server started and listening on port 8082.");
+            //Server webServer = Server.createWebServer("-webPort", "8082", "-webAllowOthers").start();
+            //System.out.println("H2 Web server started and listening on port 8082.");
 
             // 保持服务器运行
             System.out.println("Press [Enter] to stop the servers...");
             System.in.read();
 
             // 停止服务器
-            webServer.stop();
+            //webServer.stop();
             tcpServer.stop();
             System.out.println("H2 servers stopped.");
         } catch (Exception e) {
