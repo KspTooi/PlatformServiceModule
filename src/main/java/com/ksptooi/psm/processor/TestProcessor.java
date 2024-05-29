@@ -10,6 +10,27 @@ import java.io.PrintWriter;
 @RequestProcessor("TestProcessor")
 public class TestProcessor {
 
+    @RequestHandler("test")
+    public void test(ProcRequest req , ProcTask task) throws InterruptedException {
+
+
+        PrintWriter p = task.getShell().getPw();
+        p.print("这是一个测试命令 任务PID:"+task.getPid());
+        p.flush();
+
+        for (int i = 0; i < 5000; i++) {
+            Thread.sleep(500);
+            p.println(i);
+            p.flush();
+        }
+
+    }
+
+    @RequestHandler("*")
+    public void newRequest(ProcRequest req) {
+
+    }
+
 
     @EventHandler
     public void badRequestNotify(BadRequestEvent event){
@@ -36,25 +57,6 @@ public class TestProcessor {
         w.flush();
     }
 
-    @RequestHandler("test")
-    public void test(ProcRequest req , ProcTask task) throws InterruptedException {
-
-        PrintWriter p = task.getShell().getPw();
-        p.print("这是一个测试命令 任务PID:"+task.getPid());
-        p.flush();
-
-        for (int i = 0; i < 5000; i++) {
-            Thread.sleep(500);
-            p.println(i);
-            p.flush();
-        }
-
-    }
-
-    @RequestHandler("*")
-    public void newRequest(ProcRequest req) {
-
-    }
 
 
 
