@@ -7,6 +7,7 @@ import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.ProcEvent;
 import com.ksptooi.Application;
@@ -40,6 +41,8 @@ public class ProcessorManager {
     private final Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
 
     private final Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
+
+    private final Map<String, List<ProcTask>> taskMap = new ConcurrentHashMap<>();
 
     @Inject
     public ProcessorManager(){

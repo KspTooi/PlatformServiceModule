@@ -13,7 +13,6 @@
         <result column="AT_TIME" property="atTime" />
     </resultMap>
 
-
     <!-- Insert Statement -->
     <insert id="insert" parameterType="com.ksptooi.psm.modes.StatementHistoryVo">
         INSERT INTO STATEMENT_HISTORY (ID, USER_ID, USER_ACCOUNT, STATEMENT, SESSION_ID, IP_ADDRESS, AT_TIME)
