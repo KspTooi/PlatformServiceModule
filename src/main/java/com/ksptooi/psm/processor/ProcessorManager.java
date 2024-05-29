@@ -11,6 +11,7 @@ import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.ProcEvent;
 import com.ksptooi.Application;
+import com.ksptooi.psm.shell.ShellUser;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -38,11 +39,12 @@ public class ProcessorManager {
     @Inject
     private Snowflake snowflake;
 
+    @Inject
+    private TaskManager taskManager;
+
     private final Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
 
     private final Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
-
-    private final Map<String, List<ProcTask>> taskMap = new ConcurrentHashMap<>();
 
     @Inject
     public ProcessorManager(){
@@ -213,7 +215,7 @@ public class ProcessorManager {
     /**
      * 向处理器转发请求
      */
-    public Thread forward(ProcRequest request){
+    public ProcTask forward(ProcRequest request){
 
         resolverRequest(request);
 
@@ -235,6 +237,9 @@ public class ProcessorManager {
             return null;
         }
 
+        ShellUser user = request.getUser();
+
+
         //查找处理器中的Define
         ProcDefine define = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());
 
@@ -246,13 +251,9 @@ public class ProcessorManager {
             Object[] params = ProcTools.assemblyParams(define.getMethod(), innerPar, request.getParams());
 
             //执行Define
-            try {
-                //执行处理器函数
-                define.getMethod().invoke(aProc.getProc(),params);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
+            ProcTask procTask = new ProcTask(user, define.getMethod(), aProc, params);
+            taskManager.commit(procTask);
+            return procTask;
         }
 
         //没有找到对应的Define 尝试查找具有通配符的默认Define
@@ -265,14 +266,9 @@ public class ProcessorManager {
             Object[] params = ProcTools.assemblyParams(defaultDefine.getMethod(), innerPar, request.getParams());
 
             //执行Define
-            try {
-                //执行处理器函数
-                defaultDefine.getMethod().invoke(aProc.getProc(),params);
-                return null;
-            } catch (Exception e) {
-                forward(new BadRequestEvent(request,BadRequestEvent.ERR_INVOKE_EXCEPTION,e));
-                throw new RuntimeException(e);
-            }
+            ProcTask procTask = new ProcTask(user, defaultDefine.getMethod(), aProc, params);
+            taskManager.commit(procTask);
+            return procTask;
         }
 
         //处理器中找不到任何Define
