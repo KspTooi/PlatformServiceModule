@@ -1,5 +1,6 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
@@ -40,9 +41,9 @@ public class TestProcessor {
     }
 
     @RequestHandler("test")
-    public void test(ProcRequest req) throws InterruptedException {
+    public void test(ProcRequest req , ProcTask task) throws InterruptedException {
         PrintWriter p = req.getUser().getPw();
-        p.print("这是一个测试命令");
+        p.print("这是一个测试命令 任务PID:"+task.getPid());
         p.flush();
         Thread.sleep(5000);
     }

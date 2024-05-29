@@ -1,6 +1,7 @@
 package com.ksptooi.psm.processor.entity;
 
 import com.ksptooi.psm.shell.ShellUser;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,11 +17,11 @@ public class ProcTask {
         this.finishHook = finishHook;
     }
 
-
     private final ShellUser user;
     private final Method method;
     private final ActiveProcessor processor;
     private Object[] params;
+    @Getter(AccessLevel.NONE)
     private boolean isSetParams = false;
     private final HookTaskFinished finishHook;
 
@@ -41,6 +42,7 @@ public class ProcTask {
     public void setParams(Object[] p){
         if(!isSetParams){
             params = p;
+            isSetParams = true;
         }
     }
 

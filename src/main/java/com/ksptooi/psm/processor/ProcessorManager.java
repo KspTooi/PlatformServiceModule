@@ -250,7 +250,7 @@ public class ProcessorManager {
 
             //注入Define所需要的入参
             ProcTask procTask = new ProcTask(user, define.getMethod(), aProc,hook);
-            Object[] innerPar = { request };
+            Object[] innerPar = { request,procTask };
             Object[] params = ProcTools.assemblyParams(define.getMethod(), innerPar, request.getParams());
             procTask.setParams(params);
 
