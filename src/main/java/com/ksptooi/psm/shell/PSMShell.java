@@ -27,6 +27,7 @@ public class PSMShell implements Command,Runnable{
     private InputStream is;
     private ChannelSession session;
     private Environment env;
+    private ShellUser user;
 
     private final StringBuffer vTextarea = new StringBuffer();
     private int vCursor;
@@ -46,6 +47,8 @@ public class PSMShell implements Command,Runnable{
         PrintWriter pw = new PrintWriter(os);
         pw.println("Hello PSMShell Welcome " + session.getSession().getUsername());
         pw.flush();
+
+        user = new ShellUser(exitCallback,eos,os,pw,is,session,env);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 //Shell原始输入事件
-                ShellInputEvent event = new ShellInputEvent(read,len);
+                ShellInputEvent event = new ShellInputEvent(user,read,len);
                 wrapEvent(event);
                 processorManager.forward(event);
                 if(event.isCanceled()){
@@ -196,7 +199,7 @@ public class PSMShell implements Command,Runnable{
                        continue;
                     }
 
-                    StatementCommitEvent commitEvent = new StatementCommitEvent(vTextarea.toString());
+                    StatementCommitEvent commitEvent = new StatementCommitEvent(user,vTextarea.toString());
                     wrapEvent(commitEvent);
                     processorManager.forward(commitEvent);
                     if(commitEvent.isCanceled()){
@@ -218,11 +221,7 @@ public class PSMShell implements Command,Runnable{
                     req.setPattern(null);
                     req.setParams(new ArrayList<>());
                     req.setParameters(new HashMap<>());
-                    req.setSession(session);
-                    req.setIs(is);
-                    req.setOs(os);
-                    req.setEos(eos);
-                    req.setPw(pw);
+                    req.setUser(user);
                     req.setShellVk(svk);
                     processorManager.forward(req);
                     svk.nextLine();

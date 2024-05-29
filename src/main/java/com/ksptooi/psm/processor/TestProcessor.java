@@ -18,7 +18,7 @@ public class TestProcessor {
     public void badRequestNotify(BadRequestEvent event){
 
         ProcRequest request = event.getRequest();
-        PrintWriter w = request.getPw();
+        PrintWriter w = request.getUser().getPw();
 
         if(event.getErrorCode().equals(BadRequestEvent.ERR_INVOKE_EXCEPTION)){
             return;
@@ -41,7 +41,7 @@ public class TestProcessor {
 
     @RequestHandler("test")
     public void test(ProcRequest req){
-        PrintWriter p = req.getPw();
+        PrintWriter p = req.getUser().getPw();
         p.print("这是一个测试命令");
         p.flush();
     }

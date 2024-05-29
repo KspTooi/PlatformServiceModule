@@ -1,5 +1,6 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.psm.shell.ShellUser;
 import com.ksptooi.psm.vk.ShellVK;
 import lombok.Data;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -25,15 +26,7 @@ public class ProcRequest {
     //请求参数组
     private Map<String,String> parameters;
 
-    private ChannelSession session;
-
-    private InputStream is;
-
-    private OutputStream os;
-
-    private PrintWriter pw;
-
-    private OutputStream eos;
+    private ShellUser user;
 
     private ShellVK shellVk;
 
