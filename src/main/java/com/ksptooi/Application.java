@@ -20,6 +20,7 @@ public class Application {
 
         ProcessorManager instance = injector.getInstance(ProcessorManager.class);
         instance.scanFromPackage("com.ksptooi.psm");
+        instance.scanFromPackage("com.ksptooi.inner");
         instance.installRequestHandler();
         instance.installEventHandler();
 

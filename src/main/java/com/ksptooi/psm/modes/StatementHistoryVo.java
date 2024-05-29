@@ -9,6 +9,7 @@ public class StatementHistoryVo {
 
     private Long id;
     private Long userId;
+    private String userAccount;
     private String statement;
     private String sessionId;
     private String ipAddress;
