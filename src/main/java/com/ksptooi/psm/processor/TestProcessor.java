@@ -40,10 +40,11 @@ public class TestProcessor {
     }
 
     @RequestHandler("test")
-    public void test(ProcRequest req){
+    public void test(ProcRequest req) throws InterruptedException {
         PrintWriter p = req.getUser().getPw();
         p.print("这是一个测试命令");
         p.flush();
+        Thread.sleep(5000);
     }
 
     @OnActivated

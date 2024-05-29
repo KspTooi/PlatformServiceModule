@@ -9,19 +9,20 @@ import java.lang.reflect.Method;
 @Getter
 public class ProcTask {
 
-    public ProcTask(ShellUser u,Method m,ActiveProcessor p,Object[] p1){
+    public ProcTask(ShellUser u, Method m, ActiveProcessor p, HookTaskFinished finishHook){
         this.user = u;
         this.method = m;
         this.processor = p;
-        this.params = p1;
+        this.finishHook = finishHook;
     }
 
 
     private final ShellUser user;
     private final Method method;
     private final ActiveProcessor processor;
-    private final Object[] params;
-
+    private Object[] params;
+    private boolean isSetParams = false;
+    private final HookTaskFinished finishHook;
 
     @Setter
     private int pid;
@@ -35,5 +36,12 @@ public class ProcTask {
     public static final Integer STAGE_RUNNING = 1;
 
     public static final Integer STAGE_FINISHED = 2;
+
+
+    public void setParams(Object[] p){
+        if(!isSetParams){
+            params = p;
+        }
+    }
 
 }

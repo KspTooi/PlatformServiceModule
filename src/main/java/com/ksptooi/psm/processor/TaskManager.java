@@ -25,6 +25,7 @@ public class TaskManager {
 
         task.setPid(takePid());
         task.setStage(ProcTask.STAGE_RUNNING);
+        tasks.put(task.getPid(),task);
 
         log.info("用户提交任务:{} PID:{}",tName,task.getPid());
 
@@ -49,17 +50,24 @@ public class TaskManager {
             return;
         }
 
+        releaseTask(t);
         Thread instance = t.getInstance();
         instance.interrupt();
-        releaseTask(t);
     }
 
     /**
      * 释放任务资源
      */
     private void releaseTask(ProcTask t){
+
+        if(!tasks.containsKey(t.getPid())){
+            return;
+        }
+
+        tasks.remove(t.getPid());
         t.setStage(ProcTask.STAGE_FINISHED);
         releasePid(t.getPid());
+        t.getFinishHook().finished();
     }
 
     private synchronized int takePid(){

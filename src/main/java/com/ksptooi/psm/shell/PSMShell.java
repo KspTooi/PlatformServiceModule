@@ -2,6 +2,9 @@ package com.ksptooi.psm.shell;
 
 import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.ProcessorManager;
+import com.ksptooi.psm.processor.TaskManager;
+import com.ksptooi.psm.processor.entity.HookTaskFinished;
+import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.CancellableEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
@@ -34,6 +37,11 @@ public class PSMShell implements Command,Runnable{
 
     @Inject
     private ProcessorManager processorManager;
+
+    @Inject
+    private TaskManager taskManager;
+
+    //当前正在运行的前台任务
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
@@ -105,6 +113,22 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 VK.print(read,len);
+
+                //CTRL+C
+                if(len == 1 && read[0] == VK.CTRL_C){
+                    //终止命令执行线程
+
+                    if(stickyTask == null || stickyTask.getStage() != ProcTask.STAGE_RUNNING){
+                        continue;
+                    }
+
+                    taskManager.kill(stickyTask.getPid());
+                    continue;
+                }
+
+                if(stickyTask != null){
+                    continue;
+                }
 
                 //输入字符/或特殊符号
                 if(VK.IS_INPUT(read,len)){
@@ -184,14 +208,6 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                //CTRL+C
-                if(len == 1 && read[0] == VK.CTRL_C){
-                    //终止命令执行线程
-                    pw.println("command abort");
-                    pw.flush();
-                    continue;
-                }
-
                 //回车
                 if(len == 1 && read[0] == VK.ENTER){
 
@@ -202,6 +218,7 @@ public class PSMShell implements Command,Runnable{
                     StatementCommitEvent commitEvent = new StatementCommitEvent(user,vTextarea.toString());
                     wrapEvent(commitEvent);
                     processorManager.forward(commitEvent);
+
                     if(commitEvent.isCanceled()){
                         //重新渲染当前行并同步光标位置
                         svk.replaceCurrentLine(vTextarea.toString(),vCursor);
@@ -223,8 +240,22 @@ public class PSMShell implements Command,Runnable{
                     req.setParameters(new HashMap<>());
                     req.setUser(user);
                     req.setShellVk(svk);
-                    processorManager.forward(req);
-                    svk.nextLine();
+
+                    HookTaskFinished hook = ()->{
+                        svk.nextLine();
+                        stickyTask = null;
+                        System.out.println("exit hook");
+                    };
+
+                    ProcTask forward = processorManager.forward(req, hook);
+
+                    //置顶任务到前台
+                    triggerStickyTask(forward);
+
+                    if(forward == null){
+                        svk.nextLine();
+                    }
+
                     continue;
                 }
 
@@ -243,6 +274,17 @@ public class PSMShell implements Command,Runnable{
         e.setIs(is);
         e.setSession(session);
         e.setEnv(env);
+    }
+
+    private ProcTask stickyTask = null;
+
+    /**
+     * 触发置顶任务
+     */
+    public void triggerStickyTask(ProcTask procTask){
+        if(stickyTask == null){
+            stickyTask = procTask;
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
+import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.ProcDefine;
 import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
@@ -215,7 +216,7 @@ public class ProcessorManager {
     /**
      * 向处理器转发请求
      */
-    public ProcTask forward(ProcRequest request){
+    public ProcTask forward(ProcRequest request,HookTaskFinished hook){
 
         resolverRequest(request);
 
@@ -243,15 +244,17 @@ public class ProcessorManager {
         //查找处理器中的Define
         ProcDefine define = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());
 
+
         //已找到对应Handler的Define
         if(define != null){
 
             //注入Define所需要的入参
+            ProcTask procTask = new ProcTask(user, define.getMethod(), aProc,hook);
             Object[] innerPar = { request };
             Object[] params = ProcTools.assemblyParams(define.getMethod(), innerPar, request.getParams());
+            procTask.setParams(params);
 
             //执行Define
-            ProcTask procTask = new ProcTask(user, define.getMethod(), aProc, params);
             taskManager.commit(procTask);
             return procTask;
         }
@@ -261,12 +264,14 @@ public class ProcessorManager {
 
         if(defaultDefine != null){
 
+            ProcTask procTask = new ProcTask(user, defaultDefine.getMethod(), aProc,hook);
+
             //注入Define所需要的入参
-            Object[] innerPar = { request };
+            Object[] innerPar = { request,procTask };
             Object[] params = ProcTools.assemblyParams(defaultDefine.getMethod(), innerPar, request.getParams());
+            procTask.setParams(params);
 
             //执行Define
-            ProcTask procTask = new ProcTask(user, defaultDefine.getMethod(), aProc, params);
             taskManager.commit(procTask);
             return procTask;
         }
