@@ -52,7 +52,6 @@ public class ProcessorManager {
         System.out.println("ProcessorManager 初始化");
     }
 
-
     public void register(List<Object> procMap) {
         for(Object obj : procMap){
             register(obj);
