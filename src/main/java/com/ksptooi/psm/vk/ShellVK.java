@@ -132,31 +132,6 @@ public class ShellVK {
             return true;
         }
 
-/*        Pattern p = Pattern.compile("[^x00-xff]");
-        Matcher m = p.matcher(c + "");
-        while (m.find()){
-            return true;
-        }
-
-        return false;*/
-
-        // 常见的双宽字符范围
-/*        return (c >= '\u1100' && c <= '\u115F') ||      // Hangul Jamo
-                (c >= '\u2329' && c <= '\u232A') ||     // CJK部首补充
-                (c >= '\u2E80' && c <= '\uA4CF') ||    // CJK部首
-                (c >= '\uA840' && c <= '\uA877') ||    // Phags-pa
-                (c >= '\uAC00' && c <= '\uD7A3') ||    // Hangul Syllables
-                (c >= '\uF900' && c <= '\uFAFF') ||    // CJK兼容象形文字
-                (c >= '\uFE10' && c <= '\uFE19') ||    // 表格形式
-                (c >= '\uFE30' && c <= '\uFE6F') ||    // CJK兼容形式
-                (c >= '\uFF00' && c <= '\uFF60') ||    // 全角ASCII、全角中英标点符号
-                (c >= '\uFFE0' && c <= '\uFFE6') ||    // 全角数字、全角货币符号
-                (c >= '\u20000' && c <= '\u2A6DF') ||  // CJK扩展B
-                (c >= '\u2A700' && c <= '\u2B73F') ||  // CJK扩展C
-                (c >= '\u2B740' && c <= '\u2B81F') ||  // CJK扩展D
-                (c >= '\u2B820' && c <= '\u2CEAF') ||  // CJK扩展E
-                (c >= '\u2CEB0' && c <= '\u2EBEF') ||  // CJK扩展F
-                (c >= '\u2F800' && c <= '\u2FA1F');    // CJK兼容扩展*/
     }
 
 }

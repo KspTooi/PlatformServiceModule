@@ -10,6 +10,22 @@ public class VK {
     public static final int CTRL_A = 1;
     public static final int BACKSPACE = 127;
 
+    public static final int UP = 10000;
+    public static final int DOWN = 10001;
+    public static final int RIGHT = 10002;
+    public static final int LEFT = 10003;
+
+    public static final int INSERT = 11000;
+    public static final int DELETE = 11001;
+    public static final int HOME = 11002;
+    public static final int END = 11003;
+    public static final int PAGE_UP = 11004;
+    public static final int PAGE_DOWN = 11005;
+
+
+    public static final int USER_INPUT = 20000;
+
+
     public static boolean IS_UP(char[] c,int len){
         if(len != 3){
             return false;

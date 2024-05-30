@@ -7,16 +7,18 @@ import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.HookTaskToggle;
 import com.ksptooi.psm.processor.entity.ProcTask;
 import com.ksptooi.psm.processor.event.CancellableEvent;
+import com.ksptooi.psm.processor.event.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
+import com.ksptooi.psm.vk.AdvancedInputOutputStream;
 import com.ksptooi.psm.vk.ShellVK;
+import com.ksptooi.psm.vk.VK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +44,8 @@ public class PSMShell implements Command,Runnable{
     @Inject
     private TaskManager taskManager;
 
+    private Thread dispatchThread = null;
+
     //当前正在运行的前台任务
 
     @Override
@@ -51,7 +55,7 @@ public class PSMShell implements Command,Runnable{
         this.env = env;
 
         //启动处理线程
-        Thread.ofVirtual().start(this);
+        this.dispatchThread = Thread.ofVirtual().start(this);
 
         PrintWriter pw = new PrintWriter(os);
         pw.println("Hello PSMShell Welcome " + session.getSession().getUsername());
@@ -86,11 +90,12 @@ public class PSMShell implements Command,Runnable{
         this.pw = new PrintWriter(os);
     }
 
-
     @Override
     public void run() {
 
         try{
+
+            AdvancedInputOutputStream aios = new AdvancedInputOutputStream(is,os,env);
 
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             ShellVK svk = new ShellVK(os,env);
@@ -106,12 +111,9 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 //Shell原始输入事件
-                ShellInputEvent event = new ShellInputEvent(shell,read,len);
-                wrapEvent(event);
-                processorManager.forward(event);
-                if(event.isCanceled()){
-                    break;
-                }
+                if(((CancellableEvent)triggerEvent(new ShellInputEvent(shell,read,len))).isCanceled()){
+                    continue;
+                };
 
                 VK.print(read,len);
 
@@ -275,6 +277,14 @@ public class PSMShell implements Command,Runnable{
         }
     }
 
+
+
+
+
+    private ProcEvent triggerEvent(CancellableEvent e){
+        wrapEvent(e);
+        return processorManager.forward(e);
+    }
 
     private void wrapEvent(CancellableEvent e){
         e.setEos(eos);

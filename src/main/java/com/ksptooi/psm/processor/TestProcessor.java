@@ -31,7 +31,6 @@ public class TestProcessor {
 
     }
 
-
     @EventHandler
     public void badRequestNotify(BadRequestEvent event){
 
@@ -50,6 +49,7 @@ public class TestProcessor {
             w.flush();
             return;
         }
+
         w.print(Colors.RED);
         w.print(request.getPattern());
         w.print(": 无法处理请求,匹配处理器失败.");
