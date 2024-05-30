@@ -184,16 +184,6 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                if(aios.match(VK.UP)){
-                    System.out.println("UP");
-                }
-                if(aios.match(VK.DOWN)){
-                    System.out.println("DOWN");
-                }
-                if(aios.match(VK.DELETE)){
-                    System.out.println("DELETE");
-                }
-
                 //回车
                 if(aios.match(VK.ENTER)){
 
@@ -257,9 +247,6 @@ public class PSMShell implements Command,Runnable{
             ex.printStackTrace();
         }
     }
-
-
-
 
 
     private ProcEvent triggerEvent(CancellableEvent e){
