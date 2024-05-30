@@ -95,50 +95,25 @@ public class AdvancedInputOutputStream {
         lockO.unlock();
     }
 
+
+
+    public boolean match(int[] c){
+        return mat(c);
+    }
+
     public boolean match(int k){
 
         if(rl < 1){
             return false;
         }
-        if(k == VK.CTRL_C){
-            return mat(3);
-        }
-        if(k == VK.UP){
-            return mat(27,91,65);
-        }
-        if(k == VK.DOWN){
-            return mat(27,91,66);
-        }
-        if(k == VK.RIGHT){
-            return mat(27,91,67);
-        }
-        if(k == VK.LEFT){
-            return mat(27,91,68);
-        }
-        if(k == VK.INSERT){
-            return mat(27,91,50,126);
-        }
-        if(k == VK.DELETE){
-            return mat(27,91,51,126);
-        }
+
         if(k == VK.HOME){
-            return mat(3,27,91,72) || mat(4,27,91,49,126);
+            return mat(27,91,72) || mat(27,91,49,126);
         }
         if(k == VK.END){
-            return mat(3,27,91,70) || mat(4,27,91,52,126);
+            return mat(27,91,70) || mat(27,91,52,126);
         }
-        if(k == VK.PAGE_UP){
-            return mat(27,91,53,126);
-        }
-        if(k == VK.PAGE_DOWN){
-            return mat(27,91,54,126);
-        }
-        if(k == VK.ENTER){
-            return mat(13);
-        }
-        if(k == VK.BACKSPACE){
-            return mat(127);
-        }
+
         if(k == VK.USER_INPUT){
             return isUserTypes();
         }

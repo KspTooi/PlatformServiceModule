@@ -234,11 +234,9 @@ public class PSMShell implements Command,Runnable{
                     };
 
                     HookTaskToggle hookToggle = (background,task)->{
-
                         if(background){
                             task.setShell(null);
                         }
-
                     };
 
                     ProcTask forward = processorManager.forward(req, hook,hookToggle);
