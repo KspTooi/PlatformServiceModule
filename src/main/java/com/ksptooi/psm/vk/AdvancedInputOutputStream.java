@@ -20,7 +20,7 @@ public class AdvancedInputOutputStream {
     private final BufferedReader b;
     private final PrintWriter p;
 
-    private final char[] rb = new char[8192]; //readBuffer
+    private final char[] rc = new char[8192]; //readBuffer
     private volatile int rl = 0; //readLen
 
     public AdvancedInputOutputStream(InputStream is, OutputStream os, Environment env){
@@ -53,7 +53,7 @@ public class AdvancedInputOutputStream {
 
     public void read() throws IOException {
         checkHeldInput();
-        rl = b.read(rb);
+        rl = b.read(rc);
     }
 
     public int directRead(char[] c) throws IOException {
@@ -142,7 +142,7 @@ public class AdvancedInputOutputStream {
         if(k == VK.USER_INPUT){
             return isUserTypes();
         }
-        
+
         return false;
     }
 
@@ -157,7 +157,7 @@ public class AdvancedInputOutputStream {
         }
 
         for(int i = 0 ; i < seq.length ; i++){
-            if(rb[i] != seq[i]){
+            if(rc[i] != seq[i]){
                 return false;
             }
         }
@@ -168,12 +168,12 @@ public class AdvancedInputOutputStream {
     private boolean isUserTypes(){
 
         //在只有一个字符的情况下 第一个字符为CRLF 不能判定为输入 判定为回车
-        if(rl == 1 && ( rb[0] == '\r' || rb[0] == '\n' )){
+        if(rl == 1 && ( rc[0] == '\r' || rc[0] == '\n' )){
             return false;
         }
 
         for (int i = 0; i < rl; i++) {
-            char ch = rb[i];
+            char ch = rc[i];
             if (!((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') ||
                     (ch >= '!' && ch <= '/') || (ch >= ':' && ch <= '@') ||
                     (ch >= '[' && ch <= '`') || (ch >= '{' && ch <= '~') ||
@@ -186,6 +186,22 @@ public class AdvancedInputOutputStream {
             }
         }
         return true;
+    }
+
+    public boolean containsCrlf(){
+        for (int i = 0; i < rl; i++) {
+            if (rc[i] == '\r' || rc[i] == '\n') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getReadLen(){
+        return rl;
+    }
+    public char[] getReadChars(){
+        return rc;
     }
 
 }

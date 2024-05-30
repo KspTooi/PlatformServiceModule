@@ -97,47 +97,42 @@ public class PSMShell implements Command,Runnable{
 
             AdvancedInputOutputStream aios = new AdvancedInputOutputStream(is,os,env);
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            //BufferedReader br = new BufferedReader(new InputStreamReader(is));
             ShellVK svk = new ShellVK(os,env);
 
-            char[] read = new char[2400];
+            //char[] read = new char[2400];
 
             while (true){
 
-                int len = br.read(read);
+                aios.read();
 
-                if(len < 1){
-                    break;
-                }
+                final char[] rc = aios.getReadChars();
+                final int rl = aios.getReadLen();
 
                 //Shell原始输入事件
-                if(((CancellableEvent)triggerEvent(new ShellInputEvent(shell,read,len))).isCanceled()){
+                if(((CancellableEvent)triggerEvent(new ShellInputEvent(shell,aios.getReadChars(),aios.getReadLen()))).isCanceled()){
                     continue;
                 };
 
-                VK.print(read,len);
-
-                //CTRL+C
-                if(len == 1 && read[0] == VK.CTRL_C){
-                    //终止命令执行线程
-
+                if(aios.match(VK.CTRL_C)){
                     if(stickyTask == null || stickyTask.getStage() != ProcTask.STAGE_RUNNING){
                         continue;
                     }
-
                     taskManager.kill(stickyTask.getPid());
                     continue;
                 }
+
+                VK.print(aios.getReadChars(),aios.getReadLen());
 
                 if(stickyTask != null){
                     continue;
                 }
 
                 //输入字符/或特殊符号
-                if(VK.IS_INPUT(read,len)){
+                if(aios.match(VK.USER_INPUT)){
 
                     //不允许键入CRLF
-                    if(VK.CONTAINS_CRLF(read,len)){
+                    if(aios.containsCrlf()){
                         pw.print("输入错误.");
                         pw.flush();
                         continue;
@@ -145,14 +140,14 @@ public class PSMShell implements Command,Runnable{
 
                     //光标不是在末尾 处理插入
                     if(vCursor != vTextarea.length()){
-                        vTextarea.insert(vCursor,read,0,len);
+                        vTextarea.insert(vCursor,rc,0,rl);
                     }else {
                         //光标在末尾 附加
-                        vTextarea.append(read,0,len);
+                        vTextarea.append(rc,0,rl);
                     }
 
                     //vCursor++;
-                    vCursor = vCursor + len;
+                    vCursor = vCursor + rl;
 
                     //重新渲染当前行并同步光标位置
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
@@ -160,59 +155,47 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 //处理光标左右移动
-                if(VK.IS_LEFT(read,len)){
+                if(aios.match(VK.LEFT)){
                     if(vCursor < 1){
                         continue;
                     }
                     vCursor--;
-
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;
                 }
 
-                if(VK.IS_RIGHT(read,len)){
+                if(aios.match(VK.RIGHT)){
                     if(vCursor >= vTextarea.length()){
                         continue;
                     }
                     vCursor++;
-                    //svk.cursorRight();
-
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;
                 }
 
-                //退格 处理字符删除
-                if(len == 1 && read[0] == VK.BACKSPACE){
-
+                if(aios.match(VK.BACKSPACE)){
                     if(vCursor < 1){
                         continue;
                     }
-
                     vTextarea.deleteCharAt(vCursor - 1);
                     vCursor--;
-
                     //重新渲染当前行并同步光标位置
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
                     continue;
                 }
 
-                //控制 UP (上一个命令)
-                if(VK.IS_UP(read,len)){
+                if(aios.match(VK.UP)){
                     System.out.println("UP");
-                    continue;
                 }
-                if(VK.IS_DOWN(read,len)){
+                if(aios.match(VK.DOWN)){
                     System.out.println("DOWN");
-                    continue;
                 }
-
-                if(VK.IS_DELETE(read,len)){
+                if(aios.match(VK.DELETE)){
                     System.out.println("DELETE");
-                    continue;
                 }
 
                 //回车
-                if(len == 1 && read[0] == VK.ENTER){
+                if(aios.match(VK.ENTER)){
 
                     if(vTextarea.isEmpty() || vTextarea.toString().trim().isEmpty()){
                        continue;
