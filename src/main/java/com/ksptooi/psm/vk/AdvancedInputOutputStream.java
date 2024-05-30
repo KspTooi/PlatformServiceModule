@@ -54,6 +54,9 @@ public class AdvancedInputOutputStream {
     public void read() throws IOException {
         checkHeldInput();
         rl = b.read(rc);
+        if(rl < 1){
+            throw new IOException();
+        }
     }
 
     public int directRead(char[] c) throws IOException {

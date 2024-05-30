@@ -30,10 +30,6 @@ public class VK {
 
 
 
-
-
-
-
     public static void print(char[] c,int len){
 
         StringBuilder sb = new StringBuilder();
