@@ -10,9 +10,8 @@ import com.ksptooi.psm.processor.event.CancellableEvent;
 import com.ksptooi.psm.processor.event.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
-import com.ksptooi.psm.vk.AdvancedInputOutputStream;
+import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.ShellVK;
-import com.ksptooi.psm.vk.VK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
 import org.apache.sshd.server.Environment;
@@ -95,7 +94,7 @@ public class PSMShell implements Command,Runnable{
 
         try{
 
-            AdvancedInputOutputStream aios = new AdvancedInputOutputStream(is,os,env);
+            AdvInputOutputStream aios = new AdvInputOutputStream(is,os,env);
 
             //BufferedReader br = new BufferedReader(new InputStreamReader(is));
             ShellVK svk = new ShellVK(os,env);
