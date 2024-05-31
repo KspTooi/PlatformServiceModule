@@ -5,8 +5,8 @@ import org.apache.sshd.server.Environment;
 import xyz.downgoon.snowflake.Snowflake;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,16 +23,18 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     private final BufferedReader b;
     private final PrintWriter p;
 
+    private Map<Long, ForwardStream> subStreamMap = new ConcurrentHashMap<>();
+
     /**
      * SubStreams
      */
     private final Long subStreamId;
-    private Map<Long, ForwardStream> subStreamMap = new ConcurrentHashMap<>();
     private AdvInputOutputStream parent = null;
+    private Queue<String> subOs;
 
     //当前独占的out 和 in
-    private long stickyOutId = -1;
-    private long stickyInId = -1;
+    private long subStreamInput = -1;
+    private long subStreamOutput = -1;
 
     public AdvInputOutputStream(InputStream is, OutputStream os, Environment env){
         this.is = is;
@@ -43,12 +45,13 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         this.subStreamId = -1L;
     }
 
-    public AdvInputOutputStream(Long id,AdvInputOutputStream parent, InputStream is, OutputStream os, Environment env){
+    public AdvInputOutputStream(Long id, AdvInputOutputStream parent, InputStream is, Queue<String> os, Environment env){
         this.is = is;
-        this.os = os;
+        this.os = null;
         this.env = env;
         this.b = new BufferedReader(new InputStreamReader(is));
-        this.p = new PrintWriter(os);
+        this.subOs = os;
+        this.p = null;
         this.subStreamId = id;
         this.parent = parent;
     }
@@ -75,12 +78,18 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
 
     public void read() throws IOException {
 
+        if(isSubStream()){
+            if(!parent.isHeldInput(subStreamId)){
+                throw new NotAttachedException("The SubStream is not attached to the InputStream");
+            }
+        }
+
         rl = b.read(rb);
 
         //转发到subStream
-        if(stickyOutId != -1){
-            subStreamMap.get(stickyOutId).getForwardPwOut().write(rb,0,rl);
-            subStreamMap.get(stickyOutId).getForwardPwOut().flush();
+        if(subStreamInput != -1){
+            subStreamMap.get(subStreamInput).getForwardCharOut().write(rb,0,rl);
+            subStreamMap.get(subStreamInput).getForwardCharOut().flush();
             rl = 0;
             return;
         }
@@ -90,12 +99,27 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         }
     }
 
+
+
     public AdvInputOutputStream print(String a){
+
+        if(isSubStream()){
+            subOs.add(a);
+            return this;
+        }
+
         p.print(a);
         return this;
     }
 
     public AdvInputOutputStream println(String a){
+
+        if(isSubStream()){
+            subOs.add(a);
+            subOs.add("\r\n");
+            return this;
+        }
+
         p.print(a);
         return this;
     }
@@ -117,15 +141,27 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     @SneakyThrows
     private void notifyFlush(long subStreamId){
 
+        ensureNotSubStream();
+
         if(!subStreamMap.containsKey(subStreamId)){
             return;
         }
 
-        if(stickyInId != subStreamId){
-            subStreamMap.get(subStreamId).getForwardIn().reset();
+
+        Queue<String> forwardIn = subStreamMap.get(subStreamId).getForwardIn();
+
+        if(subStreamOutput != subStreamId){
+            forwardIn.clear();
+            return;
         }
 
-        subStreamMap.get(subStreamId).getForwardIn().transferTo(os);
+        if(!forwardIn.isEmpty()){
+            assert p != null;
+            forwardIn.forEach(p::print);
+            p.flush();
+            forwardIn.clear();
+        }
+
     }
 
     public int directRead(char[] c) throws IOException {
@@ -152,35 +188,33 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     }
 
 
-    private boolean isHeldInBySubStreamId(long subStreamId){
-        return stickyInId == subStreamId;
+    public boolean isHeldInput(long subStreamId){
+        if(isSubStream()){
+            return parent.isHeldInput(subStreamId);
+        }
+        return subStreamInput == subStreamId;
     }
-    private boolean isHeldOutBySubStreamId(long subStreamId){
-        return stickyOutId == subStreamId;
+    public boolean isHeldOutput(long subStreamId){
+        if(isSubStream()){
+            return parent.isHeldOutput(subStreamId);
+        }
+        return subStreamOutput == subStreamId;
     }
 
     public void attachInput(){
-        if(!isSubStream()){
-            return;
-        }
+        ensureIsSubStream();
         parent.notifyAttachInput(subStreamId);
     }
     public void attachOutput(){
-        if(!isSubStream()){
-            return;
-        }
+        ensureIsSubStream();
         parent.notifyAttachOutput(subStreamId);
     }
     public void detachInput(){
-        if(!isSubStream()){
-            return;
-        }
+        ensureIsSubStream();
         parent.notifyDetachInput(subStreamId);
     }
     public void detachOutput(){
-        if(!isSubStream()){
-            return;
-        }
+        ensureIsSubStream();
         parent.notifyDetachOutput(subStreamId);
     }
 
@@ -199,25 +233,39 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     }
 
 
-
-
     private void notifyAttachInput(long subStreamId){
-        stickyInId = subStreamId;
+        ensureNotSubStream();
+        subStreamInput = subStreamId;
     }
     private void notifyAttachOutput(long subStreamId){
-        stickyOutId = subStreamId;
+        ensureNotSubStream();
+        subStreamOutput = subStreamId;
     }
     private void notifyDetachInput(long subStreamId){
-        if(!isHeldInBySubStreamId(subStreamId)){
+        ensureNotSubStream();
+        if(!isHeldInput(subStreamId)){
             return;
         }
-        stickyInId = -1;
+        subStreamInput = -1;
     }
     private void notifyDetachOutput(long subStreamId){
-        if(!isHeldOutBySubStreamId(subStreamId)){
+        ensureNotSubStream();
+        if(!isHeldOutput(subStreamId)){
             return;
         }
-        stickyOutId = -1;
+        subStreamOutput = -1;
+    }
+
+    private void ensureIsSubStream(){
+        if(!isSubStream()){
+            throw new NotSupportOperationException("the TopLayerStream not support this operation");
+        }
+    }
+
+    private void ensureNotSubStream(){
+        if(isSubStream()){
+            throw new NotSupportOperationException("the subStream not support this operation");
+        }
     }
 
 }

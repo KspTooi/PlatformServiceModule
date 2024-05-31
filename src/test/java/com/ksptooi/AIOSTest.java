@@ -2,6 +2,7 @@ package com.ksptooi;
 
 import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.VK;
+import lombok.SneakyThrows;
 import org.junit.Test;
 
 import java.io.*;
@@ -11,29 +12,39 @@ public class AIOSTest {
 
     public static void main(String[] args) throws IOException {
 
-        AIOSTest test = new AIOSTest();
-        test.subStreamTest();
+        AIOSTest t = new AIOSTest();
+        t.subStreamTest();
 
     }
 
     @Test
     public void subStreamTest() throws IOException {
 
-        AdvInputOutputStream aios = new AdvInputOutputStream(System.in,System.out,null);
+        AdvInputOutputStream aio = new AdvInputOutputStream(System.in,System.out,null);
 
-        //创建新线程
+        AdvInputOutputStream sub1 = aio.createSubStream();
+        AdvInputOutputStream sub2 = aio.createSubStream();
+
+        sub2.attachOutput();
+        sub1.attachInput();
+
         Thread.ofVirtual().start(()->{
+            while (true){
+                sub2.println("[SUB2]输出调试文本").flush();
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
-            AdvInputOutputStream sub = aios.createSubStream();
-            aios.destroySubStream(sub.getId());
-            sub.attachInput();
-            sub.attachOutput();
-
+        Thread.ofVirtual().start(()->{
             while (true){
                 try {
-                    sub.read();
-                    if(sub.match(VK.USER_INPUT)){
-                        System.out.println("[SUB]用户输入长度:"+sub.getReadLen());
+                    sub1.read();
+                    if(sub1.match(VK.USER_INPUT)){
+                        System.out.println("[SUB1]接收用户输入:"+sub1.getReadLen());
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -42,23 +53,11 @@ public class AIOSTest {
         });
 
         while (true){
-
-            aios.println("AAA").flush();
-            aios.read();
-
-            if(aios.match(VK.USER_INPUT)){
-                System.out.println("用户输入长度:"+aios.getReadLen());
-            }
-
+            aio.read();
         }
 
 
     }
-
-
-
-
-
 
 
     @Test

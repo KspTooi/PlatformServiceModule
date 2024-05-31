@@ -4,35 +4,36 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.sshd.server.Environment;
 
+import java.io.CharArrayWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Getter
 public class ForwardStream {
 
-    private final PipedInputStream forwardIn;
+
     private final PipedOutputStream forwardOut;
-    private final PrintWriter forwardPwOut;
+    private final PrintWriter forwardCharOut;
+    private final Queue<String> forwardIn;
     private final AdvInputOutputStream instance;
 
     @SneakyThrows
     public ForwardStream(Long id,AdvInputOutputStream parent, Environment env) {
-
-        final PipedInputStream subIn = new PipedInputStream(204800);
-        final PipedOutputStream subOut = new PipedOutputStream();
-
+        final PipedInputStream subIn = new PipedInputStream(2048);
         this.forwardOut = new PipedOutputStream(subIn);
-        this.forwardIn = new PipedInputStream(subOut,204800);
-        this.forwardPwOut = new PrintWriter(forwardOut);
-        instance = new AdvInputOutputStream(id,parent,subIn,subOut,env);
+        this.forwardCharOut = new PrintWriter(forwardOut);
+        forwardIn = new ConcurrentLinkedQueue<>();
+        instance = new AdvInputOutputStream(id,parent,subIn, forwardIn,env);
     }
 
     @SneakyThrows
     public void destroy(){
         instance.detachInput();
         instance.detachOutput();
-        forwardIn.close();
+        //forwardIn
         forwardOut.close();
     }
 
