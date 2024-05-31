@@ -6,12 +6,14 @@ import org.apache.sshd.server.Environment;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.PrintWriter;
 
 @Getter
 public class ForwardStream {
 
     private final PipedInputStream forwardIn;
     private final PipedOutputStream forwardOut;
+    private final PrintWriter forwardPwOut;
     private final AdvInputOutputStream instance;
 
     @SneakyThrows
@@ -22,6 +24,7 @@ public class ForwardStream {
 
         this.forwardOut = new PipedOutputStream(subIn);
         this.forwardIn = new PipedInputStream(subOut,204800);
+        this.forwardPwOut = new PrintWriter(forwardOut);
         instance = new AdvInputOutputStream(id,parent,subIn,subOut,env);
     }
 

@@ -1,5 +1,6 @@
 package com.ksptooi.psm.vk;
 
+import lombok.SneakyThrows;
 import org.apache.sshd.server.Environment;
 import xyz.downgoon.snowflake.Snowflake;
 
@@ -27,12 +28,12 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
      * SubStreams
      */
     private final Long subStreamId;
-    private Map<Long, AdvInputOutputStream> subStreams = new HashMap<>();
+    private Map<Long, ForwardStream> subStreamMap = new HashMap<>();
     private AdvInputOutputStream parent = null;
 
     //当前独占的out 和 in
-    private AdvInputOutputStream stickyOut = null;
-    private AdvInputOutputStream stickyIn = null;
+    private long stickyOutId = -1;
+    private long stickyInId = -1;
 
     public AdvInputOutputStream(InputStream is, OutputStream os, Environment env){
         this.is = is;
@@ -72,6 +73,13 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
 
     public void read() throws IOException {
         rl = b.read(rb);
+
+        //转发到subStream
+        if(stickyOutId != -1){
+            subStreamMap.get(stickyOutId).getForwardPwOut().write(rb,0,rl);
+            subStreamMap.get(stickyOutId).getForwardPwOut().flush();
+        }
+
         if(rl < 1){
             throw new IOException();
         }
@@ -90,12 +98,29 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     public AdvInputOutputStream flush(){
 
         if(isSubStream()){
-
+            parent.notifyFlush(this.subStreamId);
             return this;
         }
 
         p.flush();
         return this;
+    }
+
+    /**
+     * 子AIOS通知父AIOS
+     */
+    @SneakyThrows
+    public void notifyFlush(long subStreamId){
+
+        if(!subStreamMap.containsKey(subStreamId)){
+            return;
+        }
+
+        if(stickyInId != subStreamId){
+            subStreamMap.get(subStreamId).getForwardIn().reset();
+        }
+
+        subStreamMap.get(subStreamId).getForwardIn().transferTo(os);
     }
 
     public int directRead(char[] c) throws IOException {
@@ -105,7 +130,6 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     public int directRead() throws IOException{
         return b.read();
     }
-
 
     public int getReadLen(){
         return rl;
@@ -120,5 +144,25 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
 
     public boolean isSubStream(){
         return parent != null;
+    }
+
+    private void notifyAttachInput(long subStreamId){
+        stickyInId = subStreamId;
+    }
+    private void notifyAttachOutput(long subStreamId){
+        stickyOutId = subStreamId;
+    }
+
+    public void attachInput(){
+        if(!isSubStream()){
+            return;
+        }
+        parent.notifyAttachInput(this.subStreamId);
+    }
+    public void attachOutput(){
+        if(!isSubStream()){
+            return;
+        }
+        parent.notifyAttachOutput(this.subStreamId);
     }
 }
