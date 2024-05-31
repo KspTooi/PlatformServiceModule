@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class AdvInputOutputStream extends BufferedAndMatcher{
 
-    private static final Snowflake snowflake = new Snowflake(1,50);
+    private static final Snowflake snowflake = new Snowflake(1,30);
 
     private final InputStream is;
     private final OutputStream os;
@@ -57,14 +57,10 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
 
 
     public AdvInputOutputStream createSub(){
-
         final long id = snowflake.nextId();
-
-        final ForwardStream forwardStream = new ForwardStream(id, this, env);
-
-        AdvInputOutputStream subAIOS = forwardStream.getInstance();
-
-        return null;
+        final ForwardStream subForwardStream = new ForwardStream(id, this, env);
+        subStreamMap.put(id,subForwardStream);
+        return subForwardStream.getInstance();
     }
 
     public void removeSub(Long id){
@@ -72,12 +68,15 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     }
 
     public void read() throws IOException {
+
         rl = b.read(rb);
 
         //转发到subStream
         if(stickyOutId != -1){
             subStreamMap.get(stickyOutId).getForwardPwOut().write(rb,0,rl);
             subStreamMap.get(stickyOutId).getForwardPwOut().flush();
+            rl = 0;
+            return;
         }
 
         if(rl < 1){
@@ -110,7 +109,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
      * 子AIOS通知父AIOS
      */
     @SneakyThrows
-    public void notifyFlush(long subStreamId){
+    private void notifyFlush(long subStreamId){
 
         if(!subStreamMap.containsKey(subStreamId)){
             return;
@@ -151,6 +150,12 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     }
     private void notifyAttachOutput(long subStreamId){
         stickyOutId = subStreamId;
+    }
+    private boolean isHeldInBySubStreamId(long subStreamId){
+        return stickyInId == subStreamId;
+    }
+    private boolean isHeldOutBySubStreamId(long subStreamId){
+        return stickyOutId == subStreamId;
     }
 
     public void attachInput(){
