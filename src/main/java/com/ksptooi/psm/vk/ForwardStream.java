@@ -28,4 +28,12 @@ public class ForwardStream {
         instance = new AdvInputOutputStream(id,parent,subIn,subOut,env);
     }
 
+    @SneakyThrows
+    public void destroy(){
+        instance.detachInput();
+        instance.detachOutput();
+        forwardIn.close();
+        forwardOut.close();
+    }
+
 }

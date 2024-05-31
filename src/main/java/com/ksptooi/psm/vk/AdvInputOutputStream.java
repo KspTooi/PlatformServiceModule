@@ -7,6 +7,7 @@ import xyz.downgoon.snowflake.Snowflake;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 线程独占的IO
@@ -22,13 +23,11 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     private final BufferedReader b;
     private final PrintWriter p;
 
-    private boolean reading = false;
-
     /**
      * SubStreams
      */
     private final Long subStreamId;
-    private Map<Long, ForwardStream> subStreamMap = new HashMap<>();
+    private Map<Long, ForwardStream> subStreamMap = new ConcurrentHashMap<>();
     private AdvInputOutputStream parent = null;
 
     //当前独占的out 和 in
@@ -51,20 +50,27 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         this.b = new BufferedReader(new InputStreamReader(is));
         this.p = new PrintWriter(os);
         this.subStreamId = id;
-        this.reading = false;
         this.parent = parent;
     }
 
 
-    public AdvInputOutputStream createSub(){
+    public AdvInputOutputStream createSubStream(){
         final long id = snowflake.nextId();
         final ForwardStream subForwardStream = new ForwardStream(id, this, env);
         subStreamMap.put(id,subForwardStream);
         return subForwardStream.getInstance();
     }
 
-    public void removeSub(Long id){
+    @SneakyThrows
+    public void destroySubStream(Long id){
 
+        if(!subStreamMap.containsKey(id)){
+            return;
+        }
+
+        ForwardStream fs = subStreamMap.get(id);
+        fs.destroy();
+        subStreamMap.remove(id);
     }
 
     public void read() throws IOException {
@@ -145,12 +151,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         return parent != null;
     }
 
-    private void notifyAttachInput(long subStreamId){
-        stickyInId = subStreamId;
-    }
-    private void notifyAttachOutput(long subStreamId){
-        stickyOutId = subStreamId;
-    }
+
     private boolean isHeldInBySubStreamId(long subStreamId){
         return stickyInId == subStreamId;
     }
@@ -162,12 +163,61 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         if(!isSubStream()){
             return;
         }
-        parent.notifyAttachInput(this.subStreamId);
+        parent.notifyAttachInput(subStreamId);
     }
     public void attachOutput(){
         if(!isSubStream()){
             return;
         }
-        parent.notifyAttachOutput(this.subStreamId);
+        parent.notifyAttachOutput(subStreamId);
     }
+    public void detachInput(){
+        if(!isSubStream()){
+            return;
+        }
+        parent.notifyDetachInput(subStreamId);
+    }
+    public void detachOutput(){
+        if(!isSubStream()){
+            return;
+        }
+        parent.notifyDetachOutput(subStreamId);
+    }
+
+    @SneakyThrows
+    public void destroy(){
+
+        if(isSubStream()){
+            parent.destroySubStream(subStreamId);
+            return;
+        }
+
+        detachInput();
+        detachOutput();
+        is.close();
+        os.close();
+    }
+
+
+
+
+    private void notifyAttachInput(long subStreamId){
+        stickyInId = subStreamId;
+    }
+    private void notifyAttachOutput(long subStreamId){
+        stickyOutId = subStreamId;
+    }
+    private void notifyDetachInput(long subStreamId){
+        if(!isHeldInBySubStreamId(subStreamId)){
+            return;
+        }
+        stickyInId = -1;
+    }
+    private void notifyDetachOutput(long subStreamId){
+        if(!isHeldOutBySubStreamId(subStreamId)){
+            return;
+        }
+        stickyOutId = -1;
+    }
+
 }

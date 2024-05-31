@@ -2,8 +2,6 @@ package com.ksptooi;
 
 import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.VK;
-import lombok.SneakyThrows;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
 import java.io.*;
@@ -25,7 +23,9 @@ public class AIOSTest {
 
         //创建新线程
         Thread.ofVirtual().start(()->{
-            AdvInputOutputStream sub = aios.createSub();
+
+            AdvInputOutputStream sub = aios.createSubStream();
+            aios.destroySubStream(sub.getId());
             sub.attachInput();
             sub.attachOutput();
 
