@@ -2,7 +2,6 @@ package com.ksptooi;
 
 import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.VK;
-import lombok.SneakyThrows;
 import org.junit.Test;
 
 import java.io.*;

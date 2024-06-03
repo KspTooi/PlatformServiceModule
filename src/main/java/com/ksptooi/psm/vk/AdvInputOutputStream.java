@@ -69,7 +69,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         return subForwardStream.getInstance();
     }
 
-    public AdvInputOutputStream createSubStream(AdvInputOutputStream aio){
+    public AdvInputOutputStream joinSubStream(AdvInputOutputStream aio){
 
         if(!aio.isSubStream()){
             throw new RuntimeException("无法将一个顶层AIO加入到顶层AIO中.");
@@ -78,8 +78,9 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         aio.detachInput();
         aio.detachOutput();
         var id = aio.getId();
-
-        final ForwardStream subForwardStream = new ForwardStream(id, this, env);
+        final ForwardStream sub = new ForwardStream(aio, this, env);
+        subStreamMap.put(id,sub);
+        return sub.getInstance();
     }
 
     public Queue<String> rebuild(InputStream is,AdvInputOutputStream parent, Environment env){
@@ -261,6 +262,14 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         parent.notifyDetachInput(subStreamId);
     }
     public void detachOutput(){
+
+        //顶层AIO解除子IO的Attach
+        if(!isSubStream()){
+            ensureNotSubStream();
+            subStreamOutput = -1;
+            return;
+        }
+
         ensureIsSubStream();
         parent.notifyDetachOutput(subStreamId);
     }
@@ -277,6 +286,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         detachOutput();
         is.close();
         os.close();
+        offline = true;
     }
 
 
