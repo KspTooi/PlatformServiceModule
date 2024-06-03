@@ -131,7 +131,14 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         }
     }
 
-
+    public AdvInputOutputStream nextLine(){
+        if(isSubStream()){
+            subOs.add("\r\n");
+            return this;
+        }
+        p.print("\r\n");
+        return this;
+    }
 
     public AdvInputOutputStream print(String a){
 
@@ -144,13 +151,17 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         return this;
     }
 
+    public AdvInputOutputStream print(int i){
+        return print(i+"");
+    }
+
     public AdvInputOutputStream println(String a){
         if(isSubStream()){
             subOs.add(a);
             subOs.add("\r\n");
             return this;
         }
-        p.print(a);
+        p.println(a);
         return this;
     }
     public AdvInputOutputStream println(int i){

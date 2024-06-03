@@ -33,6 +33,8 @@ public class TaskManager {
 
         log.info("用户创建进程:{} PID:{}",tName,task.getPid());
 
+        task.setTaskName(tName);
+
         Thread thread = Thread.ofPlatform().name(tName).start(() -> {
 
             //创建子AIO 并置顶
@@ -113,6 +115,10 @@ public class TaskManager {
      */
     public RunningTask getCurTask(){
         return curTask;
+    }
+
+    public Map<Integer,RunningTask> getTasks(){
+        return tasks;
     }
 
 }

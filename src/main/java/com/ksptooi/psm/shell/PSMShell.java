@@ -53,18 +53,23 @@ public class PSMShell implements Command,Runnable{
 
     private boolean offline = false;
 
+    private AdvInputOutputStream aios;
+
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
 
         this.session = session;
         this.env = env;
 
+        aios = new AdvInputOutputStream(is,os,env);
+        aios.print(Colors.CYAN)
+                .print("Welcome To PlatformServiceModule(PSM/3.9B x64)")
+                .print(Colors.RESET)
+                .flush();
+        aios.nextLine().flush();
+
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
-
-        PrintWriter pw = new PrintWriter(os);
-        pw.println("Hello PSMShell Welcome " + session.getSession().getUsername());
-        pw.flush();
 
         shell = new ShellInstance(exitCallback,eos,os,pw,is,session,env);
     }
@@ -100,8 +105,6 @@ public class PSMShell implements Command,Runnable{
     public void run() {
 
         try{
-
-            AdvInputOutputStream aios = new AdvInputOutputStream(is,os,env);
 
             //BufferedReader br = new BufferedReader(new InputStreamReader(is));
             ShellVK svk = new ShellVK(os,env);

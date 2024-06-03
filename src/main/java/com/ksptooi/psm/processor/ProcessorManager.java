@@ -234,7 +234,7 @@ public class ProcessorManager {
             return null;
         }
 
-        ShellInstance user = request.getShellInstance();
+        //ShellInstance user = request.getShellInstance();
 
         //查找处理器中的Define
         ProcDefine define = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());

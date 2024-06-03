@@ -16,6 +16,9 @@ public class RunningTask {
     @Getter
     private int pid = -1; //当前Task的PID
 
+    @Getter
+    private String name;
+
     //原始请求对象
     @Getter
     private ProcRequest request;
@@ -88,6 +91,26 @@ public class RunningTask {
         if(this.taskManager == null){
             this.taskManager = manager;
         }
+    }
+    public void setTaskName(String name) {
+        if(this.name == null){
+            this.name = name;
+        }
+    }
+
+    public String getStageStr(){
+
+        if(stage == 0){
+            return "PREPARING";
+        }
+        if(stage == 1){
+            return "RUNNING";
+        }
+        if(stage == 2){
+            return "FINISHED";
+        }
+
+        return "UNKNOWN";
     }
 
     public static final Integer STAGE_PREPARING = 0;
