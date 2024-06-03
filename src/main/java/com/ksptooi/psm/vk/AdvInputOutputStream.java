@@ -1,5 +1,6 @@
 package com.ksptooi.psm.vk;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.sshd.server.Environment;
 import xyz.downgoon.snowflake.Snowflake;
@@ -16,14 +17,17 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
 
     private static final Snowflake snowflake = new Snowflake(1,30);
 
-    private final InputStream is;
-    private final OutputStream os;
-    private final Environment env;
+    private InputStream is;
+    private OutputStream os;
+    private Environment env;
 
-    private final BufferedReader b;
+    private BufferedReader b;
     private final PrintWriter p;
 
     private final Map<Long, ForwardStream> subStreamMap = new ConcurrentHashMap<>();
+
+    @Getter
+    private boolean offline = false;
 
     /**
      * SubStreams
@@ -32,9 +36,10 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     private AdvInputOutputStream parent = null;
     private Queue<String> subOs;
 
-    //当前独占的out 和 in
+    //当前独占的out和in
     private long subStreamInput = -1;
     private long subStreamOutput = -1;
+
 
     public AdvInputOutputStream(InputStream is, OutputStream os, Environment env){
         this.is = is;
@@ -62,6 +67,32 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         final ForwardStream subForwardStream = new ForwardStream(id, this, env);
         subStreamMap.put(id,subForwardStream);
         return subForwardStream.getInstance();
+    }
+
+    public AdvInputOutputStream createSubStream(AdvInputOutputStream aio){
+
+        if(!aio.isSubStream()){
+            throw new RuntimeException("无法将一个顶层AIO加入到顶层AIO中.");
+        }
+
+        aio.detachInput();
+        aio.detachOutput();
+        var id = aio.getId();
+
+        final ForwardStream subForwardStream = new ForwardStream(id, this, env);
+    }
+
+    public Queue<String> rebuild(InputStream is,AdvInputOutputStream parent, Environment env){
+
+        if(!isSubStream()){
+            throw new RuntimeException("无法在顶层AIO上执行Rebuild.");
+        }
+
+        this.is = is;
+        this.parent = parent;
+        this.env = env;
+        this.offline = false;
+        return subOs;
     }
 
     @SneakyThrows
@@ -147,7 +178,6 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         if(!subStreamMap.containsKey(subStreamId)){
             return;
         }
-
 
         Queue<String> forwardIn = subStreamMap.get(subStreamId).getForwardIn();
 

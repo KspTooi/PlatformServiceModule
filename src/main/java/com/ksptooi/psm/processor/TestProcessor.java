@@ -11,6 +11,7 @@ public class TestProcessor {
     @RequestHandler("test")
     public void test(ProcRequest req , RunningTask task) throws InterruptedException {
 
+        req.getAio().attachOutput();
 
         var p = req.getAio();
         p.print("这是一个测试命令 任务PID:"+task.getPid());
@@ -53,9 +54,6 @@ public class TestProcessor {
         w.print(Colors.RESET);
         w.flush();
     }
-
-
-
 
 
 }

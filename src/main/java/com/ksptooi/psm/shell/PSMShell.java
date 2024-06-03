@@ -216,7 +216,7 @@ public class PSMShell implements Command,Runnable{
                     req.setParameters(new HashMap<>());
                     req.setShellInstance(shell);
                     //req.setShellVk(svk);
-                    req.setAio(aios.createSubStream());
+                    req.setAio(aios);
 
                     HookTaskFinished hook = ()->{
                         svk.nextLine();
@@ -225,9 +225,7 @@ public class PSMShell implements Command,Runnable{
                     };
 
                     HookTaskToggle hookToggle = (background,task)->{
-                        if(background){
-                            task.setShell(null);
-                        }
+
                     };
 
                     RunningTask forward = processorManager.forward(req, hook,hookToggle);

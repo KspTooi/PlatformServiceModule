@@ -34,6 +34,10 @@ public class TaskManager {
         log.info("用户提交任务:{} PID:{}",tName,task.getPid());
 
         Thread thread = Thread.ofPlatform().name(tName).start(() -> {
+
+            //创建子AIO 并置顶
+            
+
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
             } catch (Exception e) {

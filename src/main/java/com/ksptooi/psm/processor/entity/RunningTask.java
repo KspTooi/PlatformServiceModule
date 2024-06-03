@@ -80,7 +80,7 @@ public class RunningTask {
         }
     }
     public void setFinishHook(HookTaskFinished hook){
-        if(this.finishHook != null){
+        if(this.finishHook == null){
             this.finishHook = hook;
         }
     }
