@@ -23,20 +23,19 @@ public class TaskManager {
 
     public void commit(RunningTask task){
 
-        ChannelSession session = task.getRequest().getShellInstance().getSession();
+        ChannelSession session = task.getRequest().getShell().getSession();
 
-        final String tName = "task-"+session.getSession().getUsername()+"-"+task.getTarget().getName();
+        final String tName = session.getSession().getUsername()+"-"+task.getTarget().getName();
 
         task.setPid(takePid());
         task.setStage(RunningTask.STAGE_RUNNING);
         tasks.put(task.getPid(),task);
 
-        log.info("用户提交任务:{} PID:{}",tName,task.getPid());
+        log.info("用户创建进程:{} PID:{}",tName,task.getPid());
 
         Thread thread = Thread.ofPlatform().name(tName).start(() -> {
 
             //创建子AIO 并置顶
-            
 
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
@@ -44,7 +43,7 @@ public class TaskManager {
                 e.printStackTrace();
             }
             releaseTask(task);
-            log.info("任务结束:{}", tName);
+            log.info("进程退出:{}", tName);
         });
 
         task.setInstance(thread);

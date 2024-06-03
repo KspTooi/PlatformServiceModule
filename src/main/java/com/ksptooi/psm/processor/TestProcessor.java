@@ -2,8 +2,10 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.RunningTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
+import com.ksptooi.psm.processor.event.RequestForwardEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.Colors;
+import com.ksptooi.psm.vk.AdvInputOutputStream;
 
 @RequestProcessor("TestProcessor")
 public class TestProcessor {
@@ -28,6 +30,16 @@ public class TestProcessor {
     @RequestHandler("*")
     public void newRequest(ProcRequest req) {
     }
+
+
+    @EventHandler(global = true)
+    public void event(RequestForwardEvent e){
+
+        e.cancel();
+        AdvInputOutputStream aio = e.getRequest().getAio();
+        
+    }
+
 
     @EventHandler
     public void badRequestNotify(BadRequestEvent event){

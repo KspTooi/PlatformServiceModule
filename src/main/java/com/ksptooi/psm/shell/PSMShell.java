@@ -14,10 +14,13 @@ import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
+import org.apache.sshd.common.session.Session;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.session.ServerSession;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,6 +51,8 @@ public class PSMShell implements Command,Runnable{
     //当前正在运行的前台任务
     private RunningTask currentTask = null;
 
+    private boolean offline = false;
+
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
 
@@ -66,7 +71,8 @@ public class PSMShell implements Command,Runnable{
 
     @Override
     public void destroy(ChannelSession session) throws Exception {
-
+        offline = true;
+        shellThread.interrupt();
     }
 
     @Override
@@ -214,8 +220,7 @@ public class PSMShell implements Command,Runnable{
                     req.setPattern(null);
                     req.setParams(new ArrayList<>());
                     req.setParameters(new HashMap<>());
-                    req.setShellInstance(shell);
-                    //req.setShellVk(svk);
+                    req.setShell(this);
                     req.setAio(aios);
 
                     HookTaskFinished hook = ()->{
@@ -269,6 +274,20 @@ public class PSMShell implements Command,Runnable{
         if(currentTask == null){
             currentTask = procTask;
         }
+    }
+
+
+    public Environment getEnv(){
+        return env;
+    }
+    public ChannelSession getSession(){
+        return session;
+    }
+    public ServerSession getServerSession(){
+        return session.getSession();
+    }
+    public boolean isOffline(){
+        return this.offline;
     }
 
 }
