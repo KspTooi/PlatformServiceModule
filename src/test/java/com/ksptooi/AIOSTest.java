@@ -25,6 +25,8 @@ public class AIOSTest {
         AdvInputOutputStream sub1 = aio.createSubStream();
         AdvInputOutputStream sub2 = aio.createSubStream();
 
+        aio.detachInput();
+
         sub2.attachOutput();
         sub1.attachInput();
 

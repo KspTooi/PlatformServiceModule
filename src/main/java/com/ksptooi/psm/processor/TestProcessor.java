@@ -1,20 +1,18 @@
 package com.ksptooi.psm.processor;
 
-import com.ksptooi.psm.processor.entity.ProcTask;
+import com.ksptooi.psm.processor.entity.RunningTask;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.Colors;
-
-import java.io.PrintWriter;
 
 @RequestProcessor("TestProcessor")
 public class TestProcessor {
 
     @RequestHandler("test")
-    public void test(ProcRequest req , ProcTask task) throws InterruptedException {
+    public void test(ProcRequest req , RunningTask task) throws InterruptedException {
 
 
-        PrintWriter p = task.getShell().getPw();
+        var p = req.getAio();
         p.print("这是一个测试命令 任务PID:"+task.getPid());
         p.flush();
 
@@ -28,14 +26,13 @@ public class TestProcessor {
 
     @RequestHandler("*")
     public void newRequest(ProcRequest req) {
-
     }
 
     @EventHandler
     public void badRequestNotify(BadRequestEvent event){
 
         ProcRequest request = event.getRequest();
-        PrintWriter w = request.getShellInstance().getPw();
+        var w = request.getAio();
 
         if(event.getErrorCode().equals(BadRequestEvent.ERR_INVOKE_EXCEPTION)){
             return;

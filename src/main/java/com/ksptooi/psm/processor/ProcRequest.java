@@ -1,6 +1,7 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.shell.ShellInstance;
+import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.ShellVK;
 import lombok.Data;
 
@@ -24,6 +25,8 @@ public class ProcRequest {
 
     private ShellInstance shellInstance;
 
-    private ShellVK shellVk;
+    //private ShellVK shellVk;
+
+    private AdvInputOutputStream aio;
 
 }

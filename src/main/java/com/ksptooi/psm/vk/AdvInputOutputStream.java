@@ -23,7 +23,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     private final BufferedReader b;
     private final PrintWriter p;
 
-    private Map<Long, ForwardStream> subStreamMap = new ConcurrentHashMap<>();
+    private final Map<Long, ForwardStream> subStreamMap = new ConcurrentHashMap<>();
 
     /**
      * SubStreams
@@ -113,15 +113,16 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     }
 
     public AdvInputOutputStream println(String a){
-
         if(isSubStream()){
             subOs.add(a);
             subOs.add("\r\n");
             return this;
         }
-
         p.print(a);
         return this;
+    }
+    public AdvInputOutputStream println(int i){
+        return println(i+"");
     }
 
     public AdvInputOutputStream flush(){
@@ -206,10 +207,26 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         parent.notifyAttachInput(subStreamId);
     }
     public void attachOutput(){
+
+        //顶层AIO解除子IO的Attach
+        if(!isSubStream()){
+            ensureNotSubStream();
+            subStreamOutput = -1;
+            return;
+        }
+
         ensureIsSubStream();
         parent.notifyAttachOutput(subStreamId);
     }
     public void detachInput(){
+
+        //顶层AIO解除子IO的Attach
+        if(!isSubStream()){
+            ensureNotSubStream();
+            subStreamInput = -1;
+            return;
+        }
+
         ensureIsSubStream();
         parent.notifyDetachInput(subStreamId);
     }
@@ -266,6 +283,27 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         if(isSubStream()){
             throw new NotSupportOperationException("the subStream not support this operation");
         }
+    }
+
+    public void printDebugText(){
+
+        StringBuilder sb = new StringBuilder();
+
+        if(!isSubStream()){
+            sb.append("AIO->");
+        }else {
+            sb.append("AIO(").append(subStreamId).append(")->");
+        }
+
+        sb.append("[ ");
+        for (int i = 0; i < rl; i++) {
+            sb.append((int)rb[i]).append(",");
+        }
+
+        sb.deleteCharAt(sb.length() - 1);
+        sb.append(" ]");
+
+        System.out.println("VK_PRINT:: "+sb.toString());
     }
 
 }

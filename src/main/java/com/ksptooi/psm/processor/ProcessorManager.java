@@ -212,7 +212,7 @@ public class ProcessorManager {
     /**
      * 向处理器转发请求
      */
-    public ProcTask forward(ProcRequest request, HookTaskFinished hook, HookTaskToggle hookToggle){
+    public RunningTask forward(ProcRequest request, HookTaskFinished hook, HookTaskToggle hookToggle){
 
         resolverRequest(request);
 
@@ -236,23 +236,25 @@ public class ProcessorManager {
 
         ShellInstance user = request.getShellInstance();
 
-
         //查找处理器中的Define
         ProcDefine define = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());
-
 
         //已找到对应Handler的Define
         if(define != null){
 
             //注入Define所需要的入参
-            ProcTask procTask = new ProcTask(user, define.getMethod(), aProc,hook,hookToggle);
-            Object[] innerPar = { request,procTask };
-            Object[] params = ProcTools.assemblyParams(define.getMethod(), innerPar, request.getParams());
-            procTask.setParams(params);
+            var t = new RunningTask();
+            t.setRequest(request);
+            t.setProcessor(aProc);
+            t.setTarget(define.getMethod());
+            Object[] innerPar = { request,t,taskManager };
+            t.setInjectParams(ProcTools.assemblyParams(define.getMethod(), innerPar, request.getParams()));
+            t.setFinishHook(hook);
+            t.setTaskManager(taskManager);
 
             //执行Define
-            taskManager.commit(procTask);
-            return procTask;
+            taskManager.commit(t);
+            return t;
         }
 
         //没有找到对应的Define 尝试查找具有通配符的默认Define
@@ -260,16 +262,19 @@ public class ProcessorManager {
 
         if(defaultDefine != null){
 
-            ProcTask procTask = new ProcTask(user, defaultDefine.getMethod(), aProc,hook,hookToggle);
-
             //注入Define所需要的入参
-            Object[] innerPar = { request,procTask };
-            Object[] params = ProcTools.assemblyParams(defaultDefine.getMethod(), innerPar, request.getParams());
-            procTask.setParams(params);
+            var t = new RunningTask();
+            t.setRequest(request);
+            t.setProcessor(aProc);
+            t.setTarget(defaultDefine.getMethod());
+            Object[] innerPar = { request,t,taskManager };
+            t.setInjectParams(ProcTools.assemblyParams(defaultDefine.getMethod(), innerPar, request.getParams()));
+            t.setFinishHook(hook);
+            t.setTaskManager(taskManager);
 
             //执行Define
-            taskManager.commit(procTask);
-            return procTask;
+            taskManager.commit(t);
+            return t;
         }
 
         //处理器中找不到任何Define

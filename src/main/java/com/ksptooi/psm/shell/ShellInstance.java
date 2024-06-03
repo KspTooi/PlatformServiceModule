@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-@Getter
+
 public class ShellInstance {
 
     private final ExitCallback exitCallback;
@@ -17,7 +17,10 @@ public class ShellInstance {
     private final OutputStream os;
     private final PrintWriter pw;
     private final InputStream is;
+
+    @Getter
     private final ChannelSession session;
+    @Getter
     private final Environment env;
 
     public ShellInstance(ExitCallback ecb, OutputStream eos, OutputStream os, PrintWriter pw, InputStream is, ChannelSession session, Environment env){

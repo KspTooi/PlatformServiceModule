@@ -37,6 +37,9 @@ public class ProcDefine implements Comparable<ProcDefine>{
     //事件处理器类型
     private String eventHandlerType;
 
+    //是否是全局事件处理器?
+    private boolean globalEventHandler;
+
     //事件名称
     private String eventName;
 

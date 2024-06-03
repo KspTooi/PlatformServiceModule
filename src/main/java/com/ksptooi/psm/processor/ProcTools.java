@@ -367,6 +367,7 @@ public class ProcTools {
 
             String eventHandlerEventName = getEventHandlerEventName(m);
             def.setEventName(eventHandlerEventName);
+            def.setGlobalEventHandler(m.getAnnotation(EventHandler.class).global());
             ret.add(def);
         }
 

@@ -33,6 +33,7 @@ public class VK {
     public static void print(char[] c,int len){
 
         StringBuilder sb = new StringBuilder();
+
         sb.append("[ ");
         for (int i = 0; i < len; i++) {
             sb.append((int)c[i]).append(",");

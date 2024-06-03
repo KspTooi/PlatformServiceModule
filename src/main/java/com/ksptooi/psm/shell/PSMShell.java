@@ -5,7 +5,7 @@ import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.HookTaskToggle;
-import com.ksptooi.psm.processor.entity.ProcTask;
+import com.ksptooi.psm.processor.entity.RunningTask;
 import com.ksptooi.psm.processor.event.CancellableEvent;
 import com.ksptooi.psm.processor.event.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
@@ -43,9 +43,10 @@ public class PSMShell implements Command,Runnable{
     @Inject
     private TaskManager taskManager;
 
-    private Thread dispatchThread = null;
+    private Thread shellThread = null;
 
     //当前正在运行的前台任务
+    private RunningTask currentTask = null;
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
@@ -54,7 +55,7 @@ public class PSMShell implements Command,Runnable{
         this.env = env;
 
         //启动处理线程
-        this.dispatchThread = Thread.ofVirtual().start(this);
+        this.shellThread = Thread.ofVirtual().start(this);
 
         PrintWriter pw = new PrintWriter(os);
         pw.println("Hello PSMShell Welcome " + session.getSession().getUsername());
@@ -114,16 +115,16 @@ public class PSMShell implements Command,Runnable{
                 };
 
                 if(aios.match(VK.CTRL_C)){
-                    if(stickyTask == null || stickyTask.getStage() != ProcTask.STAGE_RUNNING){
+                    if(currentTask == null || currentTask.getStage() != RunningTask.STAGE_RUNNING){
                         continue;
                     }
-                    taskManager.kill(stickyTask.getPid());
+                    taskManager.kill(currentTask.getPid());
                     continue;
                 }
 
-                VK.print(aios.getReadChars(),aios.getReadLen());
+                aios.printDebugText();
 
-                if(stickyTask != null){
+                if(currentTask != null){
                     continue;
                 }
 
@@ -214,11 +215,12 @@ public class PSMShell implements Command,Runnable{
                     req.setParams(new ArrayList<>());
                     req.setParameters(new HashMap<>());
                     req.setShellInstance(shell);
-                    req.setShellVk(svk);
+                    //req.setShellVk(svk);
+                    req.setAio(aios.createSubStream());
 
                     HookTaskFinished hook = ()->{
                         svk.nextLine();
-                        stickyTask = null;
+                        currentTask = null;
                         System.out.println("exit hook");
                     };
 
@@ -228,7 +230,7 @@ public class PSMShell implements Command,Runnable{
                         }
                     };
 
-                    ProcTask forward = processorManager.forward(req, hook,hookToggle);
+                    RunningTask forward = processorManager.forward(req, hook,hookToggle);
 
                     //置顶任务到前台
                     triggerStickyTask(forward);
@@ -262,14 +264,12 @@ public class PSMShell implements Command,Runnable{
         e.setEnv(env);
     }
 
-    private ProcTask stickyTask = null;
-
     /**
      * 触发置顶任务
      */
-    public void triggerStickyTask(ProcTask procTask){
-        if(stickyTask == null){
-            stickyTask = procTask;
+    public void triggerStickyTask(RunningTask procTask){
+        if(currentTask == null){
+            currentTask = procTask;
         }
     }
 
