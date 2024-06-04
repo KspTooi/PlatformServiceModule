@@ -1,10 +1,12 @@
 package com.ksptooi.psm.processor.event;
 
 import com.ksptooi.psm.processor.ProcRequest;
+import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
+import com.ksptooi.psm.shell.PSMShell;
 import lombok.Getter;
 
 @Getter
-public class BadRequestEvent implements ProcEvent{
+public class BadRequestEvent extends AbstractProcEvent {
 
     private final ProcRequest request;
 
@@ -24,8 +26,19 @@ public class BadRequestEvent implements ProcEvent{
         this.exception = ex;
     }
 
+
+    @Override
+    public PSMShell getUserShell() {
+        return request.getShell();
+    }
+
     @Override
     public boolean isIntercepted() {
+        return false;
+    }
+
+    @Override
+    public boolean isCanceled() {
         return false;
     }
 

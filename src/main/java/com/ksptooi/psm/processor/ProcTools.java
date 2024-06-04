@@ -207,6 +207,13 @@ public class ProcTools {
         return retString;
     }
 
+
+
+    public static Object[] assemblyParams(Method m,List<String> outsideParams,Object... innerParam){
+        return assemblyParams(m,innerParam,outsideParams);
+    }
+
+
     /**
      * 组装方法参数
      * @param method 需要组装参数的方法

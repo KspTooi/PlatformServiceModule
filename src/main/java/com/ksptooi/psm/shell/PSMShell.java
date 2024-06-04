@@ -1,26 +1,23 @@
 package com.ksptooi.psm.shell;
 
+import com.ksptooi.Application;
 import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
-import com.ksptooi.psm.processor.entity.HookTaskToggle;
 import com.ksptooi.psm.processor.entity.RunningTask;
-import com.ksptooi.psm.processor.event.CancellableEvent;
-import com.ksptooi.psm.processor.event.ProcEvent;
+import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.vk.AdvInputOutputStream;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
-import org.apache.sshd.common.session.Session;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.session.ServerSession;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,16 +58,20 @@ public class PSMShell implements Command,Runnable{
         this.session = session;
         this.env = env;
 
+        final var v = Application.version;
+        final var p = Application.platform;
+
         aios = new AdvInputOutputStream(is,os,env);
         aios.print(Colors.CYAN)
-                .print("Welcome To PlatformServiceModule(PSM/3.9B x64)")
+                .print("Welcome To PlatformServiceModule(PSM/").print(v).print(" "+p ).print(")")
                 .print(Colors.RESET)
                 .flush();
         aios.nextLine().flush();
 
+        var userSession = new UserSession();
+
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
-
         shell = new ShellInstance(exitCallback,eos,os,pw,is,session,env);
     }
 
@@ -119,7 +120,7 @@ public class PSMShell implements Command,Runnable{
                 final int rl = aios.getReadLen();
 
                 //Shell原始输入事件
-                if(((CancellableEvent)triggerEvent(new ShellInputEvent(shell,aios.getReadChars(),aios.getReadLen()))).isCanceled()){
+                if(triggerEvent(new ShellInputEvent(this,aios.getReadChars(),aios.getReadLen())).isCanceled()){
                     continue;
                 };
 
@@ -200,8 +201,7 @@ public class PSMShell implements Command,Runnable{
                        continue;
                     }
 
-                    StatementCommitEvent commitEvent = new StatementCommitEvent(shell,vTextarea.toString());
-                    wrapEvent(commitEvent);
+                    StatementCommitEvent commitEvent = new StatementCommitEvent(this,vTextarea.toString());
                     processorManager.forward(commitEvent);
 
                     if(commitEvent.isCanceled()){
@@ -232,14 +232,7 @@ public class PSMShell implements Command,Runnable{
                         System.out.println("exit hook");
                     };
 
-                    HookTaskToggle hookToggle = (background,task)->{
-
-                    };
-
-                    RunningTask forward = processorManager.forward(req, hook,hookToggle);
-
-                    //置顶任务到前台
-                    triggerStickyTask(forward);
+                    RunningTask forward = processorManager.forward(req, hook);
 
                     if(forward == null){
                         svk.nextLine();
@@ -256,29 +249,18 @@ public class PSMShell implements Command,Runnable{
     }
 
 
-    private ProcEvent triggerEvent(CancellableEvent e){
-        wrapEvent(e);
+    private ProcEvent triggerEvent(ProcEvent e){
         return processorManager.forward(e);
-    }
-
-    private void wrapEvent(CancellableEvent e){
-        e.setEos(eos);
-        e.setOs(os);
-        e.setPw(pw);
-        e.setIs(is);
-        e.setSession(session);
-        e.setEnv(env);
     }
 
     /**
      * 触发置顶任务
      */
-    public void triggerStickyTask(RunningTask procTask){
+    public void notifyCurrentTask(RunningTask procTask){
         if(currentTask == null){
             currentTask = procTask;
         }
     }
-
 
     public Environment getEnv(){
         return env;
@@ -292,5 +274,6 @@ public class PSMShell implements Command,Runnable{
     public boolean isOffline(){
         return this.offline;
     }
+
 
 }

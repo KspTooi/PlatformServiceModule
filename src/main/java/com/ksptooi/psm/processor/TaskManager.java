@@ -23,29 +23,31 @@ public class TaskManager {
 
     public void commit(RunningTask task){
 
-        ChannelSession session = task.getRequest().getShell().getSession();
+        final var request = task.getRequest();
+        final ChannelSession session = request.getShell().getSession();
+        final var taskName = task.getTaskName();
+        final var username = session.getSession().getUsername();
+        final var pid = takePid();
 
-        final String tName = session.getSession().getUsername()+"-"+task.getTarget().getName();
-
-        task.setPid(takePid());
+        task.setPid(pid);
         task.setStage(RunningTask.STAGE_RUNNING);
         tasks.put(task.getPid(),task);
 
-        log.info("用户创建进程:{} PID:{}",tName,task.getPid());
+        log.info("用户:{} 启动进程:{} PID:{}", username,taskName,task.getPid());
 
-        task.setTaskName(tName);
-
-        Thread thread = Thread.ofPlatform().name(tName).start(() -> {
+        Thread thread = Thread.ofPlatform().name(taskName).start(() -> {
 
             //创建子AIO 并置顶
+            request.setAio(request.getAio().createSubStream());
 
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             releaseTask(task);
-            log.info("进程退出:{}", tName);
+            log.info("进程退出:{}", taskName);
         });
 
         task.setInstance(thread);
@@ -77,6 +79,9 @@ public class TaskManager {
         t.setStage(RunningTask.STAGE_FINISHED);
         releasePid(t.getPid());
         t.getFinishHook().finished();
+
+        //销毁AIO
+        t.getRequest().getAio().destroy();
     }
 
     private synchronized int takePid(){
@@ -93,7 +98,7 @@ public class TaskManager {
 
     /**
      * 将正在运行的任务切换到前台
-     */
+     *
     public void toggleCurTask(RunningTask task){
         curTask = task;
         task.getRequest().getAio().attachOutput();

@@ -14,10 +14,11 @@ public class TestProcessor {
     public void test(ProcRequest req , RunningTask task) throws InterruptedException {
 
         req.getAio().attachOutput();
+        req.getAio().attachInput();
 
         var p = req.getAio();
         p.print("这是一个测试命令 任务PID:"+task.getPid());
-        p.flush();
+        p.nextLine();
 
         for (int i = 0; i < 5000; i++) {
             Thread.sleep(500);
@@ -37,7 +38,7 @@ public class TestProcessor {
 
         e.cancel();
         AdvInputOutputStream aio = e.getRequest().getAio();
-        
+
     }
 
 

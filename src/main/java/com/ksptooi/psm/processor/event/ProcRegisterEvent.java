@@ -4,7 +4,7 @@ import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import lombok.Getter;
 
 @Getter
-public class ProcRegisterEvent extends CancellableEvent{
+public class ProcRegisterEvent extends CancellableEvent {
 
     private final ActiveProcessor proc;
 

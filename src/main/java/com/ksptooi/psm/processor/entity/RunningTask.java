@@ -2,7 +2,6 @@ package com.ksptooi.psm.processor.entity;
 
 import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.TaskManager;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +16,7 @@ public class RunningTask {
     private int pid = -1; //当前Task的PID
 
     @Getter
-    private String name;
+    private String taskName;
 
     //原始请求对象
     @Getter
@@ -50,7 +49,6 @@ public class RunningTask {
     //运行该任务的任务管理器
     @Getter
     private TaskManager taskManager;
-
 
     public void setPid(int pid){
         if(this.pid == -1){
@@ -93,8 +91,8 @@ public class RunningTask {
         }
     }
     public void setTaskName(String name) {
-        if(this.name == null){
-            this.name = name;
+        if(this.taskName == null){
+            this.taskName = name;
         }
     }
 
@@ -116,7 +114,4 @@ public class RunningTask {
     public static final Integer STAGE_PREPARING = 0;
     public static final Integer STAGE_RUNNING = 1;
     public static final Integer STAGE_FINISHED = 2;
-
-
-
 }

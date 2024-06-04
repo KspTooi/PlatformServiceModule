@@ -31,9 +31,9 @@ public class TaskManagerProcessor {
             var t = item.getValue();
 
             aio.print("PID:").print(item.getKey())
-                    .print("  进程名:").print(t.getName())
-                    .print("  状态:").print(t.getStageStr())
-                    .print("  用户:").print(t.getRequest().getShell().getServerSession().getUsername());
+                    .print("\t进程名:").print(t.getTaskName())
+                    .print("\t状态:").print(t.getStageStr())
+                    .print("\t用户:").print(t.getRequest().getShell().getServerSession().getUsername());
 
             aio.nextLine();
         }

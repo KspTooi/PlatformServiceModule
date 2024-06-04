@@ -7,9 +7,8 @@ import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.*;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
-import com.ksptooi.psm.processor.event.ProcEvent;
+import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.Application;
-import com.ksptooi.psm.shell.ShellInstance;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -212,7 +211,7 @@ public class ProcessorManager {
     /**
      * 向处理器转发请求
      */
-    public RunningTask forward(ProcRequest request, HookTaskFinished hook, HookTaskToggle hookToggle){
+    public RunningTask forward(ProcRequest request, HookTaskFinished hook){
 
         resolverRequest(request);
 
@@ -237,49 +236,31 @@ public class ProcessorManager {
         //ShellInstance user = request.getShellInstance();
 
         //查找处理器中的Define
-        ProcDefine define = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());
+        var procDef = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());
 
-        //已找到对应Handler的Define
-        if(define != null){
-
-            //注入Define所需要的入参
-            var t = new RunningTask();
-            t.setRequest(request);
-            t.setProcessor(aProc);
-            t.setTarget(define.getMethod());
-            Object[] innerPar = { request,t,taskManager };
-            t.setInjectParams(ProcTools.assemblyParams(define.getMethod(), innerPar, request.getParams()));
-            t.setFinishHook(hook);
-            t.setTaskManager(taskManager);
-
-            //执行Define
-            taskManager.commit(t);
-            return t;
+        //没有找到映射Define 尝试查找具有通配符的默认Define
+        if(procDef == null){
+            procDef = DefineTools.getDefaultDefine(aProc.getProcDefines());
         }
 
-        //没有找到对应的Define 尝试查找具有通配符的默认Define
-        ProcDefine defaultDefine = DefineTools.getDefaultDefine(aProc.getProcDefines());
-
-        if(defaultDefine != null){
-
-            //注入Define所需要的入参
-            var t = new RunningTask();
-            t.setRequest(request);
-            t.setProcessor(aProc);
-            t.setTarget(defaultDefine.getMethod());
-            Object[] innerPar = { request,t,taskManager };
-            t.setInjectParams(ProcTools.assemblyParams(defaultDefine.getMethod(), innerPar, request.getParams()));
-            t.setFinishHook(hook);
-            t.setTaskManager(taskManager);
-
-            //执行Define
-            taskManager.commit(t);
-            return t;
+        if(procDef == null){
+            //处理器中找不到任何Define
+            forward(new BadRequestEvent(new ProcRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
         }
 
-        //处理器中找不到任何Define
-        forward(new BadRequestEvent(request,BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
-        return null;
+        //注入Define所需要的入参
+        var t = new RunningTask();
+        t.setTaskName(procDef.getMethod().getName());
+        t.setRequest(request);
+        t.setProcessor(aProc);
+        t.setTarget(procDef.getMethod());
+        t.setInjectParams(ProcTools.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
+        t.setFinishHook(hook);
+        t.setTaskManager(taskManager);
+
+        //执行Define
+        taskManager.commit(t);
+        return t;
     }
 
 

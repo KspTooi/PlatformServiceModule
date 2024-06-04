@@ -5,7 +5,7 @@ import com.ksptooi.psm.shell.ShellInstance;
 import lombok.Getter;
 
 @Getter
-public class RequestForwardEvent extends CancellableEvent{
+public class RequestForwardEvent extends CancellableEvent {
 
     private final ShellInstance user;
     private final ProcRequest request;
