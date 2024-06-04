@@ -1,11 +1,13 @@
 package com.ksptooi.psm.processor.event;
 
 import com.ksptooi.psm.processor.ProcRequest;
+import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
+import com.ksptooi.psm.shell.PSMShell;
 import com.ksptooi.psm.shell.ShellInstance;
 import lombok.Getter;
 
 @Getter
-public class RequestForwardEvent extends CancellableEvent {
+public class RequestForwardEvent extends AbstractProcEvent {
 
     private final ShellInstance user;
     private final ProcRequest request;
@@ -15,4 +17,8 @@ public class RequestForwardEvent extends CancellableEvent {
         this.request = request;
     }
 
+    @Override
+    public PSMShell getUserShell() {
+        return null;
+    }
 }

@@ -75,6 +75,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
             throw new RuntimeException("无法将一个顶层AIO加入到顶层AIO中.");
         }
 
+        aio.removeForParent();
         aio.detachInput();
         aio.detachOutput();
         var id = aio.getId();
@@ -323,6 +324,32 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         }
         subStreamOutput = -1;
     }
+    private void notifyRemoveSubStream(long subStreamId){
+
+        ensureNotSubStream();
+
+        var fs = subStreamMap.get(subStreamId);
+
+        if(fs == null){
+            return;
+        }
+
+        if(subStreamInput == subStreamId){
+            subStreamInput = -1;
+        }
+        if(subStreamOutput == subStreamId){
+            subStreamOutput = -1;
+        }
+
+        try {
+            fs.getForwardCharOut().close();
+            fs.getForwardOut().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        subStreamMap.remove(subStreamId);
+    }
 
     private void ensureIsSubStream(){
         if(!isSubStream()){
@@ -334,6 +361,11 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         if(isSubStream()){
             throw new NotSupportOperationException("the subStream not support this operation");
         }
+    }
+
+    private void removeForParent(){
+        ensureIsSubStream();
+        parent.notifyRemoveSubStream(subStreamId);
     }
 
     public void printDebugText(){

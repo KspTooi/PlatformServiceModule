@@ -10,6 +10,7 @@ import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.ShellInstance;
 import jakarta.inject.Inject;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.sshd.server.channel.ChannelSession;
 import xyz.downgoon.snowflake.Snowflake;
 import java.util.Date;
 
@@ -28,18 +29,20 @@ public class UserStatementProcessor {
     @EventHandler
     public void saveUserStatement(StatementCommitEvent event){
 
-        final ShellInstance u = event.getUser();
-        final String account = u.getSession().getSession().getUsername();
+        var session = event.getUserShell().getSession().getSession();
+        var sessionId = session.getSessionId();
+        var account = session.getUsername();
+
         final UserVo userVo = usersMapper.getByAccount(account);
-        final String statement = event.getStatement();
+        final var statement = event.getStatement();
 
         StatementHistoryVo i = new StatementHistoryVo();
         i.setId(snowflake.nextId());
         i.setUserId(userVo.getUid());
         i.setUserAccount(userVo.getAccount());
         i.setStatement(statement);
-        i.setSessionId(Hex.encodeHexString(u.getSession().getSession().getSessionId()));
-        i.setIpAddress(u.getSession().getSession().getClientAddress().toString());
+        i.setSessionId(Hex.encodeHexString(sessionId));
+        i.setIpAddress(session.getClientAddress().toString());
         i.setAtTime(new Date());
         statementHistMapper.insert(i);
     }
