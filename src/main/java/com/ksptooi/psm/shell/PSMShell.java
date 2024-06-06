@@ -255,10 +255,16 @@ public class PSMShell implements Command,Runnable{
     /**
      * 触发置顶任务
      */
-    public void notifyCurrentTask(RunningTask procTask){
+    public void toggleCurrentTask(RunningTask procTask){
         if(currentTask == null){
             currentTask = procTask;
         }
+    }
+    public void toggleCurrentTask(){
+
+    }
+    public RunningTask getCurrentTask(){
+        return currentTask;
     }
 
     public Environment getEnv(){

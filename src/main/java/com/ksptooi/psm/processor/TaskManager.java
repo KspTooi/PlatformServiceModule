@@ -29,7 +29,6 @@ public class TaskManager {
     @Inject
     private EventSchedule eventSchedule;
 
-
     public void commit(RunningTask task){
 
         final var request = task.getRequest();
@@ -50,6 +49,9 @@ public class TaskManager {
             var event = new AsyncProcessCommitEvent(task);
             eventSchedule.forward(event);
 
+            //进程切换到前台
+            request.getShell().toggleCurrentTask(task);
+
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
             } catch (Exception e) {
@@ -61,6 +63,9 @@ public class TaskManager {
             //提交进程退出事件
             var exit = new AsyncProcessExitEvent(task);
             eventSchedule.forward(exit);
+
+            //进程从前台移除
+            request.getShell().toggleCurrentTask();
 
             //log.info("进程退出:{}", taskName);
         });
