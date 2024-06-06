@@ -1,6 +1,7 @@
 package com.ksptooi.psm.shell;
 
 import com.ksptooi.Application;
+import com.ksptooi.psm.processor.EventSchedule;
 import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.processor.TaskManager;
@@ -32,7 +33,6 @@ public class PSMShell implements Command,Runnable{
     private InputStream is;
     private ChannelSession session;
     private Environment env;
-    private ShellInstance shell;
 
     private final StringBuffer vTextarea = new StringBuffer();
     private int vCursor;
@@ -42,6 +42,9 @@ public class PSMShell implements Command,Runnable{
 
     @Inject
     private TaskManager taskManager;
+
+    @Inject
+    private EventSchedule eventSchedule;
 
     private Thread shellThread = null;
 
@@ -72,7 +75,6 @@ public class PSMShell implements Command,Runnable{
 
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
-        shell = new ShellInstance(exitCallback,eos,os,pw,is,session,env);
     }
 
     @Override
@@ -199,7 +201,7 @@ public class PSMShell implements Command,Runnable{
                     }
 
                     StatementCommitEvent commitEvent = new StatementCommitEvent(this,vTextarea.toString());
-                    processorManager.forward(commitEvent);
+                    eventSchedule.forward(commitEvent);
 
                     if(commitEvent.isCanceled()){
                         //重新渲染当前行并同步光标位置
@@ -247,7 +249,7 @@ public class PSMShell implements Command,Runnable{
 
 
     private ProcEvent triggerEvent(ProcEvent e){
-        return processorManager.forward(e);
+        return eventSchedule.forward(e);
     }
 
     /**

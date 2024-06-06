@@ -9,11 +9,11 @@ import lombok.Getter;
  * 进程退出事件(这个事件不能被取消 也无法阻止进程创建)
  */
 @Getter
-public class ProcessExitEvent extends AbstractProcEvent {
+public class AsyncProcessExitEvent extends AbstractProcEvent {
 
     private final RunningTask process;
 
-    public ProcessExitEvent(RunningTask process) {
+    public AsyncProcessExitEvent(RunningTask process) {
         this.process = process;
     }
 

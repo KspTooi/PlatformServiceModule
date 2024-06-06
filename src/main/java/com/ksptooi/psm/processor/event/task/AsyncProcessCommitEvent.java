@@ -10,11 +10,11 @@ import lombok.Getter;
  * 进程创建事件(这个事件不能被取消 也无法阻止进程创建)
  */
 @Getter
-public class ProcessCommitEvent extends AbstractProcEvent {
+public class AsyncProcessCommitEvent extends AbstractProcEvent {
 
     private final RunningTask process;
 
-    public ProcessCommitEvent(RunningTask process){
+    public AsyncProcessCommitEvent(RunningTask process){
         this.process = process;
     }
 

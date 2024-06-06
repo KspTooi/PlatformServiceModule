@@ -2,6 +2,10 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.event.generic.ProcEvent;
+import com.ksptooi.psm.processor.event.task.AsyncProcessCommitEvent;
+import com.ksptooi.psm.processor.event.task.AsyncProcessExitEvent;
+import jakarta.inject.Inject;
 import lombok.Getter;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.slf4j.Logger;
@@ -16,10 +20,14 @@ public class TaskManager {
     private static final Logger log = LoggerFactory.getLogger(TaskManager.class);
 
     private int nextPid = 1;
+
     private final TreeSet<Integer> availablePids = new TreeSet<>();
 
     @Getter
     private final Map<Integer, RunningTask> tasks = new ConcurrentHashMap<>();
+
+    @Inject
+    private EventSchedule eventSchedule;
 
 
     public void commit(RunningTask task){
@@ -36,10 +44,11 @@ public class TaskManager {
 
         log.info("用户:{} 启动进程:{} PID:{}", username,taskName,task.getPid());
 
-        Thread thread = Thread.ofPlatform().name(taskName).start(() -> {
+        Thread thread = Thread.ofVirtual().name(taskName).start(() -> {
 
-            //创建子AIO 并置顶
-            request.setAio(request.getAio().createSubStream());
+            //提交进程创建事件
+            var event = new AsyncProcessCommitEvent(task);
+            eventSchedule.forward(event);
 
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
@@ -48,7 +57,12 @@ public class TaskManager {
             }
 
             releaseTask(task);
-            log.info("进程退出:{}", taskName);
+
+            //提交进程退出事件
+            var exit = new AsyncProcessExitEvent(task);
+            eventSchedule.forward(exit);
+
+            //log.info("进程退出:{}", taskName);
         });
 
         task.setInstance(thread);

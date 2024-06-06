@@ -4,6 +4,7 @@ import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import com.ksptooi.psm.processor.entity.ProcDefine;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,9 @@ public class EventSchedule {
 
     private static final Logger log = LoggerFactory.getLogger(EventSchedule.class);
 
-    private final Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
+    private final static Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
+
+
 
     /**
      * 向事件调度注册一个事件
@@ -74,6 +77,10 @@ public class EventSchedule {
         }
 
         return event;
+    }
+
+    public Map<String,List<ProcDefine>> getEventMap(){
+        return eventMap;
     }
 
 
