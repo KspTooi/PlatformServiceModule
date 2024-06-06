@@ -20,6 +20,8 @@ public class TaskManagerProcessor {
 
         var aio = request.getAio();
 
+        request.getAio().attachOutput();
+
         Map<Integer, RunningTask> tasks = taskManager.getTasks();
 
         aio.nextLine();

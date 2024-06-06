@@ -2,6 +2,7 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.RunningTask;
+import lombok.Getter;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +18,9 @@ public class TaskManager {
     private int nextPid = 1;
     private final TreeSet<Integer> availablePids = new TreeSet<>();
 
+    @Getter
     private final Map<Integer, RunningTask> tasks = new ConcurrentHashMap<>();
 
-    private RunningTask curTask;
 
     public void commit(RunningTask task){
 
@@ -94,36 +95,6 @@ public class TaskManager {
 
     private synchronized void releasePid(int pid){
         availablePids.add(pid);
-    }
-
-    /**
-     * 将正在运行的任务切换到前台
-     *
-    public void toggleCurTask(RunningTask task){
-        curTask = task;
-        task.getRequest().getAio().attachOutput();
-    }
-
-    /**
-     * 任务切换为后台运行
-     */
-    public void toggleCurTask(){
-        if(curTask!=null){
-            curTask.getRequest().getAio().detachOutput();
-            curTask.getRequest().getAio().detachInput();
-            curTask = null;
-        }
-    }
-
-    /**
-     * 获取当前正在前台运行的任务
-     */
-    public RunningTask getCurTask(){
-        return curTask;
-    }
-
-    public Map<Integer,RunningTask> getTasks(){
-        return tasks;
     }
 
 }

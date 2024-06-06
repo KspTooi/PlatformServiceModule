@@ -7,7 +7,6 @@ import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.*;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
-import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.Application;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
@@ -39,9 +38,11 @@ public class ProcessorManager {
     @Inject
     private TaskManager taskManager;
 
-    private final Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
+    @Inject
+    private EventSchedule eventSchedule;
 
-    private final Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
+    private final static Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
+
 
     @Inject
     public ProcessorManager(){
@@ -160,53 +161,12 @@ public class ProcessorManager {
                     continue;
                 }
 
-                //创建list
-                List<ProcDefine> emList = eventMap.computeIfAbsent(def.getEventHandlerType(), k -> new ArrayList<>());
-                emList.add(def);
-                log.info("注册事件处理器 {}:{}({})..{}",def.getProcName(),def.getEventName(),def.getEventHandlerOrder(),def.getMethod().getName());
+                eventSchedule.register(def);
             }
 
         }
 
     }
-
-    /**
-     * 创建并发布事件
-     */
-    public ProcEvent forward(ProcEvent event){
-
-        //查找已注册的事件处理器
-        List<ProcDefine> defines = eventMap.get(event.getClass().getName());
-
-        if(defines == null){
-            return event;
-        }
-
-        Collections.sort(defines);
-
-        for(ProcDefine def : defines){
-
-            try {
-
-                //获得处理器实例
-                ActiveProcessor aProc = procMap.get(def.getProcName());
-                def.getMethod().invoke(aProc.getProc(),event);
-
-                if(event.isIntercepted()){
-                    break;
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",def.getProcName(),def.getEventName(),def.getMethod().getName());
-                continue;
-            }
-
-        }
-
-        return event;
-    }
-
 
     /**
      * 向处理器转发请求
@@ -220,7 +180,7 @@ public class ProcessorManager {
 
         if(requestHandlerVo == null){
             log.warn("无法处理请求:{} 无法从数据库查找到合适的Handler",request.getPattern());
-            forward(new BadRequestEvent(request,BadRequestEvent.ERR_UNKNOWN_HANDLER));
+            eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_UNKNOWN_HANDLER));
             return null;
         }
 
@@ -229,7 +189,7 @@ public class ProcessorManager {
 
         if(!aProc.getClassType().equals(requestHandlerVo.getProcClassType())){
             log.warn("无法处理请求:{} 数据库与当前加载的处理器类型不一致. 数据库:{} 当前:{}",request.getPattern(),requestHandlerVo.getProcClassType(),aProc.getClassType());
-            forward(new BadRequestEvent(request,BadRequestEvent.ERR_HANDLER_TYPE_INCONSISTENT));
+            eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_HANDLER_TYPE_INCONSISTENT));
             return null;
         }
 
@@ -245,7 +205,7 @@ public class ProcessorManager {
 
         if(procDef == null){
             //处理器中找不到任何Define
-            forward(new BadRequestEvent(new ProcRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
+            eventSchedule.forward(new BadRequestEvent(new ProcRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
         }
 
         //注入Define所需要的入参
@@ -357,6 +317,10 @@ public class ProcessorManager {
 
         req.setPattern(params[0]);
         req.setParams(paramList);
+    }
+
+    public static ActiveProcessor getProcessor(String procName){
+        return procMap.get(procName);
     }
 
 

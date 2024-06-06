@@ -24,7 +24,6 @@ public class BufferedAndMatcher {
         if(k == VK.END){
             return mat(27,91,70) || mat(27,91,52,126);
         }
-
         if(k == VK.USER_INPUT){
             return isUserTypes();
         }

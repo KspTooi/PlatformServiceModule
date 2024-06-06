@@ -25,11 +25,6 @@ public class VK {
     public static final int USER_INPUT = 20000;
 
 
-
-
-
-
-
     public static void print(char[] c,int len){
 
         StringBuilder sb = new StringBuilder();

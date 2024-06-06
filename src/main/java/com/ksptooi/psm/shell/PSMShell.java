@@ -107,10 +107,7 @@ public class PSMShell implements Command,Runnable{
 
         try{
 
-            //BufferedReader br = new BufferedReader(new InputStreamReader(is));
             ShellVK svk = new ShellVK(os,env);
-
-            //char[] read = new char[2400];
 
             while (true){
 
@@ -229,7 +226,7 @@ public class PSMShell implements Command,Runnable{
                     HookTaskFinished hook = ()->{
                         svk.nextLine();
                         currentTask = null;
-                        System.out.println("exit hook");
+                        System.out.println("Exit Hook");
                     };
 
                     RunningTask forward = processorManager.forward(req, hook);
