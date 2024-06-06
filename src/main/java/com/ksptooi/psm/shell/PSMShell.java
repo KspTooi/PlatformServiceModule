@@ -280,5 +280,9 @@ public class PSMShell implements Command,Runnable{
         return this.offline;
     }
 
+    public AdvInputOutputStream getRootAio(){
+        return aios;
+    }
+
 
 }
