@@ -1,6 +1,7 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.shell.PSMShell;
+import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 import lombok.Data;
 
@@ -19,7 +20,7 @@ public class ProcRequest {
         this.params = r.getParams();
         this.parameters = r.getParameters();
         this.shell = r.getShell();
-        this.aio = r.getAio();
+        this.cable = r.getCable();
     }
 
     //请求原始语句
@@ -36,8 +37,6 @@ public class ProcRequest {
 
     private PSMShell shell;
 
-    //private ShellVK shellVk;
-
-    private AdvInputOutputStream aio;
+    private AdvInputOutputCable cable;
 
 }

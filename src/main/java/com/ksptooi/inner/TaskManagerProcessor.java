@@ -18,9 +18,8 @@ public class TaskManagerProcessor {
     @RequestHandler("show task")
     public void taskList(ProcRequest request){
 
-        var aio = request.getAio();
+        var aio = request.getCable();
 
-        request.getAio().attachOutput();
 
         Map<Integer, RunningTask> tasks = taskManager.getTasks();
 

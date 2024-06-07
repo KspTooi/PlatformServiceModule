@@ -5,6 +5,7 @@ import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.RequestForwardEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.Colors;
+import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 
 @RequestProcessor("TestProcessor")
@@ -13,10 +14,7 @@ public class TestProcessor {
     @RequestHandler("test")
     public void test(ProcRequest req , RunningTask task) throws InterruptedException {
 
-        req.getAio().attachOutput();
-        req.getAio().attachInput();
-
-        var p = req.getAio();
+        var p = req.getCable();
         p.print("这是一个测试命令 任务PID:"+task.getPid());
         p.nextLine();
 
@@ -37,7 +35,7 @@ public class TestProcessor {
     public void event(RequestForwardEvent e){
 
         e.cancel();
-        AdvInputOutputStream aio = e.getRequest().getAio();
+        AdvInputOutputCable aio = e.getRequest().getCable();
 
     }
 
@@ -46,7 +44,7 @@ public class TestProcessor {
     public void badRequestNotify(BadRequestEvent event){
 
         ProcRequest request = event.getRequest();
-        var w = request.getAio();
+        var w = request.getCable();
 
         if(event.getErrorCode().equals(BadRequestEvent.ERR_INVOKE_EXCEPTION)){
             return;

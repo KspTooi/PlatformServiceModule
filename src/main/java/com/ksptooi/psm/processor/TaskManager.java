@@ -2,7 +2,6 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.RunningTask;
-import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.psm.processor.event.task.AsyncProcessCommitEvent;
 import com.ksptooi.psm.processor.event.task.AsyncProcessExitEvent;
 import jakarta.inject.Inject;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,7 +48,7 @@ public class TaskManager {
             eventSchedule.forward(event);
 
             //进程切换到前台
-            request.getShell().toggleCurrentTask(task);
+            request.getShell().toggleCurrentProcess(task);
 
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
@@ -65,7 +63,7 @@ public class TaskManager {
             eventSchedule.forward(exit);
 
             //进程从前台移除
-            request.getShell().toggleCurrentTask();
+            request.getShell().toggleCurrentProcess();
             
             //log.info("进程退出:{}", taskName);
         });
@@ -101,7 +99,7 @@ public class TaskManager {
         t.getFinishHook().finished();
 
         //销毁AIO
-        t.getRequest().getAio().destroy();
+        t.getRequest().getCable().destroy();
     }
 
     private synchronized int takePid(){

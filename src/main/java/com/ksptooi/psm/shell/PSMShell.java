@@ -10,7 +10,7 @@ import com.ksptooi.psm.processor.entity.RunningTask;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
-import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
+import com.ksptooi.psm.utils.aio.*;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
@@ -53,7 +53,8 @@ public class PSMShell implements Command,Runnable{
 
     private boolean offline = false;
 
-    private AdvInputOutputStream aios;
+    private AdvancedInputOutputPort shellAioPort;
+    private AdvInputOutputCable cable;
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
@@ -64,12 +65,16 @@ public class PSMShell implements Command,Runnable{
         final var v = Application.version;
         final var p = Application.platform;
 
-        aios = new AdvInputOutputStream(is,os,env);
-        aios.print(Colors.CYAN)
+        //创建Port和默认的Cable
+        shellAioPort = new AdvInputOutputPort(is,os,env);
+        cable = shellAioPort.createCable();
+        cable.connect();
+
+        cable.print(Colors.CYAN)
                 .print("Welcome To PlatformServiceModule(PSM/").print(v).print(" "+p ).print(")")
                 .print(Colors.RESET)
                 .flush();
-        aios.nextLine().flush();
+        cable.nextLine().flush();
 
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
@@ -111,17 +116,17 @@ public class PSMShell implements Command,Runnable{
 
             while (true){
 
-                aios.read();
+                cable.read();
 
-                final char[] rc = aios.getReadChars();
-                final int rl = aios.getReadLen();
+                final char[] rc = cable.getReadChars();
+                final int rl = cable.getReadLen();
 
                 //Shell原始输入事件
-                if(triggerEvent(new ShellInputEvent(this,aios.getReadChars(),aios.getReadLen())).isCanceled()){
+                if(triggerEvent(new ShellInputEvent(this,cable.getReadChars(),cable.getReadLen())).isCanceled()){
                     continue;
                 };
 
-                if(aios.match(VK.CTRL_C)){
+                if(cable.match(VK.CTRL_C)){
                     if(currentTask == null || currentTask.getStage() != RunningTask.STAGE_RUNNING){
                         continue;
                     }
@@ -129,17 +134,17 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                aios.printDebugText();
+                cable.printDebugText();
 
                 if(currentTask != null){
                     continue;
                 }
 
                 //输入字符/或特殊符号
-                if(aios.match(VK.USER_INPUT)){
+                if(cable.match(VK.USER_INPUT)){
 
                     //不允许键入CRLF
-                    if(aios.containsCrlf()){
+                    if(cable.containsCrlf()){
                         pw.print("输入错误.");
                         pw.flush();
                         continue;
@@ -162,7 +167,7 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 //处理光标左右移动
-                if(aios.match(VK.LEFT)){
+                if(cable.match(VK.LEFT)){
                     if(vCursor < 1){
                         continue;
                     }
@@ -171,7 +176,7 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                if(aios.match(VK.RIGHT)){
+                if(cable.match(VK.RIGHT)){
                     if(vCursor >= vTextarea.length()){
                         continue;
                     }
@@ -180,7 +185,7 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                if(aios.match(VK.BACKSPACE)){
+                if(cable.match(VK.BACKSPACE)){
                     if(vCursor < 1){
                         continue;
                     }
@@ -192,7 +197,7 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 //回车
-                if(aios.match(VK.ENTER)){
+                if(cable.match(VK.ENTER)){
 
                     if(vTextarea.isEmpty() || vTextarea.toString().trim().isEmpty()){
                        continue;
@@ -221,7 +226,7 @@ public class PSMShell implements Command,Runnable{
                     req.setParams(new ArrayList<>());
                     req.setParameters(new HashMap<>());
                     req.setShell(this);
-                    req.setAio(aios);
+                    req.setCable(shellAioPort.createCable());
 
                     HookTaskFinished hook = ()->{
                         svk.nextLine();
@@ -251,17 +256,46 @@ public class PSMShell implements Command,Runnable{
     }
 
     /**
-     * 触发置顶任务
+     * 进程切换到Shell前台
      */
-    public synchronized void toggleCurrentTask(RunningTask procTask){
-        if(currentTask == null){
-            currentTask = procTask;
+    public synchronized void toggleCurrentProcess(RunningTask procTask){
+
+        //当前有前台任务 并且前台任务正在运行
+        if(currentTask != null && currentTask.getStage() != RunningTask.STAGE_FINISHED){
+            return;
         }
+
+        //要切换的进程不能是非活跃的
+        if(procTask.getStage() != RunningTask.STAGE_RUNNING){
+            return;
+        }
+
+        //切换进程到前台
+        currentTask = procTask;
+        var request = currentTask.getRequest();
+        var cab = request.getCable();
+
+        //进程Cab连接到Port
+        cab.isConnect(ConnectMode.OUTPUT);
+        cab.connect(ConnectMode.OUTPUT);
     }
-    public synchronized void toggleCurrentTask(){
+
+    /**
+     * 将当前的前台进程切换为后台进程
+     */
+    public synchronized void toggleCurrentProcess(){
+
+        //当前没有前台进程
+        if(currentTask == null) {
+            return;
+        }
+
+        var cab = currentTask.getRequest().getCable();
+        cab.disconnect();
         currentTask = null;
     }
-    public synchronized RunningTask getCurrentTask(){
+
+    public synchronized RunningTask getCurrentProcess(){
         return currentTask;
     }
 
@@ -277,8 +311,13 @@ public class PSMShell implements Command,Runnable{
     public boolean isOffline(){
         return this.offline;
     }
-    public AdvInputOutputStream getRootAio(){
-        return aios;
+
+    public AdvancedInputOutputPort getAioPort(){
+        return shellAioPort;
+    }
+
+    public AdvInputOutputCable getCable(){
+        return cable;
     }
 
 
