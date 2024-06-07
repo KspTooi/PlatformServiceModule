@@ -129,7 +129,6 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
     public boolean isConnect(ConnectMode t) {
         return port != null && port.isConnect(this, t);
     }
-
     public int getReadLen(){
         return rl;
     }

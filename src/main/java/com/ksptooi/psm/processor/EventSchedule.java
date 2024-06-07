@@ -21,8 +21,6 @@ public class EventSchedule {
 
     private final static Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
 
-
-
     /**
      * 向事件调度注册一个事件
      */
@@ -54,7 +52,12 @@ public class EventSchedule {
             return event;
         }
 
+        //根据当前发布的事件类型 获取到该类型下的所有Handler
         var defines = eventMap.get(eventType);
+
+
+        //派发进程内事件 先获取到当前正在运行的进程
+        var process = event.getUserShell().getCurrentProcess();
 
         for(var def : defines){
 
