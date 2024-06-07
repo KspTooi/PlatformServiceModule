@@ -1,5 +1,6 @@
 package com.ksptooi.psm.utils.aio;
 
+import java.io.IOException;
 import java.util.Queue;
 
 /**
@@ -7,19 +8,19 @@ import java.util.Queue;
  */
 public interface AdvancedInputOutputPort {
 
-    public void read();
+    public int read(AdvInputOutputCable cable,char[] c) throws IOException;
 
-    public void flush();
+    public void flush(AdvInputOutputCable cable);
 
     public boolean isOnline();
 
-    public AdvancedInputOutputCable createCable();
+    public AdvInputOutputCable createCable();
 
-    public void connect(AdvancedInputOutputCable cable, ConnectMode type, Queue<char[]> is, Queue<String> os);
+    public void connect(AdvInputOutputCable cable, ConnectMode type, Queue<char[]> is, Queue<String> os);
 
     public void disconnect(ConnectMode type);
 
-    public boolean isConnect(AdvancedInputOutputCable cable,ConnectMode t);
+    public boolean isConnect(AdvInputOutputCable cable,ConnectMode t);
 
     public long getCurrentCableId(ConnectMode t);
 }

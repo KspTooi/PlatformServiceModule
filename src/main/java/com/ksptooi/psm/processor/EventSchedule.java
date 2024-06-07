@@ -51,7 +51,7 @@ public class EventSchedule {
         var eventType = event.getClass().getName();
 
         if(! eventMap.containsKey(eventType)){
-            return null;
+            return event;
         }
 
         var defines = eventMap.get(eventType);

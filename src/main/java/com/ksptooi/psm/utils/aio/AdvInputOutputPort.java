@@ -3,8 +3,7 @@ package com.ksptooi.psm.utils.aio;
 import org.apache.sshd.server.Environment;
 import xyz.downgoon.snowflake.Snowflake;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Queue;
 
 /**
@@ -18,27 +17,42 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
     private final OutputStream os;
     private final Environment env;
 
+    private final BufferedReader br;
+    private final PrintWriter p;
+
     private Queue<char[]> cableInput;
     private Queue<String> cableOutput;
-    private volatile AdvancedInputOutputCable inputCable;
-    private volatile AdvancedInputOutputCable outputCable;
+    private volatile AdvInputOutputCable inputCable;
+    private volatile AdvInputOutputCable outputCable;
 
     public AdvInputOutputPort(InputStream is, OutputStream os, Environment env){
         this.is = is;
         this.os = os;
         this.env = env;
+        this.p = new PrintWriter(os);
+        this.br = new BufferedReader(new InputStreamReader(is));
     }
 
     @Override
-    public void read() {
+    public int read(AdvInputOutputCable cable,char[] c) throws IOException {
+        if(! isConnect(cable,ConnectMode.INPUT)){
+            throw new RuntimeException("cannot flush. the cable is not connected to the output on this port");
+        }
 
+        return br.read(c);
     }
 
     @Override
-    public void flush() {
-
+    public void flush(AdvInputOutputCable cable) {
+        if(! isConnect(cable,ConnectMode.OUTPUT)){
+            throw new RuntimeException("cannot flush. the cable is not connected to the output on this port");
+        }
+        for(var itr = cableOutput.iterator();itr.hasNext();){
+            p.print(itr.next());
+        }
+        p.flush();
+        cableOutput.clear();
     }
-
 
     @Override
     public boolean isOnline() {
@@ -46,12 +60,12 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
     }
 
 
-    public AdvancedInputOutputCable createCable(){
+    public AdvInputOutputCable createCable(){
         return new AdvInputOutputCable(snowflake.nextId(), this);
     }
 
     @Override
-    public void connect(AdvancedInputOutputCable cable, ConnectMode type, Queue<char[]> is, Queue<String> os) {
+    public void connect(AdvInputOutputCable cable, ConnectMode type, Queue<char[]> is, Queue<String> os) {
 
         ensureBindThisPort(cable);
 
@@ -62,6 +76,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
         if(type.val() == ConnectMode.OUTPUT.val()){
             outputCable = cable;
             this.cableOutput = os;
+            flush(cable);
         }
     }
 
@@ -78,7 +93,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
     }
 
     @Override
-    public boolean isConnect(AdvancedInputOutputCable cable, ConnectMode t) {
+    public boolean isConnect(AdvInputOutputCable cable, ConnectMode t) {
 
         ensureBindThisPort(cable);
 
@@ -113,10 +128,14 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
         return -1;
     }
 
-    private void ensureBindThisPort(AdvancedInputOutputCable cable){
+    private void ensureBindThisPort(AdvInputOutputCable cable){
         if(!cable.getPort().equals(this)){
             throw new RuntimeException("Cable没有绑定到当前的Port");
         }
+    }
+
+    public Environment getEnv(){
+        return env;
     }
 
 }
