@@ -49,7 +49,7 @@ public class PSMShell implements Command,Runnable{
     private Thread shellThread = null;
 
     //当前正在运行的前台任务
-    private RunningTask currentTask = null;
+    private volatile RunningTask currentTask = null;
 
     private boolean offline = false;
 
@@ -230,7 +230,6 @@ public class PSMShell implements Command,Runnable{
 
                     HookTaskFinished hook = ()->{
                         svk.nextLine();
-                        currentTask = null;
                         System.out.println("Exit Hook");
                     };
 
@@ -293,6 +292,7 @@ public class PSMShell implements Command,Runnable{
         var cab = currentTask.getRequest().getCable();
         cab.disconnect();
         currentTask = null;
+        cable.connect();
     }
 
     public synchronized RunningTask getCurrentProcess(){
