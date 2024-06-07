@@ -56,7 +56,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
 
     @Override
     public boolean isOnline() {
-        return false;
+        return true;
     }
 
 
