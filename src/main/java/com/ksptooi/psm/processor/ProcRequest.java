@@ -1,9 +1,7 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.shell.PSMShell;
-import com.ksptooi.psm.shell.ShellInstance;
-import com.ksptooi.psm.vk.AdvInputOutputStream;
-import com.ksptooi.psm.vk.ShellVK;
+import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 import lombok.Data;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.ksptooi;
 
-import com.ksptooi.psm.vk.AdvInputOutputStream;
+import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 
 import java.io.*;
 import java.nio.file.Files;

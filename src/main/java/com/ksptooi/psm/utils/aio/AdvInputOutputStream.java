@@ -1,5 +1,9 @@
-package com.ksptooi.psm.vk;
+package com.ksptooi.psm.utils.aio;
 
+import com.ksptooi.psm.vk.BufferedAndMatcher;
+import com.ksptooi.psm.vk.ForwardStream;
+import com.ksptooi.psm.vk.NotAttachedException;
+import com.ksptooi.psm.vk.NotSupportOperationException;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.sshd.server.Environment;
@@ -13,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 线程独占的IO
  */
-public class AdvInputOutputStream extends BufferedAndMatcher{
+public class AdvInputOutputStream extends BufferedAndMatcher {
 
     private static final Snowflake snowflake = new Snowflake(1,30);
 
@@ -98,7 +102,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     }
 
     @SneakyThrows
-    public void destroySubStream(Long id){
+    public void removeSubStream(Long id){
 
         if(!subStreamMap.containsKey(id)){
             return;
@@ -290,7 +294,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
     public void destroy(){
 
         if(isSubStream()){
-            parent.destroySubStream(subStreamId);
+            parent.removeSubStream(subStreamId);
             return;
         }
 
@@ -299,6 +303,7 @@ public class AdvInputOutputStream extends BufferedAndMatcher{
         is.close();
         os.close();
         offline = true;
+
     }
 
 

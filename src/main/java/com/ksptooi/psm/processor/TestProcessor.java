@@ -5,7 +5,7 @@ import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.RequestForwardEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.Colors;
-import com.ksptooi.psm.vk.AdvInputOutputStream;
+import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 
 @RequestProcessor("TestProcessor")
 public class TestProcessor {

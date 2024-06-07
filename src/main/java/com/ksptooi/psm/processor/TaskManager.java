@@ -66,7 +66,7 @@ public class TaskManager {
 
             //进程从前台移除
             request.getShell().toggleCurrentTask();
-
+            
             //log.info("进程退出:{}", taskName);
         });
 

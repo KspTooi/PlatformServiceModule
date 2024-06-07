@@ -10,7 +10,7 @@ import com.ksptooi.psm.processor.entity.RunningTask;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
-import com.ksptooi.psm.vk.AdvInputOutputStream;
+import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
@@ -70,8 +70,6 @@ public class PSMShell implements Command,Runnable{
                 .print(Colors.RESET)
                 .flush();
         aios.nextLine().flush();
-
-        var userSession = new UserSession();
 
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
@@ -255,15 +253,15 @@ public class PSMShell implements Command,Runnable{
     /**
      * 触发置顶任务
      */
-    public void toggleCurrentTask(RunningTask procTask){
+    public synchronized void toggleCurrentTask(RunningTask procTask){
         if(currentTask == null){
             currentTask = procTask;
         }
     }
-    public void toggleCurrentTask(){
-
+    public synchronized void toggleCurrentTask(){
+        currentTask = null;
     }
-    public RunningTask getCurrentTask(){
+    public synchronized RunningTask getCurrentTask(){
         return currentTask;
     }
 
@@ -279,7 +277,6 @@ public class PSMShell implements Command,Runnable{
     public boolean isOffline(){
         return this.offline;
     }
-
     public AdvInputOutputStream getRootAio(){
         return aios;
     }

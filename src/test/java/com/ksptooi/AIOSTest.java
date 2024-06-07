@@ -1,6 +1,6 @@
 package com.ksptooi;
 
-import com.ksptooi.psm.vk.AdvInputOutputStream;
+import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 import com.ksptooi.psm.vk.VK;
 import org.junit.Test;
 
