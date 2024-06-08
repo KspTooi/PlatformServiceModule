@@ -78,7 +78,7 @@ public class ProcessorManager {
             p.setClassType(classType);
             p.setProcDefines(procDefine);
             procMap.put(procName,p);
-            log.info("已注册处理器:{} 包含{}个子系统",procName,procDefine.size());
+            log.info("已注册处理器:{} 包含{}个内部构件",procName,procDefine.size());
 
             ProcDefine hook = DefineTools.getHook(ProcDefType.HOOK_ACTIVATED, procDefine);
 

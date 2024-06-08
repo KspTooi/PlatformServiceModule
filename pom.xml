@@ -6,7 +6,7 @@
 
     <groupId>com.ksptooi</groupId>
     <artifactId>PlatformServiceModule</artifactId>
-    <version>3.9.B</version>
+    <version>4.0.A</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
