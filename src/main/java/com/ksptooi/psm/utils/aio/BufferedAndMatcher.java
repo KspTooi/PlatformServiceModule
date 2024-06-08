@@ -1,4 +1,6 @@
-package com.ksptooi.psm.vk;
+package com.ksptooi.psm.utils.aio;
+
+import com.ksptooi.psm.vk.VK;
 
 /**
  * 缓存与VK匹配器

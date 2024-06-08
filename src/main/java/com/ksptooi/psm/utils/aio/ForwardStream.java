@@ -1,6 +1,5 @@
-package com.ksptooi.psm.vk;
+package com.ksptooi.psm.utils.aio;
 
-import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.sshd.server.Environment;

@@ -1,4 +1,4 @@
-package com.ksptooi.psm.vk;
+package com.ksptooi.psm.utils.aio;
 
 import java.io.IOException;
 
