@@ -1,13 +1,13 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.psm.processor.entity.ActiveProcessor;
 import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.entity.RunningTask;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
-import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,16 +48,15 @@ public class EventSchedule {
 
         var eventType = event.getClass().getName();
 
+        //派发进程内事件
+        trigger(event, event.getUserShell().getCurrentProcess());
+
         if(! eventMap.containsKey(eventType)){
             return event;
         }
 
         //根据当前发布的事件类型 获取到该类型下的所有Handler
         var defines = eventMap.get(eventType);
-
-
-        //派发进程内事件 先获取到当前正在运行的进程
-        var process = event.getUserShell().getCurrentProcess();
 
         for(var def : defines){
 
@@ -81,6 +80,73 @@ public class EventSchedule {
 
         return event;
     }
+
+    /**
+     * 触发进程内事件
+     */
+    private ProcEvent trigger(ProcEvent event, RunningTask task){
+
+        if(task == null){
+            return event;
+        }
+        //进程已结束
+        if(!task.getInstance().isAlive() || task.getStage() != RunningTask.STAGE_RUNNING){
+            return event;
+        }
+
+        var processInstance  = task.getProcessor().getProc();
+        var defines = task.getProcessor().getProcDefines();
+        var handler = new ArrayList<ProcDefine>();
+        var request = task.getRequest();
+
+        //查找处理器内部的*非全局*可用事件处理器
+        for(var def : defines){
+            if(!def.getDefType().equals(ProcDefType.EVENT_HANDLER)){
+                continue;
+            }
+            if(def.isGlobalEventHandler()){
+                continue;
+            }
+            if(def.getEventHandlerType().equals(event.getClass().getName())){
+                handler.add(def);
+            }
+        }
+
+        Collections.sort(handler);
+
+        for(var item : handler){
+
+            try {
+
+                if(item.getMethod().getParameterCount() < 1){
+                    continue;
+                }
+
+                Object[] params = ProcTools.assemblyParams(item.getMethod(), new ArrayList<>(), event,request);
+                item.getMethod().invoke(processInstance,params);
+
+                if(event.isIntercepted()){
+                    break;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",item.getProcName(),item.getEventName(),item.getMethod().getName());
+                continue;
+            }
+
+        }
+        return event;
+    }
+
+    /**
+     * 触发全局事件
+     */
+    private ProcEvent triggerGlobal(ProcEvent event){
+        return event;
+    }
+
+
 
     public Map<String,List<ProcDefine>> getEventMap(){
         return eventMap;

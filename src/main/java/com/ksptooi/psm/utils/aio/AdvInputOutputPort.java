@@ -35,11 +35,18 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
 
     @Override
     public int read(AdvInputOutputCable cable,char[] c) throws IOException {
+
         if(! isConnect(cable,ConnectMode.INPUT)){
             throw new RuntimeException("cannot flush. the cable is not connected to the output on this port");
         }
 
-        return br.read(c);
+        int read = br.read(c);
+
+        if(read == -1){
+            throw new IOException();
+        }
+
+        return read;
     }
 
     @Override

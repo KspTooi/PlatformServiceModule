@@ -2,9 +2,13 @@ package com.ksptooi.psm.shell;
 
 import com.google.inject.Provider;
 import jakarta.inject.Inject;
+import org.apache.sshd.common.FactoryManager;
+import org.apache.sshd.common.session.SessionHeartbeatController;
+import org.apache.sshd.server.ServerFactoryManager;
 import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class SshServerProvider implements Provider<SshServer> {
 
@@ -14,6 +18,7 @@ public class SshServerProvider implements Provider<SshServer> {
 
     @Inject
     private SimplePasswordAuthenticator authenticator;
+
 
 
     @Override
@@ -26,6 +31,9 @@ public class SshServerProvider implements Provider<SshServer> {
             sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
             sshd.setPasswordAuthenticator(authenticator);
             sshd.setShellFactory(psmShellFactory);
+            sshd.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, TimeUnit.SECONDS,32);
+
+
             sshd.start();
 
             return sshd;
@@ -37,3 +45,4 @@ public class SshServerProvider implements Provider<SshServer> {
 
 
 }
+

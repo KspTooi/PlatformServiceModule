@@ -7,6 +7,7 @@ import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.event.UserTypingEvent;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
@@ -58,6 +59,7 @@ public class PSMShell implements Command,Runnable{
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
+
 
         this.session = session;
         this.env = env;
@@ -136,9 +138,6 @@ public class PSMShell implements Command,Runnable{
 
                 cable.printDebugText();
 
-                if(currentTask != null){
-                    continue;
-                }
 
                 //输入字符/或特殊符号
                 if(cable.match(VK.USER_INPUT)){
@@ -147,6 +146,16 @@ public class PSMShell implements Command,Runnable{
                     if(cable.containsCrlf()){
                         pw.print("输入错误.");
                         pw.flush();
+                        continue;
+                    }
+
+                    ProcEvent forward = eventSchedule.forward(new UserTypingEvent(this,rc,rl, cable.getReadString()));
+
+                    if(forward.isCanceled()){
+                        continue;
+                    }
+
+                    if(currentTask != null){
                         continue;
                     }
 
@@ -163,6 +172,10 @@ public class PSMShell implements Command,Runnable{
 
                     //重新渲染当前行并同步光标位置
                     svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    continue;
+                }
+
+                if(currentTask != null){
                     continue;
                 }
 
@@ -299,9 +312,20 @@ public class PSMShell implements Command,Runnable{
         return currentTask;
     }
 
+    public synchronized boolean hasForegroundTask(){
+        if(currentTask == null){
+            return false;
+        }
+        if(currentTask.getStage() == RunningTask.STAGE_RUNNING || currentTask.getInstance().isAlive()){
+            return true;
+        }
+        return false;
+    }
+
     public Environment getEnv(){
         return env;
     }
+
     public ChannelSession getSession(){
         return session;
     }

@@ -90,7 +90,7 @@ public class ProcessorManager {
             Application.injector.injectMembers(proc);
 
         } catch (ProcDefineException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             log.warn("无法注册处理器:{} - {} 因为处理器已损坏.",procName,classType);
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -161,6 +161,11 @@ public class ProcessorManager {
                     continue;
                 }
 
+                //不安装进程内事件
+                if(! def.isGlobalEventHandler()){
+                    continue;
+                }
+
                 eventSchedule.register(def);
             }
 
@@ -207,6 +212,9 @@ public class ProcessorManager {
             //处理器中找不到任何Define
             eventSchedule.forward(new BadRequestEvent(new ProcRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
         }
+
+        //注入请求元数据
+        request.setMetadata(requestHandlerVo.getMetadata());
 
         //注入Define所需要的入参
         var t = new RunningTask();

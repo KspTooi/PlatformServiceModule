@@ -35,6 +35,9 @@ public class ProcRequest {
     //请求参数组
     private Map<String,String> parameters;
 
+    //请求元数据
+    private String metadata;
+
     private PSMShell shell;
 
     private AdvInputOutputCable cable;

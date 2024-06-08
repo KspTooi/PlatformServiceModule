@@ -29,6 +29,7 @@ public class UserStatementProcessor {
     @Inject
     private Snowflake snowflake;
 
+
     @EventHandler
     public void saveUserStatement(StatementCommitEvent event){
 

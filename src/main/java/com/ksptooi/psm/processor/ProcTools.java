@@ -23,6 +23,7 @@ public class ProcTools {
         eventDefine.add(RequestForwardEvent.class.getName());
         eventDefine.add(ShellInputEvent.class.getName());
         eventDefine.add(StatementCommitEvent.class.getName());
+        eventDefine.add(UserTypingEvent.class.getName());
     }
 
     /**
@@ -383,6 +384,7 @@ public class ProcTools {
 
 
     public static String getEventHandlerType(Method m){
+
         //获取第一个形参
         if(m.getParameterCount() < 1){
             return null;
