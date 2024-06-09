@@ -26,6 +26,26 @@ public class ProcTools {
         eventDefine.add(UserTypingEvent.class.getName());
     }
 
+    public static List<Object> getProcessorInstance(Set<Class<?>> classSet){
+
+        if(classSet.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        List<Object> ret = new ArrayList<>();
+
+        for(Class<?> item:classSet){
+            try {
+                Object processor = item.getDeclaredConstructor().newInstance();
+                ret.add(processor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return ret;
+    }
+
     /**
      * 查找该处理器中的映射
      */
