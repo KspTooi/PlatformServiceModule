@@ -6,6 +6,7 @@ import com.ksptooi.guice.compomentscan.ComponentScanModule;
 import com.ksptooi.psm.mybatis.DatabaseModule;
 import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.shell.SshModules;
+import com.ksptooi.psm.subsystem.SubSystemScanner;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -20,11 +21,14 @@ public class Application {
 
     public static void main(String[] args) throws InterruptedException {
 
-        ProcessorManager instance = injector.getInstance(ProcessorManager.class);
-        instance.scanFromPackage("com.ksptooi.psm");
-        instance.scanFromPackage("com.ksptooi.inner");
-        instance.installRequestHandler();
-        instance.installEventHandler();
+        SubSystemScanner subSystemScanner = injector.getInstance(SubSystemScanner.class);
+        subSystemScanner.scan("./subsystems");
+
+        ProcessorManager procMgr = injector.getInstance(ProcessorManager.class);
+        procMgr.scanFromPackage("com.ksptooi.psm");
+        procMgr.scanFromPackage("com.ksptooi.inner");
+        procMgr.installRequestHandler();
+        procMgr.installEventHandler();
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();

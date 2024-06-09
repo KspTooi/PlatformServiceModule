@@ -6,6 +6,5 @@ import com.ksptooi.guice.annotations.Unit;
 public class ConfigSetScanner {
 
 
-    
 
 }
