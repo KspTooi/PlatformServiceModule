@@ -6,8 +6,11 @@ import com.ksptooi.guice.compomentscan.ComponentScanModule;
 import com.ksptooi.psm.mybatis.DatabaseModule;
 import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.shell.SshModules;
+import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.subsystem.SubSystemScanner;
+import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class Application {
@@ -22,7 +25,10 @@ public class Application {
     public static void main(String[] args) throws InterruptedException {
 
         SubSystemScanner subSystemScanner = injector.getInstance(SubSystemScanner.class);
-        subSystemScanner.scan("./subsystems");
+        var scan = subSystemScanner.scan("./subsystems");
+
+        var subMgr = injector.getInstance(SubSystemManager.class);
+        subMgr.install(scan);
 
         ProcessorManager procMgr = injector.getInstance(ProcessorManager.class);
         procMgr.scanFromPackage("com.ksptooi.psm");

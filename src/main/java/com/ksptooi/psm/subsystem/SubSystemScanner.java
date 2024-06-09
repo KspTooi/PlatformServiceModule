@@ -62,8 +62,10 @@ public class SubSystemScanner {
                 discovered.setName(anno.name());
                 discovered.setVersion(anno.version());
                 discovered.setEntry(entry);
+                discovered.setClassLoader(loader);
+                discovered.setReflections(packageReflections);
 
-                log.info("已发现可用的子系统 {}-{}:[{}]",anno.name(),anno.version(),jarFileName);
+                log.info("发现可用的子系统 {}-{}:[{}]",anno.name(),anno.version(),jarFileName);
                 ret.add(discovered);
 
             } catch (MalformedURLException | SubSystemInstallException e) {
@@ -75,7 +77,7 @@ public class SubSystemScanner {
         return ret;
     }
 
-    
+
     public List<DiscoveredSubSystem> scan(String path){
         return scan(new File(path));
     }
