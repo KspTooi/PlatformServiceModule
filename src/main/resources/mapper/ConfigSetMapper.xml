@@ -11,16 +11,17 @@
         <result column="DEF" property="def"/>
         <result column="USER_ID" property="userId"/>
         <result column="DESCRIPTION" property="description"/>
+        <result column="CREATE_TIME" property="createTime"/>
     </resultMap>
 
     <insert id="insert">
-        INSERT INTO CONFIG_SET(ID,KEY,VAL,DEF,USER_ID,DESCRIPTION)
-        VALUES (#{val.id},#{val.key},#{val.val},#{val.def},#{val.userId},#{val.description})
+        INSERT INTO CONFIG_SET(`ID`,`KEY`,`VAL`,`DEF`,`USER_ID`,`DESCRIPTION`,"CREATE_TIME")
+        VALUES (#{val.id},#{val.key},#{val.val},#{val.def},#{val.userId},#{val.description},#{val.createTime})
     </insert>
 
     <select id="getByKey" resultMap="poMap">
         SELECT * FROM CONFIG_SET
-        WHERE KEY = #{key}
+        WHERE `KEY` = #{key}
     </select>
 
 
