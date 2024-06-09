@@ -23,11 +23,8 @@ public class ConfigSetTest {
 
     @Test
     public void getAndCreate(){
-
         String config = set.valOf("config","1");
-
         System.out.println(config);
-
     }
 
 
