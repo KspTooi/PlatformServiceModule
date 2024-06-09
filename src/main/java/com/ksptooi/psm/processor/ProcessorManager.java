@@ -41,6 +41,7 @@ public class ProcessorManager {
     @Inject
     private EventSchedule eventSchedule;
 
+
     private final static Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
 
 
@@ -77,6 +78,8 @@ public class ProcessorManager {
             p.setProc(proc);
             p.setClassType(classType);
             p.setProcDefines(procDefine);
+            p.setRequestHandlerInstalled(false);
+            p.setEventHandlerInstalled(false);
             procMap.put(procName,p);
             log.info("已注册处理器:{} 包含{}个内部构件",procName,procDefine.size());
 
@@ -104,6 +107,11 @@ public class ProcessorManager {
     public void installRequestHandler(){
 
         for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
+
+            //注册的处理器已安装过请求处理器
+            if(item.getValue().isRequestHandlerInstalled()){
+                continue;
+            }
 
             List<ProcDefine> defines = item.getValue().getProcDefines();
 
@@ -152,6 +160,11 @@ public class ProcessorManager {
     public void installEventHandler(){
 
         for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
+
+            //注册的处理器已安装过事件处理器
+            if(item.getValue().isEventHandlerInstalled()){
+                continue;
+            }
 
             List<ProcDefine> procDefines = item.getValue().getProcDefines();
 

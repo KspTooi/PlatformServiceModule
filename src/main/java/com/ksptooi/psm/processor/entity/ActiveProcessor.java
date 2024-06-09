@@ -15,4 +15,8 @@ public class ActiveProcessor {
 
     private List<ProcDefine> procDefines;
 
+    private boolean eventHandlerInstalled = false;
+
+    private boolean requestHandlerInstalled = false;
+
 }
