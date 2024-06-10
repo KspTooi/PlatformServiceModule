@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.ksptooi</groupId>
             <artifactId>PlatformServiceModule</artifactId>
-            <version>4.0.A</version>
+            <version>4.0.B</version>
         </dependency>
 
     </dependencies>

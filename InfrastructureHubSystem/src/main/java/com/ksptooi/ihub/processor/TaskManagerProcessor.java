@@ -4,7 +4,7 @@ import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.RequestHandler;
 import com.ksptooi.psm.processor.RequestProcessor;
 import com.ksptooi.psm.processor.TaskManager;
-import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.entity.Process;
 import jakarta.inject.Inject;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class TaskManagerProcessor {
         var aio = request.getCable();
 
 
-        Map<Integer, RunningTask> tasks = taskManager.getTasks();
+        Map<Integer, Process> tasks = taskManager.getTasks();
 
         aio.nextLine();
         aio.print("当前正在运行的进程:").print(tasks.size());
