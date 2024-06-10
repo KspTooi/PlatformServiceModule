@@ -35,7 +35,6 @@ public class SubSystemManager {
 
 
     public void install(List<DiscoveredSubSystem> dss){
-
         for(var item : dss){
 
             if(exists(item.getName())){
@@ -47,18 +46,13 @@ public class SubSystemManager {
             SubSystem entryInstance = null;
 
             try {
-
                 var instance = item.getEntry().getDeclaredConstructor().newInstance();
-
                 if(!(instance instanceof SubSystem)){
                     log.error("[无法安装] 子系统 {} 已损坏. 因为其入口没有继承自SubSystem.",item.getName());
                     continue;
                 }
-
                 entryInstance = (SubSystem) instance;
-
-            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                     IllegalAccessException e) {
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
                 continue;
             }
@@ -83,7 +77,6 @@ public class SubSystemManager {
 
             //给子系统入口注入内部组件
             Application.injector.injectMembers(entryInstance);
-
             //调用子系统安装完成钩子
             entryInstance.onActivated();
         }

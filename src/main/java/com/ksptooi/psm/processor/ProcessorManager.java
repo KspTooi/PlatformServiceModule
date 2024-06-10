@@ -147,8 +147,11 @@ public class ProcessorManager {
                 insert.setCreateTime(new Date());
                 requestHandlerMapper.insert(insert);
 
+
                 log.info("注册请求执行器 {}:{}({})",procName,def.getPattern(),def.getParamCount());
             }
+
+            item.getValue().setRequestHandlerInstalled(true);
 
         }
 
@@ -181,6 +184,8 @@ public class ProcessorManager {
 
                 eventSchedule.register(def);
             }
+
+            item.getValue().setEventHandlerInstalled(true);
 
         }
 
