@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor.event.task;
 
-import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
 import com.ksptooi.psm.shell.PSMShell;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import lombok.Getter;
 @Getter
 public class AsyncProcessExitEvent extends AbstractProcEvent {
 
-    private final RunningTask process;
+    private final Process process;
 
-    public AsyncProcessExitEvent(RunningTask process) {
+    public AsyncProcessExitEvent(Process process) {
         this.process = process;
     }
 

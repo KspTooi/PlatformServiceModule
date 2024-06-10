@@ -13,9 +13,9 @@ public class ProcToolsTest {
 
     public static void main(String[] args) {
 
-        TestProcessor tp = new TestProcessor();
+        TestServiceUnit tp = new TestServiceUnit();
 
-        List<ProcDefine> procDefine = ProcTools.getRequestDefine(TestProcessor.class);
+        List<ProcDefine> procDefine = ProcTools.getRequestDefine(TestServiceUnit.class);
 
         System.out.println(procDefine);
 

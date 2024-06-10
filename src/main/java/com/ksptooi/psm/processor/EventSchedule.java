@@ -2,12 +2,11 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.ProcDefine;
-import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -84,13 +83,13 @@ public class EventSchedule {
     /**
      * 触发进程内事件
      */
-    private ProcEvent trigger(ProcEvent event, RunningTask task){
+    private ProcEvent trigger(ProcEvent event, Process task){
 
         if(task == null){
             return event;
         }
         //进程已结束
-        if(!task.getInstance().isAlive() || task.getStage() != RunningTask.STAGE_RUNNING){
+        if(!task.getInstance().isAlive() || task.getStage() != Process.STAGE_RUNNING){
             return event;
         }
 

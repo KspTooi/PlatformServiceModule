@@ -6,6 +6,7 @@ import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.*;
+import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
 import jakarta.inject.Inject;
@@ -200,7 +201,7 @@ public class ProcessorManager {
     /**
      * 向处理器转发请求
      */
-    public RunningTask forward(ProcRequest request, HookTaskFinished hook){
+    public Process forward(ProcRequest request, HookTaskFinished hook){
 
         resolverRequest(request);
 
@@ -246,7 +247,7 @@ public class ProcessorManager {
         request.setMetadata(requestHandlerVo.getMetadata());
 
         //注入Define所需要的入参
-        var t = new RunningTask();
+        var t = new Process();
         t.setTaskName(procDef.getMethod().getName());
         t.setRequest(request);
         t.setProcessor(aProc);

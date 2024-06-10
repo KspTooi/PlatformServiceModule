@@ -1,7 +1,7 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.task.AsyncProcessCommitEvent;
 import com.ksptooi.psm.processor.event.task.AsyncProcessExitEvent;
 import jakarta.inject.Inject;
@@ -22,12 +22,12 @@ public class TaskManager {
     private final TreeSet<Integer> availablePids = new TreeSet<>();
 
     @Getter
-    private final Map<Integer, RunningTask> tasks = new ConcurrentHashMap<>();
+    private final Map<Integer, Process> tasks = new ConcurrentHashMap<>();
 
     @Inject
     private EventSchedule eventSchedule;
 
-    public void commit(RunningTask task){
+    public void commit(Process task){
 
         final var request = task.getRequest();
         final ChannelSession session = request.getShell().getSession();
@@ -36,7 +36,7 @@ public class TaskManager {
         final var pid = takePid();
 
         task.setPid(pid);
-        task.setStage(RunningTask.STAGE_RUNNING);
+        task.setStage(Process.STAGE_RUNNING);
         tasks.put(task.getPid(),task);
 
         log.info("用户:{} 启动进程:{} PID:{}", username,taskName,task.getPid());
@@ -79,9 +79,9 @@ public class TaskManager {
 
     public void kill(int pid){
 
-        RunningTask t = tasks.get(pid);
+        Process t = tasks.get(pid);
 
-        if(t == null || t.getStage() != RunningTask.STAGE_RUNNING || t.getInstance() == null){
+        if(t == null || t.getStage() != Process.STAGE_RUNNING || t.getInstance() == null){
             return;
         }
 
@@ -93,14 +93,14 @@ public class TaskManager {
     /**
      * 释放任务资源
      */
-    private void releaseTask(RunningTask t){
+    private void releaseTask(Process t){
 
         if(!tasks.containsKey(t.getPid())){
             return;
         }
 
         tasks.remove(t.getPid());
-        t.setStage(RunningTask.STAGE_FINISHED);
+        t.setStage(Process.STAGE_FINISHED);
         releasePid(t.getPid());
         t.getFinishHook().finished();
 

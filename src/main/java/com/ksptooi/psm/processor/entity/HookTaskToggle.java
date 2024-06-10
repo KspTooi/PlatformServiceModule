@@ -2,6 +2,6 @@ package com.ksptooi.psm.processor.entity;
 
 public interface HookTaskToggle {
 
-    public void toggle(boolean background, RunningTask task);
+    public void toggle(boolean background, Process task);
 
 }

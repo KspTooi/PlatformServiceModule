@@ -435,7 +435,7 @@ public class ProcTools {
 
     public static void main(String[] args) throws ProcDefineException {
 
-        List<ProcDefine> procDefine = ProcTools.getProcDefine(TestProcessor.class);
+        List<ProcDefine> procDefine = ProcTools.getProcDefine(TestServiceUnit.class);
 
         System.out.println(procDefine);
 

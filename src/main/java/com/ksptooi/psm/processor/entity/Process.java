@@ -10,8 +10,7 @@ import java.lang.reflect.Method;
 /**
  * 用于表示一个正在运行中的Task
  */
-public class RunningTask {
-
+public class Process {
 
 
     @Getter

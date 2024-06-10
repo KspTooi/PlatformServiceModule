@@ -1,15 +1,15 @@
 package com.ksptooi.psm.processor;
 
-import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.Colors;
 
-@RequestProcessor("TestProcessor")
-public class TestProcessor {
+@ServiceUnit("TestSrvUnit")
+public class TestServiceUnit {
 
     @RequestHandler("test")
-    public void test(ProcRequest req , RunningTask task) throws InterruptedException {
+    public void test(ProcRequest req , Process task) throws InterruptedException {
 
         var p = req.getCable();
         p.print(Colors.BLUE);

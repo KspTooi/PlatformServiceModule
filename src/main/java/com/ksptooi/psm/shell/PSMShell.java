@@ -6,7 +6,7 @@ import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.ProcessorManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
-import com.ksptooi.psm.processor.entity.RunningTask;
+import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
@@ -50,7 +50,7 @@ public class PSMShell implements Command,Runnable{
     private Thread shellThread = null;
 
     //当前正在运行的前台任务
-    private volatile RunningTask currentTask = null;
+    private volatile Process currentTask = null;
 
     private boolean offline = false;
 
@@ -129,7 +129,7 @@ public class PSMShell implements Command,Runnable{
                 };
 
                 if(cable.match(VK.CTRL_C)){
-                    if(currentTask == null || currentTask.getStage() != RunningTask.STAGE_RUNNING){
+                    if(currentTask == null || currentTask.getStage() != Process.STAGE_RUNNING){
                         continue;
                     }
                     taskManager.kill(currentTask.getPid());
@@ -246,7 +246,7 @@ public class PSMShell implements Command,Runnable{
                         System.out.println("Exit Hook");
                     };
 
-                    RunningTask forward = processorManager.forward(req, hook);
+                    Process forward = processorManager.forward(req, hook);
 
                     if(forward == null){
                         svk.nextLine();
@@ -270,15 +270,15 @@ public class PSMShell implements Command,Runnable{
     /**
      * 进程切换到Shell前台
      */
-    public synchronized void toggleCurrentProcess(RunningTask procTask){
+    public synchronized void toggleCurrentProcess(Process procTask){
 
         //当前有前台任务 并且前台任务正在运行
-        if(currentTask != null && currentTask.getStage() != RunningTask.STAGE_FINISHED){
+        if(currentTask != null && currentTask.getStage() != Process.STAGE_FINISHED){
             return;
         }
 
         //要切换的进程不能是非活跃的
-        if(procTask.getStage() != RunningTask.STAGE_RUNNING){
+        if(procTask.getStage() != Process.STAGE_RUNNING){
             return;
         }
 
@@ -308,7 +308,7 @@ public class PSMShell implements Command,Runnable{
         cable.connect();
     }
 
-    public synchronized RunningTask getCurrentProcess(){
+    public synchronized Process getCurrentProcess(){
         return currentTask;
     }
 
@@ -316,7 +316,7 @@ public class PSMShell implements Command,Runnable{
         if(currentTask == null){
             return false;
         }
-        if(currentTask.getStage() == RunningTask.STAGE_RUNNING || currentTask.getInstance().isAlive()){
+        if(currentTask.getStage() == Process.STAGE_RUNNING || currentTask.getInstance().isAlive()){
             return true;
         }
         return false;
