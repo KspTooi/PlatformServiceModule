@@ -52,8 +52,14 @@ public class TaskManager {
 
             try {
                 task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e){
+
+                if(e.getCause() instanceof InterruptedException){
+                    log.info("进程被中止:{}", taskName);
+                }else {
+                    e.printStackTrace();
+                }
+
             }
 
             releaseTask(task);

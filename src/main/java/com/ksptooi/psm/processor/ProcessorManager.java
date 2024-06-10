@@ -131,8 +131,15 @@ public class ProcessorManager {
 
                 //数据库已经注册过Handler
                 if(byName!=null){
-                    log.info("激活请求执行器 {}:{}({})",procName,byName.getPattern(),byName.getParamsCount());
-                    continue;
+
+                    //数据库的请求处理器类型与当前处理器类型不一致
+                    if(!byName.getProcClassType().equals(procClassType)){
+                        requestHandlerMapper.deleteById(byName.getId());
+                        log.info("移除请求处理器 {}:{}",byName.getProcName(),byName.getProcClassType());
+                    }else {
+                        log.info("激活请求执行器 {}:{}({})",procName,byName.getPattern(),byName.getParamsCount());
+                        continue;
+                    }
                 }
 
                 RequestHandlerVo insert = new RequestHandlerVo();
@@ -146,7 +153,6 @@ public class ProcessorManager {
                 insert.setMetadata("");
                 insert.setCreateTime(new Date());
                 requestHandlerMapper.insert(insert);
-
 
                 log.info("注册请求执行器 {}:{}({})",procName,def.getPattern(),def.getParamCount());
             }
@@ -209,6 +215,11 @@ public class ProcessorManager {
 
         //根据数据库Handler查找内存中已加载的处理器
         ActiveProcessor aProc = procMap.get(requestHandlerVo.getProcName());
+
+        if(aProc == null){
+            eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_UNKNOWN_HANDLER));
+            return null;
+        }
 
         if(!aProc.getClassType().equals(requestHandlerVo.getProcClassType())){
             log.warn("无法处理请求:{} 数据库与当前加载的处理器类型不一致. 数据库:{} 当前:{}",request.getPattern(),requestHandlerVo.getProcClassType(),aProc.getClassType());
