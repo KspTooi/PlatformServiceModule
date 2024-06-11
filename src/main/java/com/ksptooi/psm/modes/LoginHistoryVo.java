@@ -1,7 +1,6 @@
 package com.ksptooi.psm.modes;
 
 import lombok.Data;
-
 import java.util.Date;
 
 @Data

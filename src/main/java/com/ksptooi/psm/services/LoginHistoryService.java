@@ -5,7 +5,6 @@ import com.ksptooi.psm.mapper.LoginHistoryMapper;
 import com.ksptooi.psm.modes.LoginHistoryVo;
 import jakarta.inject.Inject;
 import xyz.downgoon.snowflake.Snowflake;
-
 import java.net.SocketAddress;
 import java.util.Date;
 

@@ -315,7 +315,7 @@ public class SrvUnitTools {
         //获取处理器名称
         final String srvUnitName = srvUnit.getAnnotation(ServiceUnit.class).value();
 
-        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(srvUnit, RequestHandler.EventHandler.class);
+        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(srvUnit, EventHandler.class);
 
         List<SrvDefine> ret = new ArrayList<>();
 
@@ -332,12 +332,12 @@ public class SrvUnitTools {
             def.setDefType(SrvDefType.EVENT_HANDLER);
             def.setSrvUnitName(srvUnitName);
             def.setMethod(m);
-            def.setEventHandlerOrder(m.getAnnotation(RequestHandler.EventHandler.class).order());
+            def.setEventHandlerOrder(m.getAnnotation(EventHandler.class).order());
             def.setEventHandlerType(eventHandlerType);
 
             String eventHandlerEventName = getEventHandlerEventName(m);
             def.setEventName(eventHandlerEventName);
-            def.setGlobalEventHandler(m.getAnnotation(RequestHandler.EventHandler.class).global());
+            def.setGlobalEventHandler(m.getAnnotation(EventHandler.class).global());
             ret.add(def);
         }
 

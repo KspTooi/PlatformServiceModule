@@ -30,9 +30,6 @@ public class SubSystemManager {
     @Inject
     private ServiceUnitManager serviceUnitManager;
 
-    @Inject
-    private EventSchedule eventSchedule;
-
 
     public void install(List<DiscoveredSubSystem> dss){
         for(var item : dss){

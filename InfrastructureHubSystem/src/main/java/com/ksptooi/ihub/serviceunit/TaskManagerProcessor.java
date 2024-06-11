@@ -1,24 +1,24 @@
-package com.ksptooi.ihub.processor;
+package com.ksptooi.ihub.serviceunit;
 
-import com.ksptooi.psm.processor.ProcRequest;
 import com.ksptooi.psm.processor.RequestHandler;
+import com.ksptooi.psm.processor.ServiceUnit;
+import com.ksptooi.psm.processor.ShellRequest;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.Process;
 import jakarta.inject.Inject;
 
 import java.util.Map;
 
-@RequestProcessor("bundled:proc:task_manager")
+@ServiceUnit("bundled:proc:task_manager")
 public class TaskManagerProcessor {
 
     @Inject
     private TaskManager taskManager;
 
     @RequestHandler("show task")
-    public void taskList(ProcRequest request){
+    public void taskList(ShellRequest request){
 
         var aio = request.getCable();
-
 
         Map<Integer, Process> tasks = taskManager.getTasks();
 

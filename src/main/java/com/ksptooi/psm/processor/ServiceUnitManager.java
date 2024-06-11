@@ -42,14 +42,7 @@ public class ServiceUnitManager {
     @Inject
     private EventSchedule eventSchedule;
 
-
     private final static Map<String, ActivatedSrvUnit> procMap = new ConcurrentHashMap<>();
-
-
-    @Inject
-    public ServiceUnitManager(){
-        System.out.println("ProcessorManager 初始化");
-    }
 
     public void register(List<Object> procMap) {
         for(Object obj : procMap){

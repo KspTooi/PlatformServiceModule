@@ -19,7 +19,7 @@ public class TemplateServiceUnit {
     }
 
     //定义事件处理器
-    @RequestHandler.EventHandler(global = true)
+    @EventHandler(global = true)
     public void userType(UserTypingEvent event){
 
     }

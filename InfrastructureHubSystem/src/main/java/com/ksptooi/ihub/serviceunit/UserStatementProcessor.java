@@ -1,10 +1,11 @@
-package com.ksptooi.ihub.processor;
+package com.ksptooi.ihub.serviceunit;
 
 import com.ksptooi.psm.mapper.StatementHistoryMapper;
 import com.ksptooi.psm.mapper.UsersMapper;
 import com.ksptooi.psm.modes.StatementHistoryVo;
 import com.ksptooi.psm.modes.UserVo;
-import com.ksptooi.psm.processor.ProcRequest;
+import com.ksptooi.psm.processor.EventHandler;
+import com.ksptooi.psm.processor.ServiceUnit;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.shell.Colors;
@@ -14,7 +15,7 @@ import xyz.downgoon.snowflake.Snowflake;
 
 import java.util.Date;
 
-@RequestProcessor("bundled:proc:user_statement")
+@ServiceUnit("bundled:proc:user_statement")
 public class UserStatementProcessor {
 
     @Inject
@@ -52,7 +53,7 @@ public class UserStatementProcessor {
     @EventHandler(global = true)
     public void badRequestNotify(BadRequestEvent event){
 
-        ProcRequest request = event.getRequest();
+        var request = event.getRequest();
         var w = request.getShell().getCable();
 
         if(event.getErrorCode().equals(BadRequestEvent.ERR_INVOKE_EXCEPTION)){

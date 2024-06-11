@@ -23,7 +23,7 @@ public class TestServiceUnit {
 
     }
 
-    @RequestHandler.EventHandler(global = true)
+    @EventHandler(global = true)
     public void userType(UserTypingEvent event){
 
         //当前有前台任务正在运行
@@ -41,7 +41,7 @@ public class TestServiceUnit {
 
     }
 
-    @RequestHandler.EventHandler
+    @EventHandler
     public void userType(UserTypingEvent event, ShellRequest request){
         var cable = request.getCable();
         cable.print("用户在前台进程内按键:");
