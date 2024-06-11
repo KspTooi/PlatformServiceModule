@@ -4,7 +4,6 @@ import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
-import com.ksptooi.uac.core.annatatiotion.Param;
 
 @ServiceUnit("TestSrvUnit")
 public class TemplateServiceUnit {
@@ -16,7 +15,7 @@ public class TemplateServiceUnit {
 
     //定义请求处理器
     @RequestHandler("example")
-    public void example(ProcRequest req , Process task){
+    public void example(ShellRequest req , Process task){
 
     }
 

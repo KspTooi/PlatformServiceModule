@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor.entity;
 
-import com.ksptooi.psm.processor.ProcRequest;
+import com.ksptooi.psm.processor.ShellRequest;
 import com.ksptooi.psm.processor.TaskManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +21,11 @@ public class Process {
 
     //原始请求对象
     @Getter
-    private ProcRequest request;
+    private ShellRequest request;
 
-    //Task所在的处理器
+    //进程所在的服务单元
     @Getter
-    private ActiveProcessor processor;
+    private ActivatedSrvUnit serviceUnit;
 
     //任务的执行函数
     @Getter
@@ -56,14 +56,14 @@ public class Process {
             this.pid = pid;
         }
     }
-    public void setRequest(ProcRequest request){
+    public void setRequest(ShellRequest request){
         if(this.request == null){
             this.request = request;
         }
     }
-    public void setProcessor(ActiveProcessor proc){
-        if(this.processor == null){
-            this.processor = proc;
+    public void setServiceUnit(ActivatedSrvUnit proc){
+        if(this.serviceUnit == null){
+            this.serviceUnit = proc;
         }
     }
     public void setTarget(Method tgt){

@@ -51,7 +51,7 @@ public class TaskManager {
             request.getShell().toggleCurrentProcess(task);
 
             try {
-                task.getTarget().invoke(task.getProcessor().getProc(),task.getInjectParams());
+                task.getTarget().invoke(task.getServiceUnit().getSrvUnit(),task.getInjectParams());
             } catch (Exception e){
 
                 if(e.getCause() instanceof InterruptedException){

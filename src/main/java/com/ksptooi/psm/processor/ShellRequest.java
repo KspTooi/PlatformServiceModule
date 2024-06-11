@@ -2,19 +2,18 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.shell.PSMShell;
 import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
-import com.ksptooi.psm.utils.aio.AdvInputOutputStream;
 import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class ProcRequest {
+public class ShellRequest {
 
-    public ProcRequest(){
+    public ShellRequest(){
     }
 
-    public ProcRequest(ProcRequest r){
+    public ShellRequest(ShellRequest r){
         this.statement = r.getStatement();
         this.pattern = r.getPattern();
         this.params = r.getParams();

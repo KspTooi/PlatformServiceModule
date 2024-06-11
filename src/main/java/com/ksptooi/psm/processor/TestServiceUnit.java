@@ -9,7 +9,7 @@ import com.ksptooi.psm.shell.Colors;
 public class TestServiceUnit {
 
     @RequestHandler("test")
-    public void test(ProcRequest req , Process task) throws InterruptedException {
+    public void test(ShellRequest req , Process task) throws InterruptedException {
 
         var p = req.getCable();
         p.print(Colors.BLUE);
@@ -43,7 +43,7 @@ public class TestServiceUnit {
     }
 
     @EventHandler
-    public void userType(UserTypingEvent event,ProcRequest request){
+    public void userType(UserTypingEvent event, ShellRequest request){
         var cable = request.getCable();
         cable.print("用户在前台进程内按键:");
         cable.print(event.getContent());

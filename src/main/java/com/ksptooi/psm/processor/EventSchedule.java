@@ -1,7 +1,7 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.generic.ProcEvent;
 import org.slf4j.Logger;
@@ -18,26 +18,26 @@ public class EventSchedule {
 
     private static final Logger log = LoggerFactory.getLogger(EventSchedule.class);
 
-    private final static Map<String, List<ProcDefine>> eventMap = new ConcurrentHashMap<>();
+    private final static Map<String, List<SrvDefine>> eventMap = new ConcurrentHashMap<>();
 
     /**
      * 向事件调度注册一个事件
      */
-    public void register(ProcDefine def){
+    public void register(SrvDefine def){
 
         if(def == null){
             log.error("无法注册事件处理器,内部错误(E1)");
             return;
         }
-        if(!def.getDefType().equals(ProcDefType.EVENT_HANDLER)){
-            log.error("无法注册事件处理器,Define类型错误. 位于Proc:{}.{}",def.getProcName(),def.getMethod().getName());
+        if(!def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
+            log.error("无法注册事件处理器,Define类型错误. 位于Proc:{}.{}",def.getSrvUnitName(),def.getMethod().getName());
             return;
         }
 
-        List<ProcDefine> emList = eventMap.computeIfAbsent(def.getEventHandlerType(), k -> new ArrayList<>());
+        List<SrvDefine> emList = eventMap.computeIfAbsent(def.getEventHandlerType(), k -> new ArrayList<>());
         emList.add(def);
         Collections.sort(emList);
-        log.info("注册事件处理器 {}:{}({})..{}",def.getProcName(),def.getEventName(),def.getEventHandlerOrder(),def.getMethod().getName());
+        log.info("注册事件处理器 {}:{}({})..{}",def.getSrvUnitName(),def.getEventName(),def.getEventHandlerOrder(),def.getMethod().getName());
     }
 
     /**
@@ -62,8 +62,8 @@ public class EventSchedule {
             try {
 
                 //获得处理器实例
-                var processor = ProcessorManager.getProcessor(def.getProcName());
-                def.getMethod().invoke(processor.getProc(),event);
+                var processor = ServiceUnitManager.getProcessor(def.getSrvUnitName());
+                def.getMethod().invoke(processor.getSrvUnit(),event);
 
                 if(event.isIntercepted()){
                     break;
@@ -71,7 +71,7 @@ public class EventSchedule {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",def.getProcName(),def.getEventName(),def.getMethod().getName());
+                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",def.getSrvUnitName(),def.getEventName(),def.getMethod().getName());
                 continue;
             }
 
@@ -93,14 +93,14 @@ public class EventSchedule {
             return event;
         }
 
-        var processInstance  = task.getProcessor().getProc();
-        var defines = task.getProcessor().getProcDefines();
-        var handler = new ArrayList<ProcDefine>();
+        var processInstance  = task.getServiceUnit().getSrvUnit();
+        var defines = task.getServiceUnit().getSrvDefines();
+        var handler = new ArrayList<SrvDefine>();
         var request = task.getRequest();
 
         //查找处理器内部的*非全局*可用事件处理器
         for(var def : defines){
-            if(!def.getDefType().equals(ProcDefType.EVENT_HANDLER)){
+            if(!def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
                 continue;
             }
             if(def.isGlobalEventHandler()){
@@ -121,7 +121,7 @@ public class EventSchedule {
                     continue;
                 }
 
-                Object[] params = ProcTools.assemblyParams(item.getMethod(), new ArrayList<>(), event,request);
+                Object[] params = SrvUnitTools.assemblyParams(item.getMethod(), new ArrayList<>(), event,request);
                 item.getMethod().invoke(processInstance,params);
 
                 if(event.isIntercepted()){
@@ -130,7 +130,7 @@ public class EventSchedule {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",item.getProcName(),item.getEventName(),item.getMethod().getName());
+                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",item.getSrvUnitName(),item.getEventName(),item.getMethod().getName());
                 continue;
             }
 
@@ -147,7 +147,7 @@ public class EventSchedule {
 
 
 
-    public Map<String,List<ProcDefine>> getEventMap(){
+    public Map<String,List<SrvDefine>> getEventMap(){
         return eventMap;
     }
 

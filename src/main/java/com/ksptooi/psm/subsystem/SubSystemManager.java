@@ -3,8 +3,8 @@ package com.ksptooi.psm.subsystem;
 import com.ksptooi.Application;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.EventSchedule;
-import com.ksptooi.psm.processor.ProcTools;
-import com.ksptooi.psm.processor.ProcessorManager;
+import com.ksptooi.psm.processor.ServiceUnitManager;
+import com.ksptooi.psm.processor.SrvUnitTools;
 import com.ksptooi.psm.processor.RequestProcessor;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
@@ -28,7 +28,7 @@ public class SubSystemManager {
     private final List<ActivatedSubSystem> installed = new ArrayList<>();
 
     @Inject
-    private ProcessorManager processorManager;
+    private ServiceUnitManager serviceUnitManager;
 
     @Inject
     private EventSchedule eventSchedule;
@@ -59,9 +59,9 @@ public class SubSystemManager {
 
             //扫描子系统中定义的Processor
             Set<Class<?>> processorDefine = item.getReflections().getTypesAnnotatedWith(RequestProcessor.class);
-            processorManager.register(ProcTools.getProcessorInstance(processorDefine));
-            processorManager.installRequestHandler();
-            processorManager.installEventHandler();
+            serviceUnitManager.register(SrvUnitTools.getProcessorInstance(processorDefine));
+            serviceUnitManager.installRequestHandler();
+            serviceUnitManager.installEventHandler();
 
             var activated = new ActivatedSubSystem();
             activated.setJarFile(item.getJarFile());

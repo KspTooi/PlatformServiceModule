@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor;
 
-public class ProcDefType {
+public class SrvDefType {
 
     public static final String REQ_HANDLER = "request_handler";
     public static final String HOOK_ACTIVATED = "hook_activated";

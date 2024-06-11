@@ -18,11 +18,11 @@ public class RequestHandlerVo {
     //参数长度
     private Integer paramsCount;
 
-    //处理器名称
-    private String procName;
+    //服务单元名称
+    private String srvUnitName;
 
-    //处理器ClassType
-    private String procClassType;
+    //服务单元ClassType
+    private String srvUnitClassType;
 
     //状态 0:正常 1:被删除
     private Integer status;

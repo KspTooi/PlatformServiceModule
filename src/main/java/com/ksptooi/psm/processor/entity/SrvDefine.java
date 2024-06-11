@@ -8,7 +8,7 @@ import java.util.List;
  * 处理器中的请求映射实体
  */
 @Data
-public class ProcDefine implements Comparable<ProcDefine>{
+public class SrvDefine implements Comparable<SrvDefine>{
 
     //定义类型(PROC中包含Hook与请求处理器(映射))
     private String defType;
@@ -28,8 +28,8 @@ public class ProcDefine implements Comparable<ProcDefine>{
     //函数签名
     private Method method;
 
-    //处理器名称
-    private String procName;
+    //服务单元名称
+    private String srvUnitName;
 
     //事件处理器序列(如果有)
     private int eventHandlerOrder;
@@ -44,7 +44,7 @@ public class ProcDefine implements Comparable<ProcDefine>{
     private String eventName;
 
     @Override
-    public int compareTo(ProcDefine o) {
+    public int compareTo(SrvDefine o) {
         return Integer.compare(this.eventHandlerOrder, o.eventHandlerOrder);
     }
 }

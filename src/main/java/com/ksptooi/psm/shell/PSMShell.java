@@ -2,8 +2,8 @@ package com.ksptooi.psm.shell;
 
 import com.ksptooi.Application;
 import com.ksptooi.psm.processor.EventSchedule;
-import com.ksptooi.psm.processor.ProcRequest;
-import com.ksptooi.psm.processor.ProcessorManager;
+import com.ksptooi.psm.processor.ShellRequest;
+import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.Process;
@@ -39,7 +39,7 @@ public class PSMShell implements Command,Runnable{
     private int vCursor;
 
     @Inject
-    private ProcessorManager processorManager;
+    private ServiceUnitManager serviceUnitManager;
 
     @Inject
     private TaskManager taskManager;
@@ -233,7 +233,7 @@ public class PSMShell implements Command,Runnable{
                     svk.nextLine();
 
                     //statement组装为请求
-                    ProcRequest req = new ProcRequest();
+                    ShellRequest req = new ShellRequest();
                     req.setStatement(statement);
                     req.setPattern(null);
                     req.setParams(new ArrayList<>());
@@ -246,7 +246,7 @@ public class PSMShell implements Command,Runnable{
                         System.out.println("Exit Hook");
                     };
 
-                    Process forward = processorManager.forward(req, hook);
+                    Process forward = serviceUnitManager.forward(req, hook);
 
                     if(forward == null){
                         svk.nextLine();

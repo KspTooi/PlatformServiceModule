@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor.event;
 
-import com.ksptooi.psm.processor.ProcRequest;
+import com.ksptooi.psm.processor.ShellRequest;
 import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
 import com.ksptooi.psm.shell.PSMShell;
 import lombok.Getter;
@@ -8,19 +8,19 @@ import lombok.Getter;
 @Getter
 public class BadRequestEvent extends AbstractProcEvent {
 
-    private final ProcRequest request;
+    private final ShellRequest request;
 
     private final String errorCode;
 
     private final Exception exception;
 
-    public BadRequestEvent(ProcRequest request,String errorCode){
+    public BadRequestEvent(ShellRequest request, String errorCode){
         this.request = request;
         this.errorCode = errorCode;
         this.exception = null;
     }
 
-    public BadRequestEvent(ProcRequest request,String errorCode,Exception ex){
+    public BadRequestEvent(ShellRequest request, String errorCode, Exception ex){
         this.request = request;
         this.errorCode = errorCode;
         this.exception = ex;

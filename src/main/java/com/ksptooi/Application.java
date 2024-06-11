@@ -4,13 +4,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.guice.compomentscan.ComponentScanModule;
 import com.ksptooi.psm.mybatis.DatabaseModule;
-import com.ksptooi.psm.processor.ProcessorManager;
+import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.shell.SshModules;
 import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.subsystem.SubSystemScanner;
-import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class Application {
@@ -30,11 +28,11 @@ public class Application {
         var subMgr = injector.getInstance(SubSystemManager.class);
         subMgr.install(scan);
 
-        ProcessorManager procMgr = injector.getInstance(ProcessorManager.class);
-        procMgr.scanFromPackage("com.ksptooi.psm");
-        procMgr.scanFromPackage("com.ksptooi.inner");
-        procMgr.installRequestHandler();
-        procMgr.installEventHandler();
+        ServiceUnitManager unitMgr = injector.getInstance(ServiceUnitManager.class);
+        unitMgr.scanFromPackage("com.ksptooi.psm");
+        unitMgr.scanFromPackage("com.ksptooi.inner");
+        unitMgr.installRequestHandler();
+        unitMgr.installEventHandler();
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();

@@ -26,9 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * 用于接收请求字符串并将请求分发到Processor
  */
 @Unit
-public class ProcessorManager {
+public class ServiceUnitManager {
 
-    private static final Logger log = LoggerFactory.getLogger(ProcessorManager.class);
+    private static final Logger log = LoggerFactory.getLogger(ServiceUnitManager.class);
 
     @Inject
     private RequestHandlerMapper requestHandlerMapper;
@@ -43,11 +43,11 @@ public class ProcessorManager {
     private EventSchedule eventSchedule;
 
 
-    private final static Map<String, ActiveProcessor> procMap = new ConcurrentHashMap<>();
+    private final static Map<String, ActivatedSrvUnit> procMap = new ConcurrentHashMap<>();
 
 
     @Inject
-    public ProcessorManager(){
+    public ServiceUnitManager(){
         System.out.println("ProcessorManager 初始化");
     }
 
@@ -62,29 +62,29 @@ public class ProcessorManager {
      */
     public void register(Object proc){
 
-        String procName = ProcTools.getProcName(proc.getClass());
+        String procName = SrvUnitTools.getProcName(proc.getClass());
         String classType = proc.getClass().getName();
 
         try {
 
-            List<ProcDefine> procDefine = ProcTools.getProcDefine(proc.getClass());
+            List<SrvDefine> srvDefine = SrvUnitTools.getProcDefine(proc.getClass());
 
             if(procMap.containsKey(procName)){
                 log.warn("无法注册处理器:{} 处理器名称冲突,当前已注册了一个相同名字的处理器.",procName);
                 return;
             }
 
-            ActiveProcessor p = new ActiveProcessor();
-            p.setProcName(procName);
-            p.setProc(proc);
+            ActivatedSrvUnit p = new ActivatedSrvUnit();
+            p.setSrvUnitName(procName);
+            p.setSrvUnit(proc);
             p.setClassType(classType);
-            p.setProcDefines(procDefine);
+            p.setSrvDefines(srvDefine);
             p.setRequestHandlerInstalled(false);
             p.setEventHandlerInstalled(false);
             procMap.put(procName,p);
-            log.info("已注册处理器:{} 包含{}个内部构件",procName,procDefine.size());
+            log.info("已注册处理器:{} 包含{}个内部构件",procName, srvDefine.size());
 
-            ProcDefine hook = DefineTools.getHook(ProcDefType.HOOK_ACTIVATED, procDefine);
+            SrvDefine hook = DefineTools.getHook(SrvDefType.HOOK_ACTIVATED, srvDefine);
 
             if(hook!=null){
                 hook.getMethod().invoke(proc);
@@ -93,7 +93,7 @@ public class ProcessorManager {
             //注入内部组件
             Application.injector.injectMembers(proc);
 
-        } catch (ProcDefineException e) {
+        } catch (SrvDefineException e) {
             e.printStackTrace();
             log.warn("无法注册处理器:{} - {} 因为处理器已损坏.",procName,classType);
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -107,22 +107,22 @@ public class ProcessorManager {
      */
     public void installRequestHandler(){
 
-        for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
+        for (Map.Entry<String, ActivatedSrvUnit> item : procMap.entrySet()){
 
             //注册的处理器已安装过请求处理器
             if(item.getValue().isRequestHandlerInstalled()){
                 continue;
             }
 
-            List<ProcDefine> defines = item.getValue().getProcDefines();
+            List<SrvDefine> defines = item.getValue().getSrvDefines();
 
             final String procName = item.getKey();
-            final String procClassType = item.getValue().getProc().getClass().getName();
+            final String procClassType = item.getValue().getSrvUnit().getClass().getName();
 
-            for(ProcDefine def : defines){
+            for(SrvDefine def : defines){
 
                 //不能安装Hook和事件
-                if(!def.getDefType().equals(ProcDefType.REQ_HANDLER)){
+                if(!def.getDefType().equals(SrvDefType.REQ_HANDLER)){
                     continue;
                 }
                 //不能安装通配符执行器
@@ -134,9 +134,9 @@ public class ProcessorManager {
                 if(byName!=null){
 
                     //数据库的请求处理器类型与当前处理器类型不一致
-                    if(!byName.getProcClassType().equals(procClassType)){
+                    if(!byName.getSrvUnitClassType().equals(procClassType)){
                         requestHandlerMapper.deleteById(byName.getId());
-                        log.info("移除请求处理器 {}:{}",byName.getProcName(),byName.getProcClassType());
+                        log.info("移除请求处理器 {}:{}",byName.getSrvUnitName(),byName.getSrvUnitClassType());
                     }else {
                         log.info("激活请求执行器 {}:{}({})",procName,byName.getPattern(),byName.getParamsCount());
                         continue;
@@ -148,8 +148,8 @@ public class ProcessorManager {
                 insert.setPattern(def.getPattern());
                 insert.setParams(JSON.toJSONString(def.getParams()));
                 insert.setParamsCount(def.getParamCount());
-                insert.setProcName(procName);
-                insert.setProcClassType(procClassType);
+                insert.setSrvUnitName(procName);
+                insert.setSrvUnitClassType(procClassType);
                 insert.setStatus(0);
                 insert.setMetadata("");
                 insert.setCreateTime(new Date());
@@ -169,18 +169,18 @@ public class ProcessorManager {
      */
     public void installEventHandler(){
 
-        for (Map.Entry<String,ActiveProcessor> item : procMap.entrySet()){
+        for (Map.Entry<String, ActivatedSrvUnit> item : procMap.entrySet()){
 
             //注册的处理器已安装过事件处理器
             if(item.getValue().isEventHandlerInstalled()){
                 continue;
             }
 
-            List<ProcDefine> procDefines = item.getValue().getProcDefines();
+            List<SrvDefine> srvDefines = item.getValue().getSrvDefines();
 
-            for(ProcDefine def : procDefines){
+            for(SrvDefine def : srvDefines){
 
-                if(! def.getDefType().equals(ProcDefType.EVENT_HANDLER)){
+                if(! def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
                     continue;
                 }
 
@@ -201,7 +201,7 @@ public class ProcessorManager {
     /**
      * 向处理器转发请求
      */
-    public Process forward(ProcRequest request, HookTaskFinished hook){
+    public Process forward(ShellRequest request, HookTaskFinished hook){
 
         resolverRequest(request);
 
@@ -215,15 +215,15 @@ public class ProcessorManager {
         }
 
         //根据数据库Handler查找内存中已加载的处理器
-        ActiveProcessor aProc = procMap.get(requestHandlerVo.getProcName());
+        ActivatedSrvUnit aProc = procMap.get(requestHandlerVo.getSrvUnitName());
 
         if(aProc == null){
             eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_UNKNOWN_HANDLER));
             return null;
         }
 
-        if(!aProc.getClassType().equals(requestHandlerVo.getProcClassType())){
-            log.warn("无法处理请求:{} 数据库与当前加载的处理器类型不一致. 数据库:{} 当前:{}",request.getPattern(),requestHandlerVo.getProcClassType(),aProc.getClassType());
+        if(!aProc.getClassType().equals(requestHandlerVo.getSrvUnitClassType())){
+            log.warn("无法处理请求:{} 数据库与当前加载的处理器类型不一致. 数据库:{} 当前:{}",request.getPattern(),requestHandlerVo.getSrvUnitClassType(),aProc.getClassType());
             eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_HANDLER_TYPE_INCONSISTENT));
             return null;
         }
@@ -231,16 +231,16 @@ public class ProcessorManager {
         //ShellInstance user = request.getShellInstance();
 
         //查找处理器中的Define
-        var procDef = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getProcDefines());
+        var procDef = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getSrvDefines());
 
         //没有找到映射Define 尝试查找具有通配符的默认Define
         if(procDef == null){
-            procDef = DefineTools.getDefaultDefine(aProc.getProcDefines());
+            procDef = DefineTools.getDefaultDefine(aProc.getSrvDefines());
         }
 
         if(procDef == null){
             //处理器中找不到任何Define
-            eventSchedule.forward(new BadRequestEvent(new ProcRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
+            eventSchedule.forward(new BadRequestEvent(new ShellRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
         }
 
         //注入请求元数据
@@ -250,9 +250,9 @@ public class ProcessorManager {
         var t = new Process();
         t.setTaskName(procDef.getMethod().getName());
         t.setRequest(request);
-        t.setProcessor(aProc);
+        t.setServiceUnit(aProc);
         t.setTarget(procDef.getMethod());
-        t.setInjectParams(ProcTools.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
+        t.setInjectParams(SrvUnitTools.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
         t.setFinishHook(hook);
         t.setTaskManager(taskManager);
 
@@ -319,7 +319,7 @@ public class ProcessorManager {
      * @param req
      * @return
      */
-    private void resolverRequest(ProcRequest req){
+    private void resolverRequest(ShellRequest req){
 
         String statement = req.getStatement();
 
@@ -357,7 +357,7 @@ public class ProcessorManager {
         req.setParams(paramList);
     }
 
-    public static ActiveProcessor getProcessor(String procName){
+    public static ActivatedSrvUnit getProcessor(String procName){
         return procMap.get(procName);
     }
 

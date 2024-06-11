@@ -8,8 +8,8 @@
         <result column="PATTERN" property="pattern"/>
         <result column="PARAMS" property="params"/>
         <result column="PARAMS_COUNT" property="paramsCount"/>
-        <result column="PROC_NAME" property="procName"/>
-        <result column="PROC_CLASS_TYPE" property="procClassType"/>
+        <result column="SRV_UNIT_NAME" property="srvUnitName"/>
+        <result column="SRV_UNIT_CLASS_TYPE" property="srvUnitClassType"/>
         <result column="STATUS" property="status"/>
         <result column="METADATA" property="metadata"/>
         <result column="CREATE_TIME" property="createTime"/>
@@ -22,8 +22,8 @@
                ,#{val.pattern}
                ,#{val.params}
                ,#{val.paramsCount}
-               ,#{val.procName}
-               ,#{val.procClassType}
+               ,#{val.srvUnitName}
+               ,#{val.srvUnitClassType}
                ,#{val.status}
                ,#{val.metadata}
                ,#{val.createTime}

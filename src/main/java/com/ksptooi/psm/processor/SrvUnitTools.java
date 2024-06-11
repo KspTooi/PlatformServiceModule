@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor;
 
-import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
 import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
@@ -12,7 +12,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class ProcTools {
+public class SrvUnitTools {
 
     public static final List<String> eventDefine = new ArrayList<>();
 
@@ -49,17 +49,17 @@ public class ProcTools {
     /**
      * 查找该处理器中的映射
      */
-    public static List<ProcDefine> getProcDefine(Class<?> proc) throws ProcDefineException {
+    public static List<SrvDefine> getProcDefine(Class<?> proc) throws SrvDefineException {
 
         //获取处理器名称
         RequestProcessor annoProc = proc.getAnnotation(RequestProcessor.class);
 
         if(annoProc == null){
-            throw new ProcDefineException("处理器已损坏,原因:处理器需要@RequestProcessor注解. 位于:"+ proc.getName());
+            throw new SrvDefineException("处理器已损坏,原因:处理器需要@RequestProcessor注解. 位于:"+ proc.getName());
         }
 
         if(!chkProcName(annoProc.value())){
-            throw new ProcDefineException("处理器已损坏,原因:处理器名称不合法. 位于:"+ proc.getName());
+            throw new SrvDefineException("处理器已损坏,原因:处理器名称不合法. 位于:"+ proc.getName());
         }
 
         final String procName = annoProc.value();
@@ -69,43 +69,43 @@ public class ProcTools {
         final Method[] annoOnDestroy = ReflectUtils.getMethodByAnnotation(proc, OnDestroy.class);
 
         if(annoOnActivated.length > 1 || annoOnDestroy.length > 1){
-            throw new ProcDefineException("处理器不支持同时拥有多个相同的钩子注解 位于:"+procName);
+            throw new SrvDefineException("处理器不支持同时拥有多个相同的钩子注解 位于:"+procName);
         }
 
         //获取处理器中的请求映射
         Method[] annoReqHandler = ReflectUtils.getMethodByAnnotation(proc, RequestHandler.class);
 
-        List<ProcDefine> ret = new ArrayList<>();
+        List<SrvDefine> ret = new ArrayList<>();
 
         if(annoOnActivated.length > 0){
-            ProcDefine defHook = new ProcDefine();
-            defHook.setDefType(ProcDefType.HOOK_ACTIVATED);
+            SrvDefine defHook = new SrvDefine();
+            defHook.setDefType(SrvDefType.HOOK_ACTIVATED);
             defHook.setMethod(annoOnActivated[0]);
             ret.add(defHook);
         }
         if(annoOnDestroy.length > 0){
-            ProcDefine defHook = new ProcDefine();
-            defHook.setDefType(ProcDefType.HOOK_DESTROY);
+            SrvDefine defHook = new SrvDefine();
+            defHook.setDefType(SrvDefType.HOOK_DESTROY);
             defHook.setMethod(annoOnDestroy[0]);
             ret.add(defHook);
         }
 
         if(!chkReqHandlerPattern(annoReqHandler)){
-            throw new ProcDefineException("处理器已损坏 原因:至少有一个请求映射Pattern不合法 位于:"+procName);
+            throw new SrvDefineException("处理器已损坏 原因:至少有一个请求映射Pattern不合法 位于:"+procName);
         }
 
         if(!chkRepeatWildcard(annoReqHandler)){
-            throw new ProcDefineException("处理器已损坏 原因:处理器不支持多个模式为通配符(*)的请求映射 位于:"+procName);
+            throw new SrvDefineException("处理器已损坏 原因:处理器不支持多个模式为通配符(*)的请求映射 位于:"+procName);
         }
 
         for(Method m : annoReqHandler){
             final String pattern = m.getAnnotation(RequestHandler.class).value();
             final List<String> alias = getAliasByAnnotation(m);
             final List<String> params = getParamNameByAnnotation(m);
-            ProcDefine def = new ProcDefine();
-            def.setDefType(ProcDefType.REQ_HANDLER);
+            SrvDefine def = new SrvDefine();
+            def.setDefType(SrvDefType.REQ_HANDLER);
             def.setPattern(pattern);
-            def.setProcName(procName);
+            def.setSrvUnitName(procName);
             def.setAlias(alias);
             def.setParams(params);
             def.setParamCount(params.size());
@@ -115,7 +115,7 @@ public class ProcTools {
 
         //检查是否有两个一样的请求映射
         if(!checkRepeatMapping(ret)){
-            throw new ProcDefineException("处理器已损坏 原因:处理器中有两个相同的映射 位于:"+procName);
+            throw new SrvDefineException("处理器已损坏 原因:处理器中有两个相同的映射 位于:"+procName);
         }
 
         //获取处理器中的事件处理器
@@ -138,7 +138,7 @@ public class ProcTools {
     /**
      * 查找该处理器中的请求映射(定义)
      */
-    public static List<ProcDefine> getRequestDefine(Class<?> proc){
+    public static List<SrvDefine> getRequestDefine(Class<?> proc){
 
         //获取处理器名称
         RequestProcessor annotation = proc.getAnnotation(RequestProcessor.class);
@@ -154,13 +154,13 @@ public class ProcTools {
             return new ArrayList<>();
         }
 
-        List<ProcDefine> ret = new ArrayList<>();
+        List<SrvDefine> ret = new ArrayList<>();
 
         for (Method method: methodByAnnotation){
 
-            ProcDefine define = new ProcDefine();
+            SrvDefine define = new SrvDefine();
             define.setPattern(null);
-            define.setProcName(annotation.value());
+            define.setSrvUnitName(annotation.value());
             define.setAlias(new ArrayList<>());
             define.setParams(new ArrayList<>());
             define.setParamCount(0);
@@ -342,18 +342,18 @@ public class ProcTools {
         return count <= 1;
     }
 
-    public static boolean checkRepeatMapping(List<ProcDefine> defines){
+    public static boolean checkRepeatMapping(List<SrvDefine> defines){
 
         Set<String> hSet = new HashSet<>();
 
-        for(ProcDefine def : defines){
+        for(SrvDefine def : defines){
 
             //只判断请求映射器类型
-            if(! def.getDefType().equals(ProcDefType.REQ_HANDLER)){
+            if(! def.getDefType().equals(SrvDefType.REQ_HANDLER)){
                 continue;
             }
 
-            final String identity = def.getProcName() + "::" + def.getPattern() + "::" + def.getParamCount();
+            final String identity = def.getSrvUnitName() + "::" + def.getPattern() + "::" + def.getParamCount();
 
             if(hSet.contains(identity)){
                 return false;
@@ -368,14 +368,14 @@ public class ProcTools {
     /**
      * 获取处理器中的事件处理器
      */
-    public static List<ProcDefine> getProcEventHandler(Class<?> proc) throws ProcDefineException{
+    public static List<SrvDefine> getProcEventHandler(Class<?> proc) throws SrvDefineException {
 
         //获取处理器名称
         final String procName = proc.getAnnotation(RequestProcessor.class).value();
 
         final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(proc, EventHandler.class);
 
-        List<ProcDefine> ret = new ArrayList<>();
+        List<SrvDefine> ret = new ArrayList<>();
 
         for(Method m : annoEventHandler){
 
@@ -383,12 +383,12 @@ public class ProcTools {
             final String eventHandlerType = getEventHandlerType(m);
 
             if(eventHandlerType == null){
-                throw new ProcDefineException("事件处理器已损坏. ProcName:"+procName + " FuncName:"+m.getName());
+                throw new SrvDefineException("事件处理器已损坏. ProcName:"+procName + " FuncName:"+m.getName());
             }
 
-            ProcDefine def = new ProcDefine();
-            def.setDefType(ProcDefType.EVENT_HANDLER);
-            def.setProcName(procName);
+            SrvDefine def = new SrvDefine();
+            def.setDefType(SrvDefType.EVENT_HANDLER);
+            def.setSrvUnitName(procName);
             def.setMethod(m);
             def.setEventHandlerOrder(m.getAnnotation(EventHandler.class).order());
             def.setEventHandlerType(eventHandlerType);
@@ -433,11 +433,11 @@ public class ProcTools {
     }
 
 
-    public static void main(String[] args) throws ProcDefineException {
+    public static void main(String[] args) throws SrvDefineException {
 
-        List<ProcDefine> procDefine = ProcTools.getProcDefine(TestServiceUnit.class);
+        List<SrvDefine> srvDefine = SrvUnitTools.getProcDefine(TestServiceUnit.class);
 
-        System.out.println(procDefine);
+        System.out.println(srvDefine);
 
     }
 

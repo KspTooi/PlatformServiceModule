@@ -1,7 +1,7 @@
 package com.ksptooi;
 
 import com.ksptooi.psm.processor.*;
-import com.ksptooi.psm.processor.entity.ProcDefine;
+import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.hook.OnActivated;
 import com.ksptooi.psm.processor.hook.OnDestroy;
 import com.ksptooi.uac.core.annatatiotion.Param;
@@ -9,24 +9,24 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class ProcToolsTest {
+public class SrvUnitToolsTest {
 
     public static void main(String[] args) {
 
         TestServiceUnit tp = new TestServiceUnit();
 
-        List<ProcDefine> procDefine = ProcTools.getRequestDefine(TestServiceUnit.class);
+        List<SrvDefine> srvDefine = SrvUnitTools.getRequestDefine(TestServiceUnit.class);
 
-        System.out.println(procDefine);
+        System.out.println(srvDefine);
 
     }
 
     @Test
-    public void getProcDefine() throws ProcDefineException {
+    public void getProcDefine() throws SrvDefineException {
 
-        List<ProcDefine> procDefine = ProcTools.getProcDefine(TestProc.class);
+        List<SrvDefine> srvDefine = SrvUnitTools.getProcDefine(TestProc.class);
 
-        System.out.println(procDefine);
+        System.out.println(srvDefine);
 
     }
 
@@ -36,7 +36,7 @@ public class ProcToolsTest {
 class TestProc{
 
     @RequestHandler("*")
-    public void newRequest(ProcRequest request){
+    public void newRequest(ShellRequest request){
     }
 
     @OnActivated
@@ -54,7 +54,7 @@ class TestProc{
     }
 
     @RequestHandler("ls")
-    public void listFiles(@Param("directory")String dir, ProcRequest request){
+    public void listFiles(@Param("directory")String dir, ShellRequest request){
     }
 
 }

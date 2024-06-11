@@ -5,15 +5,15 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ActiveProcessor {
+public class ActivatedSrvUnit {
 
-    private String procName;
+    private String srvUnitName;
 
-    private Object proc;
+    private Object srvUnit;
 
     private String classType;
 
-    private List<ProcDefine> procDefines;
+    private List<SrvDefine> srvDefines;
 
     private boolean eventHandlerInstalled = false;
 
