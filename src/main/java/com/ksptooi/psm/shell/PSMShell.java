@@ -35,9 +35,6 @@ public class PSMShell implements Command,Runnable{
     private ChannelSession session;
     private Environment env;
 
-    private final StringBuffer vTextarea = new StringBuffer();
-    private int vCursor;
-
     @Inject
     private ServiceUnitManager serviceUnitManager;
 
@@ -162,19 +159,8 @@ public class PSMShell implements Command,Runnable{
                         continue;
                     }
 
-                    //光标不是在末尾 处理插入
-                    if(vCursor != vTextarea.length()){
-                        vTextarea.insert(vCursor,rc,0,rl);
-                    }else {
-                        //光标在末尾 附加
-                        vTextarea.append(rc,0,rl);
-                    }
-
-                    //vCursor++;
-                    vCursor = vCursor + rl;
-
-                    //重新渲染当前行并同步光标位置
-                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    vt.insert(cable.getReadString());
+                    vt.render();
                     continue;
                 }
 
@@ -184,53 +170,41 @@ public class PSMShell implements Command,Runnable{
 
                 //处理光标左右移动
                 if(cable.match(VK.LEFT)){
-                    if(vCursor < 1){
-                        continue;
-                    }
-                    vCursor--;
-                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    vt.cursorLeft();
+                    vt.render();
                     continue;
                 }
 
                 if(cable.match(VK.RIGHT)){
-                    if(vCursor >= vTextarea.length()){
-                        continue;
-                    }
-                    vCursor++;
-                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    vt.cursorRight();
+                    vt.render();
                     continue;
                 }
 
                 if(cable.match(VK.BACKSPACE)){
-                    if(vCursor < 1){
-                        continue;
-                    }
-                    vTextarea.deleteCharAt(vCursor - 1);
-                    vCursor--;
-                    //重新渲染当前行并同步光标位置
-                    svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                    vt.backspace();
+                    vt.render();
                     continue;
                 }
 
                 //回车
                 if(cable.match(VK.ENTER)){
 
-                    if(vTextarea.isEmpty() || vTextarea.toString().trim().isEmpty()){
+                    if(vt.isBlank()){
                        continue;
                     }
 
-                    StatementCommitEvent commitEvent = new StatementCommitEvent(this,vTextarea.toString());
+                    StatementCommitEvent commitEvent = new StatementCommitEvent(this,vt.getContent());
                     eventSchedule.forward(commitEvent);
 
                     if(commitEvent.isCanceled()){
                         //重新渲染当前行并同步光标位置
-                        svk.replaceCurrentLine(vTextarea.toString(),vCursor);
+                        vt.render();
                         continue;
                     }
 
-                    String statement = vTextarea.toString();
-                    vTextarea.setLength(0);
-                    vCursor = 0;
+                    String statement = vt.getContent();
+                    vt.reset();
 
                     //svk.replaceCurrentLine("executed:: " + statement,0);
                     svk.nextLine();

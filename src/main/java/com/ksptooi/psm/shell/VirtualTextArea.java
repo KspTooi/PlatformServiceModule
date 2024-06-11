@@ -47,7 +47,7 @@ public class VirtualTextArea {
         for (int i = 0; i < vCursor; i++) {
             //pw.write("\033[C"); //右移同步光标
 
-            char c = content.charAt(i);
+            char c = buf.charAt(i);
 
             //双宽字符需要移动两次光标
             if(isDoubleWidth(c)){
@@ -57,6 +57,8 @@ public class VirtualTextArea {
             }
 
         }
+
+        cable.flush();
 
     }
 
@@ -122,6 +124,16 @@ public class VirtualTextArea {
             return true;
         }
 
+    }
+
+    public boolean isBlank(){
+        if(vCursor < 1){
+            return true;
+        }
+        if(buf.isEmpty() || buf.toString().trim().isEmpty()){
+            return true;
+        }
+        return false;
     }
 
 
