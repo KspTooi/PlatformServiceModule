@@ -15,12 +15,28 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>com.ksptooi</groupId>
             <artifactId>PlatformServiceModule</artifactId>
             <version>4.0.B</version>
         </dependency>
 
+
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.yaml</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.mmdb</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
 </project>

@@ -57,6 +57,8 @@ public class PSMShell implements Command,Runnable{
     private AdvancedInputOutputPort shellAioPort;
     private AdvInputOutputCable cable;
 
+    private VirtualTextArea vt;
+
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
 
@@ -77,6 +79,8 @@ public class PSMShell implements Command,Runnable{
                 .print(Colors.RESET)
                 .flush();
         cable.nextLine().flush();
+
+        vt = new VirtualTextArea(cable,env);
 
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
@@ -137,7 +141,6 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 cable.printDebugText();
-
 
                 //输入字符/或特殊符号
                 if(cable.match(VK.USER_INPUT)){
@@ -242,7 +245,7 @@ public class PSMShell implements Command,Runnable{
                     req.setCable(shellAioPort.createCable());
 
                     HookTaskFinished hook = ()->{
-                        svk.nextLine();
+                        //svk.nextLine();
                         System.out.println("Exit Hook");
                     };
 

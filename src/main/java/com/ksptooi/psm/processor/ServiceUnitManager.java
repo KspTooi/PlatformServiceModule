@@ -9,6 +9,7 @@ import com.ksptooi.psm.processor.entity.*;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
+import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -203,7 +204,7 @@ public class ServiceUnitManager {
 
         if(requestHandlerVo == null){
             log.warn("无法处理请求:{} 无法从数据库查找到合适的Handler",request.getPattern());
-            eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_UNKNOWN_HANDLER));
+            eventSchedule.forward(new BadRequestEvent(request, BadRequestEvent.ERR_UNKNOWN_HANDLER));
             return null;
         }
 

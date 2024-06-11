@@ -18,14 +18,7 @@
 
 
     <mappers>
-        <mapper resource="mapper/CommandMapper.xml"/>
-        <mapper resource="mapper/DocumentMapper.xml"/>
-        <mapper resource="mapper/DatabaseMapper.xml"/>
-        <mapper resource="mapper/RequestHandlerMapper.xml"/>
-        <mapper resource="mapper/UsersMapper.xml"/>
-        <mapper resource="mapper/LoginHistoryMapper.xml"/>
-        <mapper resource="mapper/StatementHistoryMapper.xml"/>
-        <mapper resource="mapper/ConfigSetMapper.xml"/>
+        
     </mappers>
 
 </configuration>

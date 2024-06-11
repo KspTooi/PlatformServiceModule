@@ -21,4 +21,6 @@ public class DatabaseModule extends AbstractModule {
         bind(Snowflake.class).toInstance(snowflake);
         // 其他依赖注入配置
     }
+
+
 }

@@ -4,6 +4,7 @@ import com.ksptooi.psm.processor.ShellRequest;
 import com.ksptooi.psm.processor.event.generic.AbstractServiceUnitEvent;
 import com.ksptooi.psm.shell.PSMShell;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class BadRequestEvent extends AbstractServiceUnitEvent {
@@ -13,6 +14,9 @@ public class BadRequestEvent extends AbstractServiceUnitEvent {
     private final String errorCode;
 
     private final Exception exception;
+
+    @Setter
+    private String responseText;
 
     public BadRequestEvent(ShellRequest request, String errorCode){
         this.request = request;
