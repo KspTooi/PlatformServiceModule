@@ -60,7 +60,7 @@ public class SrvUnitTools {
             throw new SrvDefineException("服务单元已损坏,原因:服务单元需要@ServiceUnit注解. 位于:"+ srvUnit.getName());
         }
 
-        if(!chkProcName(annoSrvUnit.value())){
+        if(!chkSrvUnitName(annoSrvUnit.value())){
             throw new SrvDefineException("服务单元已损坏,原因:处理器名称不合法. 位于:"+ srvUnit.getName());
         }
 
@@ -121,11 +121,11 @@ public class SrvUnitTools {
         }
 
         //获取处理器中的事件处理器
-        ret.addAll(getProcEventHandler(srvUnit));
+        ret.addAll(getEventHandlerInSrvUnit(srvUnit));
         return ret;
     }
 
-    public static String getProcName(Class<?> proc){
+    public static String getSrvUnitName(Class<?> proc){
 
         //获取处理器名称
         var annoProc = proc.getAnnotation(ServiceUnit.class);
@@ -172,7 +172,6 @@ public class SrvUnitTools {
 
         return retString;
     }
-
 
 
     public static Object[] assemblyParams(Method m,List<String> outsideParams,Object... innerParam){
@@ -230,7 +229,7 @@ public class SrvUnitTools {
         return params;
     }
 
-    public static boolean chkProcName(String name){
+    public static boolean chkSrvUnitName(String name){
 
         if(StringUtils.isBlank(name)){
             return false;
@@ -313,12 +312,12 @@ public class SrvUnitTools {
     /**
      * 获取处理器中的事件处理器
      */
-    public static List<SrvDefine> getProcEventHandler(Class<?> proc) throws SrvDefineException {
+    public static List<SrvDefine> getEventHandlerInSrvUnit(Class<?> srvUnit) throws SrvDefineException {
 
         //获取处理器名称
-        final String procName = proc.getAnnotation(RequestProcessor.class).value();
+        final String srvUnitName = srvUnit.getAnnotation(ServiceUnit.class).value();
 
-        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(proc, RequestHandler.EventHandler.class);
+        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(srvUnit, RequestHandler.EventHandler.class);
 
         List<SrvDefine> ret = new ArrayList<>();
 
@@ -328,12 +327,12 @@ public class SrvUnitTools {
             final String eventHandlerType = getEventHandlerType(m);
 
             if(eventHandlerType == null){
-                throw new SrvDefineException("事件处理器已损坏. ProcName:"+procName + " FuncName:"+m.getName());
+                throw new SrvDefineException("事件处理器已损坏. ProcName:"+srvUnitName + " FuncName:"+m.getName());
             }
 
             SrvDefine def = new SrvDefine();
             def.setDefType(SrvDefType.EVENT_HANDLER);
-            def.setSrvUnitName(procName);
+            def.setSrvUnitName(srvUnitName);
             def.setMethod(m);
             def.setEventHandlerOrder(m.getAnnotation(RequestHandler.EventHandler.class).order());
             def.setEventHandlerType(eventHandlerType);

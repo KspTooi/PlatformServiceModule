@@ -62,7 +62,7 @@ public class ServiceUnitManager {
      */
     public void register(Object proc){
 
-        String procName = SrvUnitTools.getProcName(proc.getClass());
+        String procName = SrvUnitTools.getSrvUnitName(proc.getClass());
         String classType = proc.getClass().getName();
 
         try {
