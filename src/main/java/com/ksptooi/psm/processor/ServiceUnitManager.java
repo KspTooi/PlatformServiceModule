@@ -267,7 +267,7 @@ public class ServiceUnitManager {
      */
     public void scanFromPackage(String packagePath){
         Reflections reflections = new Reflections(packagePath);
-        Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(RequestProcessor.class);
+        Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(ServiceUnit.class);
         register(getProcessorForClassSet(typesAnnotatedWith));
     }
 
@@ -279,7 +279,7 @@ public class ServiceUnitManager {
         Reflections packageReflections = new Reflections(new ConfigurationBuilder()
                 .addUrls(url).addClassLoaders(loader)
         );
-        Set<Class<?>> typesAnnotatedWith = packageReflections.getTypesAnnotatedWith(RequestProcessor.class);
+        Set<Class<?>> typesAnnotatedWith = packageReflections.getTypesAnnotatedWith(ServiceUnit.class);
         register(getProcessorForClassSet(typesAnnotatedWith));
     }
 
@@ -290,7 +290,7 @@ public class ServiceUnitManager {
         Reflections packageReflections = new Reflections(new ConfigurationBuilder()
                 .addUrls(url).addClassLoaders(classLoader)
         );
-        Set<Class<?>> typesAnnotatedWith = packageReflections.getTypesAnnotatedWith(RequestProcessor.class);
+        Set<Class<?>> typesAnnotatedWith = packageReflections.getTypesAnnotatedWith(ServiceUnit.class);
         register(getProcessorForClassSet(typesAnnotatedWith));
     }
 
