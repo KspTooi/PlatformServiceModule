@@ -12,6 +12,8 @@ public class VirtualTextArea {
     private final StringBuffer buf = new StringBuffer();
     private int vCursor = 0;
 
+    private String header = "user>";
+
     public VirtualTextArea(AdvInputOutputCable cable, Environment env){
         this.env = env;
         this.cable = cable;
