@@ -8,7 +8,7 @@ import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
-import com.ksptooi.psm.processor.event.generic.ProcEvent;
+import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.utils.aio.*;
@@ -149,7 +149,7 @@ public class PSMShell implements Command,Runnable{
                         continue;
                     }
 
-                    ProcEvent forward = eventSchedule.forward(new UserTypingEvent(this,rc,rl, cable.getReadString()));
+                    ServiceUnitEvent forward = eventSchedule.forward(new UserTypingEvent(this,rc,rl, cable.getReadString()));
 
                     if(forward.isCanceled()){
                         continue;
@@ -263,7 +263,7 @@ public class PSMShell implements Command,Runnable{
     }
 
 
-    private ProcEvent triggerEvent(ProcEvent e){
+    private ServiceUnitEvent triggerEvent(ServiceUnitEvent e){
         return eventSchedule.forward(e);
     }
 

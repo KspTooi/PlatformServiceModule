@@ -1,4 +1,4 @@
-package com.ksptooi.psm.processor.hook;
+package com.ksptooi.psm.processor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OnActivated {
+public @interface OnDestroy {
 }

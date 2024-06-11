@@ -1,12 +1,12 @@
 package com.ksptooi.psm.processor.event;
 
 import com.ksptooi.psm.processor.ShellRequest;
-import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
+import com.ksptooi.psm.processor.event.generic.AbstractServiceUnitEvent;
 import com.ksptooi.psm.shell.PSMShell;
 import lombok.Getter;
 
 @Getter
-public class BadRequestEvent extends AbstractProcEvent {
+public class BadRequestEvent extends AbstractServiceUnitEvent {
 
     private final ShellRequest request;
 

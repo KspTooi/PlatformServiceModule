@@ -1,6 +1,6 @@
 package com.ksptooi.psm.processor.event.generic;
 
-public abstract class AbstractProcEvent implements ProcEvent{
+public abstract class AbstractServiceUnitEvent implements ServiceUnitEvent {
 
     /**
      * 当事件被取消 发布者不会继续执行其他动作

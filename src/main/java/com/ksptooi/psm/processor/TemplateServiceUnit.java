@@ -2,7 +2,6 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
-import com.ksptooi.psm.processor.hook.OnActivated;
 
 @ServiceUnit("TestSrvUnit")
 public class TemplateServiceUnit {

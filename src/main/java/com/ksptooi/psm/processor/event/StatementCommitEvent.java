@@ -1,13 +1,11 @@
 package com.ksptooi.psm.processor.event;
 
-import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
-import com.ksptooi.psm.processor.event.generic.ProcEvent;
+import com.ksptooi.psm.processor.event.generic.AbstractServiceUnitEvent;
 import com.ksptooi.psm.shell.PSMShell;
-import com.ksptooi.psm.shell.ShellInstance;
 import lombok.Getter;
 
 @Getter
-public class StatementCommitEvent extends AbstractProcEvent {
+public class StatementCommitEvent extends AbstractServiceUnitEvent {
 
     public final String statement;
 

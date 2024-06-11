@@ -3,7 +3,7 @@ package com.ksptooi.psm.processor;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.entity.Process;
-import com.ksptooi.psm.processor.event.generic.ProcEvent;
+import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public class EventSchedule {
     /**
      * 向调度器发布一个事件
      */
-    public ProcEvent forward(ProcEvent event){
+    public ServiceUnitEvent forward(ServiceUnitEvent event){
 
         var eventType = event.getClass().getName();
 
@@ -83,7 +83,7 @@ public class EventSchedule {
     /**
      * 触发进程内事件
      */
-    private ProcEvent trigger(ProcEvent event, Process task){
+    private ServiceUnitEvent trigger(ServiceUnitEvent event, Process task){
 
         if(task == null){
             return event;
@@ -141,7 +141,7 @@ public class EventSchedule {
     /**
      * 触发全局事件
      */
-    private ProcEvent triggerGlobal(ProcEvent event){
+    private ServiceUnitEvent triggerGlobal(ServiceUnitEvent event){
         return event;
     }
 

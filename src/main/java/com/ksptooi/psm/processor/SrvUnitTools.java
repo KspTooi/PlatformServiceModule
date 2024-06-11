@@ -2,8 +2,6 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
-import com.ksptooi.psm.processor.hook.OnActivated;
-import com.ksptooi.psm.processor.hook.OnDestroy;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +16,7 @@ public class SrvUnitTools {
     static {
         eventDefine.add(BadRequestEvent.class.getName());
         eventDefine.add(InstallProcHandlerEvent.class.getName());
-        eventDefine.add(ProcRegisterEvent.class.getName());
+        eventDefine.add(ServiceUnitRegisterEvent.class.getName());
         eventDefine.add(RequestForwardEvent.class.getName());
         eventDefine.add(ShellInputEvent.class.getName());
         eventDefine.add(StatementCommitEvent.class.getName());

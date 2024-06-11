@@ -1,12 +1,11 @@
 package com.ksptooi.psm.processor.event;
 
-import com.ksptooi.psm.processor.event.generic.AbstractProcEvent;
+import com.ksptooi.psm.processor.event.generic.AbstractServiceUnitEvent;
 import com.ksptooi.psm.shell.PSMShell;
-import com.ksptooi.psm.shell.ShellInstance;
 import lombok.Getter;
 
 @Getter
-public class ShellInputEvent extends AbstractProcEvent {
+public class ShellInputEvent extends AbstractServiceUnitEvent {
 
     private final PSMShell userShell;
     private final char[] rawInput;
