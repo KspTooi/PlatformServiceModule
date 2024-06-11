@@ -2,7 +2,6 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
-import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.shell.Colors;
 
 @ServiceUnit("TestSrvUnit")
@@ -24,7 +23,7 @@ public class TestServiceUnit {
 
     }
 
-    @EventHandler(global = true)
+    @RequestHandler.EventHandler(global = true)
     public void userType(UserTypingEvent event){
 
         //当前有前台任务正在运行
@@ -42,7 +41,7 @@ public class TestServiceUnit {
 
     }
 
-    @EventHandler
+    @RequestHandler.EventHandler
     public void userType(UserTypingEvent event, ShellRequest request){
         var cable = request.getCable();
         cable.print("用户在前台进程内按键:");

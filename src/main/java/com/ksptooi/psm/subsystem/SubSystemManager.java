@@ -5,7 +5,6 @@ import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.EventSchedule;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.SrvUnitTools;
-import com.ksptooi.psm.processor.RequestProcessor;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 import jakarta.inject.Inject;
@@ -59,7 +58,7 @@ public class SubSystemManager {
 
             //扫描子系统中定义的Processor
             Set<Class<?>> processorDefine = item.getReflections().getTypesAnnotatedWith(RequestProcessor.class);
-            serviceUnitManager.register(SrvUnitTools.getProcessorInstance(processorDefine));
+            serviceUnitManager.register(SrvUnitTools.getSrvUnitInstance(processorDefine));
             serviceUnitManager.installRequestHandler();
             serviceUnitManager.installEventHandler();
 

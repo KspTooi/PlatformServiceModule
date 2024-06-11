@@ -2,7 +2,6 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
-import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
 
 @ServiceUnit("TestSrvUnit")
@@ -21,9 +20,9 @@ public class TemplateServiceUnit {
     }
 
     //定义事件处理器
-    @EventHandler(global = true)
+    @RequestHandler.EventHandler(global = true)
     public void userType(UserTypingEvent event){
-        
+
     }
 
 }

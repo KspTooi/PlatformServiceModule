@@ -9,4 +9,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestHandler {
     String value();
+
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface EventHandler {
+        int order() default 0;
+        boolean global() default false;
+    }
 }

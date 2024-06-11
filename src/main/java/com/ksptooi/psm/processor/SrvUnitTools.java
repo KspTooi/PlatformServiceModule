@@ -2,7 +2,6 @@ package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
-import com.ksptooi.psm.processor.hook.EventHandler;
 import com.ksptooi.psm.processor.hook.OnActivated;
 import com.ksptooi.psm.processor.hook.OnDestroy;
 import com.ksptooi.uac.commons.ReflectUtils;
@@ -26,7 +25,10 @@ public class SrvUnitTools {
         eventDefine.add(UserTypingEvent.class.getName());
     }
 
-    public static List<Object> getProcessorInstance(Set<Class<?>> classSet){
+    /**
+     * 根据类模板创建服务单元实例
+     */
+    public static List<Object> getSrvUnitInstance(Set<Class<?>> classSet){
 
         if(classSet.isEmpty()){
             return new ArrayList<>();
@@ -47,33 +49,33 @@ public class SrvUnitTools {
     }
 
     /**
-     * 查找该处理器中的映射
+     * 查找该服务单元中的映射
      */
-    public static List<SrvDefine> getProcDefine(Class<?> proc) throws SrvDefineException {
+    public static List<SrvDefine> getSrvDefine(Class<?> srvUnit) throws SrvDefineException {
 
-        //获取处理器名称
-        RequestProcessor annoProc = proc.getAnnotation(RequestProcessor.class);
+        //获取服务单元名称
+        var annoSrvUnit = srvUnit.getAnnotation(ServiceUnit.class);
 
-        if(annoProc == null){
-            throw new SrvDefineException("处理器已损坏,原因:处理器需要@RequestProcessor注解. 位于:"+ proc.getName());
+        if(annoSrvUnit == null){
+            throw new SrvDefineException("服务单元已损坏,原因:服务单元需要@ServiceUnit注解. 位于:"+ srvUnit.getName());
         }
 
-        if(!chkProcName(annoProc.value())){
-            throw new SrvDefineException("处理器已损坏,原因:处理器名称不合法. 位于:"+ proc.getName());
+        if(!chkProcName(annoSrvUnit.value())){
+            throw new SrvDefineException("服务单元已损坏,原因:处理器名称不合法. 位于:"+ srvUnit.getName());
         }
 
-        final String procName = annoProc.value();
+        final String procName = annoSrvUnit.value();
 
         //获取处理器中的钩子注解
-        final Method[] annoOnActivated = ReflectUtils.getMethodByAnnotation(proc, OnActivated.class);
-        final Method[] annoOnDestroy = ReflectUtils.getMethodByAnnotation(proc, OnDestroy.class);
+        final Method[] annoOnActivated = ReflectUtils.getMethodByAnnotation(srvUnit, OnActivated.class);
+        final Method[] annoOnDestroy = ReflectUtils.getMethodByAnnotation(srvUnit, OnDestroy.class);
 
         if(annoOnActivated.length > 1 || annoOnDestroy.length > 1){
             throw new SrvDefineException("处理器不支持同时拥有多个相同的钩子注解 位于:"+procName);
         }
 
         //获取处理器中的请求映射
-        Method[] annoReqHandler = ReflectUtils.getMethodByAnnotation(proc, RequestHandler.class);
+        Method[] annoReqHandler = ReflectUtils.getMethodByAnnotation(srvUnit, RequestHandler.class);
 
         List<SrvDefine> ret = new ArrayList<>();
 
@@ -119,14 +121,14 @@ public class SrvUnitTools {
         }
 
         //获取处理器中的事件处理器
-        ret.addAll(getProcEventHandler(proc));
+        ret.addAll(getProcEventHandler(srvUnit));
         return ret;
     }
 
     public static String getProcName(Class<?> proc){
 
         //获取处理器名称
-        RequestProcessor annoProc = proc.getAnnotation(RequestProcessor.class);
+        var annoProc = proc.getAnnotation(ServiceUnit.class);
 
         if(annoProc == null){
             return null;
@@ -316,7 +318,7 @@ public class SrvUnitTools {
         //获取处理器名称
         final String procName = proc.getAnnotation(RequestProcessor.class).value();
 
-        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(proc, EventHandler.class);
+        final Method[] annoEventHandler = ReflectUtils.getMethodByAnnotation(proc, RequestHandler.EventHandler.class);
 
         List<SrvDefine> ret = new ArrayList<>();
 
@@ -333,12 +335,12 @@ public class SrvUnitTools {
             def.setDefType(SrvDefType.EVENT_HANDLER);
             def.setSrvUnitName(procName);
             def.setMethod(m);
-            def.setEventHandlerOrder(m.getAnnotation(EventHandler.class).order());
+            def.setEventHandlerOrder(m.getAnnotation(RequestHandler.EventHandler.class).order());
             def.setEventHandlerType(eventHandlerType);
 
             String eventHandlerEventName = getEventHandlerEventName(m);
             def.setEventName(eventHandlerEventName);
-            def.setGlobalEventHandler(m.getAnnotation(EventHandler.class).global());
+            def.setGlobalEventHandler(m.getAnnotation(RequestHandler.EventHandler.class).global());
             ret.add(def);
         }
 
@@ -378,7 +380,7 @@ public class SrvUnitTools {
 
     public static void main(String[] args) throws SrvDefineException {
 
-        List<SrvDefine> srvDefine = SrvUnitTools.getProcDefine(TestServiceUnit.class);
+        List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(TestServiceUnit.class);
 
         System.out.println(srvDefine);
 

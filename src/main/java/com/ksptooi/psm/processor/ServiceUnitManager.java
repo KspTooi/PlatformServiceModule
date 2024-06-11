@@ -67,7 +67,7 @@ public class ServiceUnitManager {
 
         try {
 
-            List<SrvDefine> srvDefine = SrvUnitTools.getProcDefine(proc.getClass());
+            List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(proc.getClass());
 
             if(procMap.containsKey(procName)){
                 log.warn("无法注册处理器:{} 处理器名称冲突,当前已注册了一个相同名字的处理器.",procName);

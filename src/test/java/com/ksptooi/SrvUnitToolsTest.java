@@ -22,9 +22,9 @@ public class SrvUnitToolsTest {
     }
 
     @Test
-    public void getProcDefine() throws SrvDefineException {
+    public void getSrvDefine() throws SrvDefineException {
 
-        List<SrvDefine> srvDefine = SrvUnitTools.getProcDefine(TestProc.class);
+        List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(TestProc.class);
 
         System.out.println(srvDefine);
 
@@ -32,7 +32,6 @@ public class SrvUnitToolsTest {
 
 }
 
-@RequestProcessor("TestProc")
 class TestProc{
 
     @RequestHandler("*")
