@@ -135,63 +135,6 @@ public class SrvUnitTools {
         return annoProc.value();
     }
 
-    /**
-     * 查找该处理器中的请求映射(定义)
-     */
-    public static List<SrvDefine> getRequestDefine(Class<?> proc){
-
-        //获取处理器名称
-        RequestProcessor annotation = proc.getAnnotation(RequestProcessor.class);
-
-        if(annotation == null){
-            return new ArrayList<>();
-        }
-
-        //拿到该Class里面带注解的方法列表
-        Method[] methodByAnnotation = ReflectUtils.getMethodByAnnotation(proc, RequestName.class);
-
-        if(methodByAnnotation.length < 1){
-            return new ArrayList<>();
-        }
-
-        List<SrvDefine> ret = new ArrayList<>();
-
-        for (Method method: methodByAnnotation){
-
-            SrvDefine define = new SrvDefine();
-            define.setPattern(null);
-            define.setSrvUnitName(annotation.value());
-            define.setAlias(new ArrayList<>());
-            define.setParams(new ArrayList<>());
-            define.setParamCount(0);
-            define.setMethod(method);
-
-            //拿到方法上RequestName注解的值
-            String name = method.getAnnotation(RequestName.class).value();
-            define.setPattern(name);
-
-            Alias annoAlias = method.getAnnotation(Alias.class);
-
-            //请求有Alias
-            if(annoAlias != null && annoAlias.value().length > 0){
-                define.setAlias(Arrays.stream(annoAlias.value()).toList());
-            }
-
-            //获取请求参数
-            List<String> parameter = getParamNameByAnnotation(method);
-
-            if(!parameter.isEmpty()){
-                define.setParams(parameter);
-                define.setParamCount(parameter.size());
-            }
-
-            ret.add(define);
-        }
-
-        return ret;
-    }
-
-
     private static List<String> getAliasByAnnotation(Method m){
 
         Alias annoAlias = m.getAnnotation(Alias.class);

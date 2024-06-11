@@ -15,9 +15,9 @@ public class SrvUnitToolsTest {
 
         TestServiceUnit tp = new TestServiceUnit();
 
-        List<SrvDefine> srvDefine = SrvUnitTools.getRequestDefine(TestServiceUnit.class);
+        //List<SrvDefine> srvDefine = SrvUnitTools.getRequestDefine(TestServiceUnit.class);
 
-        System.out.println(srvDefine);
+        //System.out.println(srvDefine);
 
     }
 

@@ -17,6 +17,7 @@ public class TemplateServiceUnit {
     @RequestHandler("example")
     public void example(ShellRequest req , Process task){
 
+        
     }
 
     //定义事件处理器
@@ -24,6 +25,5 @@ public class TemplateServiceUnit {
     public void userType(UserTypingEvent event){
         
     }
-
 
 }
