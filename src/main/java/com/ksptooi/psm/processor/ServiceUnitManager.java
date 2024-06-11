@@ -58,7 +58,7 @@ public class ServiceUnitManager {
     }
 
     /**
-     * 注册处理器
+     * 注册服务单元
      */
     public void register(Object proc){
 
@@ -70,7 +70,7 @@ public class ServiceUnitManager {
             List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(proc.getClass());
 
             if(procMap.containsKey(procName)){
-                log.warn("无法注册处理器:{} 处理器名称冲突,当前已注册了一个相同名字的处理器.",procName);
+                log.warn("无法注册服务单元:{} 服务单元名称冲突,当前已注册了一个相同名字的服务单元.",procName);
                 return;
             }
 
@@ -82,7 +82,7 @@ public class ServiceUnitManager {
             p.setRequestHandlerInstalled(false);
             p.setEventHandlerInstalled(false);
             procMap.put(procName,p);
-            log.info("已注册处理器:{} 包含{}个内部构件",procName, srvDefine.size());
+            log.info("已注册服务单元:{} 包含{}个内部构件",procName, srvDefine.size());
 
             SrvDefine hook = DefineTools.getHook(SrvDefType.HOOK_ACTIVATED, srvDefine);
 
@@ -95,7 +95,7 @@ public class ServiceUnitManager {
 
         } catch (SrvDefineException e) {
             e.printStackTrace();
-            log.warn("无法注册处理器:{} - {} 因为处理器已损坏.",procName,classType);
+            log.warn("无法注册服务单元:{} - {} 因为服务单元已损坏.",procName,classType);
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -103,13 +103,13 @@ public class ServiceUnitManager {
     }
 
     /**
-     * 安装处理器指令
+     * 安装服务单元指令
      */
     public void installRequestHandler(){
 
         for (Map.Entry<String, ActivatedSrvUnit> item : procMap.entrySet()){
 
-            //注册的处理器已安装过请求处理器
+            //注册的服务单元已安装过请求处理器
             if(item.getValue().isRequestHandlerInstalled()){
                 continue;
             }
@@ -133,12 +133,12 @@ public class ServiceUnitManager {
                 //数据库已经注册过Handler
                 if(byName!=null){
 
-                    //数据库的请求处理器类型与当前处理器类型不一致
+                    //数据库的请求处理器类型与当前服务单元类型不一致
                     if(!byName.getSrvUnitClassType().equals(procClassType)){
                         requestHandlerMapper.deleteById(byName.getId());
                         log.info("移除请求处理器 {}:{}",byName.getSrvUnitName(),byName.getSrvUnitClassType());
                     }else {
-                        log.info("激活请求执行器 {}:{}({})",procName,byName.getPattern(),byName.getParamsCount());
+                        log.info("激活请求处理器 {}:{}({})",procName,byName.getPattern(),byName.getParamsCount());
                         continue;
                     }
                 }
@@ -165,13 +165,13 @@ public class ServiceUnitManager {
     }
 
     /**
-     * 安装处理器事件
+     * 安装服务单元事件
      */
     public void installEventHandler(){
 
         for (Map.Entry<String, ActivatedSrvUnit> item : procMap.entrySet()){
 
-            //注册的处理器已安装过事件处理器
+            //注册的服务单元已安装过事件处理器
             if(item.getValue().isEventHandlerInstalled()){
                 continue;
             }
@@ -199,7 +199,7 @@ public class ServiceUnitManager {
     }
 
     /**
-     * 向处理器转发请求
+     * 向服务单元转发请求
      */
     public Process forward(ShellRequest request, HookTaskFinished hook){
 
@@ -214,7 +214,7 @@ public class ServiceUnitManager {
             return null;
         }
 
-        //根据数据库Handler查找内存中已加载的处理器
+        //根据数据库Handler查找内存中已加载的服务单元
         ActivatedSrvUnit aProc = procMap.get(requestHandlerVo.getSrvUnitName());
 
         if(aProc == null){
@@ -223,14 +223,14 @@ public class ServiceUnitManager {
         }
 
         if(!aProc.getClassType().equals(requestHandlerVo.getSrvUnitClassType())){
-            log.warn("无法处理请求:{} 数据库与当前加载的处理器类型不一致. 数据库:{} 当前:{}",request.getPattern(),requestHandlerVo.getSrvUnitClassType(),aProc.getClassType());
+            log.warn("无法处理请求:{} 数据库与当前加载的服务单元类型不一致. 数据库:{} 当前:{}",request.getPattern(),requestHandlerVo.getSrvUnitClassType(),aProc.getClassType());
             eventSchedule.forward(new BadRequestEvent(request,BadRequestEvent.ERR_HANDLER_TYPE_INCONSISTENT));
             return null;
         }
 
         //ShellInstance user = request.getShellInstance();
 
-        //查找处理器中的Define
+        //查找服务单元中的Define
         var procDef = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getSrvDefines());
 
         //没有找到映射Define 尝试查找具有通配符的默认Define
@@ -239,7 +239,7 @@ public class ServiceUnitManager {
         }
 
         if(procDef == null){
-            //处理器中找不到任何Define
+            //服务单元中找不到任何Define
             eventSchedule.forward(new BadRequestEvent(new ShellRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
         }
 
@@ -263,7 +263,7 @@ public class ServiceUnitManager {
 
 
     /**
-     * 从包路径中扫描并添加处理器
+     * 从包路径中扫描并添加服务单元
      */
     public void scanFromPackage(String packagePath){
         Reflections reflections = new Reflections(packagePath);
@@ -272,7 +272,7 @@ public class ServiceUnitManager {
     }
 
     /**
-     * 从URL中扫描并添加处理器
+     * 从URL中扫描并添加服务单元
      */
     public void scanFromURL(URL url) {
         ClassLoader loader = new URLClassLoader(new URL[]{url});
@@ -284,7 +284,7 @@ public class ServiceUnitManager {
     }
 
     /**
-     * 从插件中扫描并添加处理器
+     * 从插件中扫描并添加服务单元
      */
     public void scanFromPlugins(URL url, ClassLoader classLoader) {
         Reflections packageReflections = new Reflections(new ConfigurationBuilder()
