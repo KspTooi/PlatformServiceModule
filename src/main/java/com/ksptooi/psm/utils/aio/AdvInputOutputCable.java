@@ -1,6 +1,7 @@
 package com.ksptooi.psm.utils.aio;
 
 import asia.kala.ansi.AnsiString;
+import com.ksptooi.psm.utils.aio.color.CableDye;
 
 import java.io.IOException;
 import java.util.Queue;
@@ -18,6 +19,10 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
 
     private final Queue<char[]> is = new ArrayBlockingQueue<>(8192);
     private final Queue<String> os = new ArrayBlockingQueue<>(8192);
+
+    //线缆染料
+    private volatile CableDye dye = null;
+
 
     public AdvInputOutputCable(Long id, AdvancedInputOutputPort port){
         this.id = id;
@@ -86,7 +91,11 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
 
     public AdvInputOutputCable print(String a) {
         ensureCableNotDestroyed();
-        os.add(a);
+        if(dye == null){
+            os.add(a);
+        }else {
+            os.add(AnsiString.Color.True(dye.r(),dye.g(),dye.b()).overlay(a).toString());
+        }
         return this;
     }
     public AdvInputOutputCable print(byte b){
@@ -186,19 +195,16 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         return print(v);
     }
 
-    public AdvInputOutputCable color(int r,int g, int b){
-
-
-
-
-        os.add(AnsiString.Color.True(r,g,b).toString());
+    public synchronized AdvInputOutputCable dye(CableDye dye){
+        this.dye = dye;
         return this;
     }
 
-    public static void main(String[] args) {
-        var aTrue = AnsiString.Color.True(127, 0, 85).overlay("HGFHGFH");
-        System.out.println(aTrue.toString());
+    public synchronized AdvInputOutputCable wash(){
+        this.dye = null;
+        return this;
     }
+
 
 
     public long getId() {
