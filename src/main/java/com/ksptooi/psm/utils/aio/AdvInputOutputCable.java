@@ -1,5 +1,7 @@
 package com.ksptooi.psm.utils.aio;
 
+import asia.kala.ansi.AnsiString;
+
 import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -184,6 +186,19 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         return print(v);
     }
 
+    public AdvInputOutputCable color(int r,int g, int b){
+
+
+
+
+        os.add(AnsiString.Color.True(r,g,b).toString());
+        return this;
+    }
+
+    public static void main(String[] args) {
+        var aTrue = AnsiString.Color.True(127, 0, 85).overlay("HGFHGFH");
+        System.out.println(aTrue.toString());
+    }
 
 
     public long getId() {

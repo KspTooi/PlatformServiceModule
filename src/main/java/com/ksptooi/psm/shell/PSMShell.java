@@ -1,5 +1,6 @@
 package com.ksptooi.psm.shell;
 
+import asia.kala.ansi.AnsiString;
 import com.ksptooi.Application;
 import com.ksptooi.psm.processor.EventSchedule;
 import com.ksptooi.psm.processor.ShellRequest;
@@ -56,9 +57,9 @@ public class PSMShell implements Command,Runnable{
 
     private VirtualTextArea vt;
 
+
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {
-
 
         this.session = session;
         this.env = env;
@@ -116,8 +117,6 @@ public class PSMShell implements Command,Runnable{
     public void run() {
 
         try{
-
-            ShellVK svk = new ShellVK(os,env);
 
             while (true){
 
@@ -208,7 +207,7 @@ public class PSMShell implements Command,Runnable{
                     String statement = vt.getContent();
                     vt.reset();
 
-                    svk.nextLine();
+                    cable.nextLine();
 
                     //statement组装为请求
                     ShellRequest req = new ShellRequest();

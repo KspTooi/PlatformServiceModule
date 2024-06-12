@@ -8,8 +8,8 @@ import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.shell.SshModules;
 import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.subsystem.SubSystemScanner;
-
 import java.util.concurrent.CountDownLatch;
+
 
 public class Application {
 
@@ -20,7 +20,7 @@ public class Application {
     public final static String version = "4.0A";
     public final static String platform = "x64";
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] p) throws InterruptedException {
 
         SubSystemScanner subSystemScanner = injector.getInstance(SubSystemScanner.class);
         var scan = subSystemScanner.scan("./subsystems");
