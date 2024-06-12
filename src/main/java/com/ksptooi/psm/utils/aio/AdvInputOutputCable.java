@@ -46,6 +46,25 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         disconnect(ConnectMode.OUTPUT);
     }
 
+    public void read() throws IOException {
+        ensureCableNotDestroyed();
+        rl = port.read(this,rb);
+    }
+
+    //迁移线缆到新端口
+    public void bindPort(AdvancedInputOutputPort port){
+        ensureCableNotDestroyed();
+        //先断开线缆与已有端口的连接
+        if(isConnect(ConnectMode.INPUT)){
+            disconnect(ConnectMode.INPUT);
+        }
+        if(isConnect(ConnectMode.OUTPUT)){
+            disconnect(ConnectMode.OUTPUT);
+        }
+        //更换port
+        this.port = port;
+    }
+
     public void flush(){
 
         ensureCableNotDestroyed();
@@ -54,69 +73,119 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         if(!isConnect(ConnectMode.OUTPUT)){
             return;
         }
-
         port.flush(this);
     }
 
-    public void read() throws IOException {
-        ensureCableNotDestroyed();
-        rl = port.read(this,rb);
-    }
-
-    //迁移线缆到新端口
-    public void bindPort(AdvancedInputOutputPort port){
-
-        ensureCableNotDestroyed();
-
-        //先断开线缆与已有端口的连接
-        if(isConnect(ConnectMode.INPUT)){
-            disconnect(ConnectMode.INPUT);
-        }
-        if(isConnect(ConnectMode.OUTPUT)){
-            disconnect(ConnectMode.OUTPUT);
-        }
-
-        //更换port
-        this.port = port;
-    }
-
-    
     public AdvInputOutputCable nextLine() {
         ensureCableNotDestroyed();
         os.add("\r\n");
         return this;
     }
 
-    
     public AdvInputOutputCable print(String a) {
         ensureCableNotDestroyed();
         os.add(a);
         return this;
     }
-
-    
+    public AdvInputOutputCable print(byte b){
+        return print(String.valueOf(b));
+    }
+    public AdvInputOutputCable print(short s){
+        return print(String.valueOf(s));
+    }
     public AdvInputOutputCable print(int i) {
-        ensureCableNotDestroyed();
-        os.add(i+"");
-        return this;
+        return print(String.valueOf(i));
+    }
+    public AdvInputOutputCable print(long l){
+        return print(String.valueOf(l));
+    }
+    public AdvInputOutputCable print(float f){
+        return print(String.valueOf(f));
+    }
+    public AdvInputOutputCable print(double d){
+        return print(String.valueOf(d));
+    }
+    public AdvInputOutputCable print(boolean b){
+        return print(String.valueOf(b));
+    }
+    public AdvInputOutputCable print(char c){
+        return print(String.valueOf(c));
+    }
+    public AdvInputOutputCable print(char[] c){
+        return print(String.valueOf(c));
+    }
+    public AdvInputOutputCable print(Object o){
+        return print(o.toString());
     }
 
-    
     public AdvInputOutputCable println(String i) {
         ensureCableNotDestroyed();
-        os.add(i);
-        nextLine();
+        print(i).nextLine();
         return this;
+    }
+    public AdvInputOutputCable println(byte v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(short v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(int v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(long v) {
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(float v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(double v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(boolean v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(char v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(char[] v){
+        return println(String.valueOf(v));
+    }
+    public AdvInputOutputCable println(Object v){
+        return println(v.toString());
+    }
+    public AdvInputOutputCable w(byte v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(short v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(int v) {
+        return print(v);
+    }
+    public AdvInputOutputCable w(long v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(float v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(double v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(boolean v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(char v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(char[] v){
+        return print(v);
+    }
+    public AdvInputOutputCable w(Object v){
+        return print(v);
     }
 
-    
-    public AdvInputOutputCable println(int i) {
-        ensureCableNotDestroyed();
-        os.add(i+"");
-        nextLine();
-        return this;
-    }
-    
+
+
     public long getId() {
         return id;
     }
