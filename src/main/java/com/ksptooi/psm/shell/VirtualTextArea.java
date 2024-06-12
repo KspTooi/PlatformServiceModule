@@ -14,9 +14,14 @@ public class VirtualTextArea {
 
     private String header = "user>";
 
+
     public VirtualTextArea(AdvInputOutputCable cable, Environment env){
         this.env = env;
         this.cable = cable;
+    }
+
+    public void setHeader(String header){
+        this.header = header;
     }
 
     public void render(){
@@ -37,14 +42,26 @@ public class VirtualTextArea {
 
         var content = buf.toString();
 
+        var omitFactorVal = 11 + header.length();
+
         //渲染的内容超出终端宽度(省略多余字符)
-        if(content.length() >= columns - 11){
-            int more = content.length() - (int)(columns - 11);
-            content = content.substring(0, (int)(columns - 11));
+        if(content.length() >= columns - omitFactorVal){
+            int more = content.length() - (int)(columns - omitFactorVal);
+            content = content.substring(0, (int)(columns - omitFactorVal));
             content = content + ">>more("+more+")";
         }
 
+        cable.print(header);
         cable.print(content).print("\r");
+
+        for(int i = 0; i < header.length(); i++){
+            char c = header.charAt(i);
+            if(isDoubleWidth(c)){
+                cable.print("\033[C\033[C");  //中文字符在控制台上占两个位置
+            }else {
+                cable.print("\033[C"); // 其他字符占一个位置
+            }
+        }
 
         for (int i = 0; i < vCursor; i++) {
             //pw.write("\033[C"); //右移同步光标
