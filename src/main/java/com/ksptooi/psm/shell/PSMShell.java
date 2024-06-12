@@ -78,6 +78,8 @@ public class PSMShell implements Command,Runnable{
         cable.nextLine().flush();
 
         vt = new VirtualTextArea(cable,env);
+        vt.setHeader(getServerSession().getUsername()+"> ");
+        vt.render();
 
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
@@ -206,7 +208,6 @@ public class PSMShell implements Command,Runnable{
                     String statement = vt.getContent();
                     vt.reset();
 
-                    //svk.replaceCurrentLine("executed:: " + statement,0);
                     svk.nextLine();
 
                     //statement组装为请求
@@ -219,14 +220,13 @@ public class PSMShell implements Command,Runnable{
                     req.setCable(shellAioPort.createCable());
 
                     HookTaskFinished hook = ()->{
-                        //svk.nextLine();
                         System.out.println("Exit Hook");
                     };
 
                     Process forward = serviceUnitManager.forward(req, hook);
 
                     if(forward == null){
-                        svk.nextLine();
+                        vt.render();
                     }
 
                     continue;

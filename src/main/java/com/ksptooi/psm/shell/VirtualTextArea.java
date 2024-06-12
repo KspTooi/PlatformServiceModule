@@ -12,7 +12,7 @@ public class VirtualTextArea {
     private final StringBuffer buf = new StringBuffer();
     private int vCursor = 0;
 
-    private String header = "user>";
+    private String header = ">";
 
 
     public VirtualTextArea(AdvInputOutputCable cable, Environment env){
@@ -39,9 +39,7 @@ public class VirtualTextArea {
 
         //获取终端大小
         int columns = Integer.parseInt(env.getEnv().get("COLUMNS"));
-
         var content = buf.toString();
-
         var omitFactorVal = 11 + header.length();
 
         //渲染的内容超出终端宽度(省略多余字符)
@@ -78,7 +76,6 @@ public class VirtualTextArea {
         }
 
         cable.flush();
-
     }
 
     public void cursorUp(){
