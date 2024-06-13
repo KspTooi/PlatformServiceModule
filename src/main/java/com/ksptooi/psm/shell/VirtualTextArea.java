@@ -41,7 +41,7 @@ public class VirtualTextArea {
         //获取终端大小
         int columns = Integer.parseInt(env.getEnv().get("COLUMNS"));
         var content = buf.toString();
-        var omitFactorVal = 11 + header.length();
+        var omitFactorVal = 11 + header.length() + separator.length();
 
         //渲染的内容超出终端宽度(省略多余字符)
         if(content.length() >= columns - omitFactorVal){
