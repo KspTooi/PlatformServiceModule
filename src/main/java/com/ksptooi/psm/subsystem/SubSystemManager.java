@@ -1,5 +1,6 @@
 package com.ksptooi.psm.subsystem;
 
+import com.google.inject.Injector;
 import com.ksptooi.Application;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.EventSchedule;
@@ -29,6 +30,17 @@ public class SubSystemManager {
 
     @Inject
     private ServiceUnitManager serviceUnitManager;
+
+
+    public void install(Injector injector, List<DiscoveredSubSystem> dss){
+        for(var item : dss){
+
+            var sslm = new SubSystemLoaderModule(item);
+            var subInjector = injector.createChildInjector(sslm);
+            
+
+        }
+    }
 
 
     public void install(List<DiscoveredSubSystem> dss){

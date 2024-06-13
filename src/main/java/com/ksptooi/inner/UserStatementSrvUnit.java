@@ -27,7 +27,6 @@ public class UserStatementSrvUnit {
     @Inject
     private Snowflake snowflake;
 
-
     @EventHandler(global = true)
     public void saveUserStatement(StatementCommitEvent event){
 

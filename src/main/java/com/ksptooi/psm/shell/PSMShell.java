@@ -1,6 +1,5 @@
 package com.ksptooi.psm.shell;
 
-import asia.kala.ansi.AnsiString;
 import com.ksptooi.Application;
 import com.ksptooi.psm.processor.EventSchedule;
 import com.ksptooi.psm.processor.ShellRequest;
@@ -14,7 +13,6 @@ import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.utils.aio.*;
 import com.ksptooi.psm.utils.aio.color.CyanDye;
-import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
 import org.apache.sshd.server.Environment;
@@ -55,9 +53,7 @@ public class PSMShell implements Command,Runnable{
 
     private AdvancedInputOutputPort shellAioPort;
     private AdvInputOutputCable cable;
-
     private VirtualTextArea vt;
-
 
     @Override
     public void start(ChannelSession session, Environment env) throws IOException {

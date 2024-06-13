@@ -1,5 +1,6 @@
 package com.ksptooi.psm.subsystem.entity;
 
+import com.google.inject.Injector;
 import com.ksptooi.psm.subsystem.SubSystem;
 import lombok.Data;
 import org.reflections.Reflections;
@@ -16,4 +17,5 @@ public class ActivatedSubSystem {
     private ClassLoader classLoader;
     private Reflections reflections;
     private List<Class<?>> processorDefine;
+    private Injector injector;
 }
