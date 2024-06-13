@@ -80,6 +80,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         if(!isConnect(ConnectMode.OUTPUT)){
             return;
         }
+        wash();
         port.flush(this);
     }
 

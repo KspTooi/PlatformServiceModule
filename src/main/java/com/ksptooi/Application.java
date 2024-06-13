@@ -17,7 +17,7 @@ public class Application {
 
     public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule(),csm);
 
-    public final static String version = "4.0A";
+    public final static String version = "4.0E/F";
     public final static String platform = "x64";
 
     public static void main(String[] p) throws InterruptedException {

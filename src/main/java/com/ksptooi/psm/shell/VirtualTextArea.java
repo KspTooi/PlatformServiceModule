@@ -2,6 +2,7 @@ package com.ksptooi.psm.shell;
 
 import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.ConnectMode;
+import com.ksptooi.psm.utils.aio.color.*;
 import org.apache.sshd.server.Environment;
 
 public class VirtualTextArea {
@@ -12,8 +13,8 @@ public class VirtualTextArea {
     private final StringBuffer buf = new StringBuffer();
     private int vCursor = 0;
 
-    private String header = ">";
-
+    private String header = "";
+    private String separator = "> ";
 
     public VirtualTextArea(AdvInputOutputCable cable, Environment env){
         this.env = env;
@@ -49,11 +50,18 @@ public class VirtualTextArea {
             content = content + ">>more("+more+")";
         }
 
-        cable.print(header);
+        var hps = header + separator;
+
+        cable.dye(OrangeDye.pickUp)
+                .w(header)
+                .dye(WhiteDye.pickUp)
+                .w(separator)
+                .wash();
+
         cable.print(content).print("\r");
 
-        for(int i = 0; i < header.length(); i++){
-            char c = header.charAt(i);
+        for(int i = 0; i < hps.length(); i++){
+            char c = hps.charAt(i);
             if(isDoubleWidth(c)){
                 cable.print("\033[C\033[C");  //中文字符在控制台上占两个位置
             }else {

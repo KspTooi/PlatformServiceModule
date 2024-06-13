@@ -13,6 +13,7 @@ import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 import com.ksptooi.psm.processor.event.ShellInputEvent;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.utils.aio.*;
+import com.ksptooi.psm.utils.aio.color.CyanDye;
 import com.ksptooi.psm.vk.ShellVK;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
@@ -72,14 +73,16 @@ public class PSMShell implements Command,Runnable{
         cable = shellAioPort.createCable();
         cable.connect();
 
-        cable.print(Colors.CYAN)
-                .print("Welcome To PlatformServiceModule(PSM/").print(v).print(" "+p ).print(")")
-                .print(Colors.RESET)
+        cable.dye(CyanDye.pickUp)
+                .w("Welcome To PlatformServiceModule(PSM/")
+                .w(v)
+                .w(" "+p)
+                .w(")")
+                .nextLine()
                 .flush();
-        cable.nextLine().flush();
 
         vt = new VirtualTextArea(cable,env);
-        vt.setHeader(getServerSession().getUsername()+"> ");
+        vt.setHeader(getServerSession().getUsername());
         vt.render();
 
         //启动处理线程
