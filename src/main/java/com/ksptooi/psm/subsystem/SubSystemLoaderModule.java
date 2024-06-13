@@ -1,6 +1,8 @@
 package com.ksptooi.psm.subsystem;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.ServiceUnit;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
@@ -29,8 +31,12 @@ public class SubSystemLoaderModule extends AbstractModule {
         var units = ref.getTypesAnnotatedWith(Unit.class);
         var serviceUnits = ref.getTypesAnnotatedWith(ServiceUnit.class);
 
-        for(var i : units){
+        for(var u : units){
+            bind(u).in(Scopes.SINGLETON);
+        }
 
+        for (var u : serviceUnits){
+            bind(u).in(Scopes.SINGLETON);
         }
 
 
