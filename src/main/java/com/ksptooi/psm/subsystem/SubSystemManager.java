@@ -35,9 +35,29 @@ public class SubSystemManager {
     public void install(Injector injector, List<DiscoveredSubSystem> dss){
         for(var item : dss){
 
-            var sslm = new SubSystemLoaderModule(item);
+            if(exists(item.getName())){
+                log.error("cannot install subsystem {} because the same name is already installed.",item.getName());
+                continue;
+            }
+
+            //实例化子系统入口
+            SubSystem entryInstance = null;
+
+            try {
+                var instance = item.getEntry().getDeclaredConstructor().newInstance();
+                if(!(instance instanceof SubSystem)){
+                    log.error("[无法安装] 子系统 {} 已损坏. 因为其入口没有继承自SubSystem.",item.getName());
+                    continue;
+                }
+                entryInstance = (SubSystem) instance;
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            var sslm = new SubSystemLoaderModule(item,entryInstance);
             var subInjector = injector.createChildInjector(sslm);
-            
+
 
         }
     }

@@ -31,7 +31,7 @@ public class Application {
         var scan = subSystemScanner.scan("./subsystems");
 
         var subMgr = injector.getInstance(SubSystemManager.class);
-        subMgr.install(scan);
+        subMgr.install(injector,scan);
 
 
         ServiceUnitManager unitMgr = injector.getInstance(ServiceUnitManager.class);
