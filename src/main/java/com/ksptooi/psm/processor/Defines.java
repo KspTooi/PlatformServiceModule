@@ -4,8 +4,7 @@ import com.ksptooi.psm.processor.entity.SrvDefine;
 
 import java.util.List;
 
-public class DefineTools {
-
+public class Defines {
 
 
 

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class SrvDefToolsTest {
+public class ServiceUnitsTest {
 
     public static void main(String[] args) {
 
@@ -22,9 +22,9 @@ public class SrvDefToolsTest {
     }
 
     @Test
-    public void getSrvDefine() throws SrvDefineException {
+    public void getSrvDefine() throws ServiceDefinitionException {
 
-        List<SrvDefine> srvDefine = SrvDefTools.getSrvDefine(TestProc.class);
+        List<SrvDefine> srvDefine = ServiceUnits.getSrvDefine(TestProc.class);
 
         System.out.println(srvDefine);
 

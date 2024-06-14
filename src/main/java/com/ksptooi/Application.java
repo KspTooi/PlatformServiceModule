@@ -2,17 +2,11 @@ package com.ksptooi;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.spi.Element;
-import com.google.inject.spi.Elements;
 import com.ksptooi.guice.compomentscan.ComponentScanModule;
 import com.ksptooi.psm.mybatis.DatabaseModule;
-import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.shell.SshModules;
 import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.subsystem.SubSystemScanner;
-
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 
 public class Application {
@@ -32,6 +26,8 @@ public class Application {
 
         var subManager = injector.getInstance(SubSystemManager.class);
         subManager.install(injector,subSystems);
+
+
 
 /*        var subMgr = injector.getInstance(SubSystemManager.class);
         subMgr.install(injector,scan);

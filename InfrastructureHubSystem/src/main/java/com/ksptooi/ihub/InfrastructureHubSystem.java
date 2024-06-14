@@ -2,8 +2,10 @@ package com.ksptooi.ihub;
 
 
 import com.ksptooi.Application;
+import com.ksptooi.ihub.serviceunit.UnitA;
 import com.ksptooi.psm.subsystem.SubSystem;
 import com.ksptooi.psm.subsystem.SubSystemEntry;
+import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,8 @@ public class InfrastructureHubSystem extends SubSystem {
 
     private final Logger log = LoggerFactory.getLogger(InfrastructureHubSystem.class);
 
+    @Inject
+    private UnitA ua;
 
     @Override
     public void onActivated() {
@@ -24,6 +28,8 @@ public class InfrastructureHubSystem extends SubSystem {
                 ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
                 ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░
                 ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░░▒▓██████▓▒░░▒▓███████▓▒░\s""");
+
+        ua.test();
 
     }
 

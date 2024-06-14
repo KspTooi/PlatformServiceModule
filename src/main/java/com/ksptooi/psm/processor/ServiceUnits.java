@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class SrvDefTools {
+public class ServiceUnits {
 
     public static final List<String> eventDefine = new ArrayList<>();
 
@@ -86,17 +86,17 @@ public class SrvDefTools {
     /**
      * 查找该服务单元中的映射
      */
-    public static List<SrvDefine> getSrvDefine(Class<?> srvUnit) throws SrvDefineException {
+    public static List<SrvDefine> getSrvDefine(Class<?> srvUnit) throws ServiceDefinitionException {
 
         //获取服务单元名称
         var annoSrvUnit = srvUnit.getAnnotation(ServiceUnit.class);
 
         if(annoSrvUnit == null){
-            throw new SrvDefineException("服务单元已损坏,原因:服务单元需要@ServiceUnit注解. 位于:"+ srvUnit.getName());
+            throw new ServiceDefinitionException("服务单元已损坏,原因:服务单元需要@ServiceUnit注解. 位于:"+ srvUnit.getName());
         }
 
         if(!chkSrvUnitName(annoSrvUnit.value())){
-            throw new SrvDefineException("服务单元已损坏,原因:处理器名称不合法. 位于:"+ srvUnit.getName());
+            throw new ServiceDefinitionException("服务单元已损坏,原因:处理器名称不合法. 位于:"+ srvUnit.getName());
         }
 
         final String procName = annoSrvUnit.value();
@@ -106,7 +106,7 @@ public class SrvDefTools {
         final Method[] annoOnDestroy = ReflectUtils.getMethodByAnnotation(srvUnit, OnDestroyed.class);
 
         if(annoOnActivated.length > 1 || annoOnDestroy.length > 1){
-            throw new SrvDefineException("处理器不支持同时拥有多个相同的钩子注解 位于:"+procName);
+            throw new ServiceDefinitionException("处理器不支持同时拥有多个相同的钩子注解 位于:"+procName);
         }
 
         //获取处理器中的请求映射
@@ -128,11 +128,11 @@ public class SrvDefTools {
         }
 
         if(!chkReqHandlerPattern(annoReqHandler)){
-            throw new SrvDefineException("处理器已损坏 原因:至少有一个请求映射Pattern不合法 位于:"+procName);
+            throw new ServiceDefinitionException("处理器已损坏 原因:至少有一个请求映射Pattern不合法 位于:"+procName);
         }
 
         if(!chkRepeatWildcard(annoReqHandler)){
-            throw new SrvDefineException("处理器已损坏 原因:处理器不支持多个模式为通配符(*)的请求映射 位于:"+procName);
+            throw new ServiceDefinitionException("处理器已损坏 原因:处理器不支持多个模式为通配符(*)的请求映射 位于:"+procName);
         }
 
         for(Method m : annoReqHandler){
@@ -152,7 +152,7 @@ public class SrvDefTools {
 
         //检查是否有两个一样的请求映射
         if(!checkRepeatMapping(ret)){
-            throw new SrvDefineException("处理器已损坏 原因:处理器中有两个相同的映射 位于:"+procName);
+            throw new ServiceDefinitionException("处理器已损坏 原因:处理器中有两个相同的映射 位于:"+procName);
         }
 
         //获取处理器中的事件处理器
@@ -347,7 +347,7 @@ public class SrvDefTools {
     /**
      * 获取处理器中的事件处理器
      */
-    public static List<SrvDefine> getEventHandlerInSrvUnit(Class<?> srvUnit) throws SrvDefineException {
+    public static List<SrvDefine> getEventHandlerInSrvUnit(Class<?> srvUnit) throws ServiceDefinitionException {
 
         //获取处理器名称
         final String srvUnitName = srvUnit.getAnnotation(ServiceUnit.class).value();
@@ -362,7 +362,7 @@ public class SrvDefTools {
             final String eventHandlerType = getEventHandlerType(m);
 
             if(eventHandlerType == null){
-                throw new SrvDefineException("事件处理器已损坏. ProcName:"+srvUnitName + " FuncName:"+m.getName());
+                throw new ServiceDefinitionException("事件处理器已损坏. ProcName:"+srvUnitName + " FuncName:"+m.getName());
             }
 
             SrvDefine def = new SrvDefine();
@@ -412,9 +412,9 @@ public class SrvDefTools {
     }
 
 
-    public static void main(String[] args) throws SrvDefineException {
+    public static void main(String[] args) throws ServiceDefinitionException {
 
-        List<SrvDefine> srvDefine = SrvDefTools.getSrvDefine(TestServiceUnit.class);
+        List<SrvDefine> srvDefine = ServiceUnits.getSrvDefine(TestServiceUnit.class);
 
         System.out.println(srvDefine);
 

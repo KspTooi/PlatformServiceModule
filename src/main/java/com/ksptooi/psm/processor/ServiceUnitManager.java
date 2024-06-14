@@ -55,12 +55,12 @@ public class ServiceUnitManager {
      */
     public void register(Object proc){
 
-        String procName = SrvDefTools.getSrvUnitName(proc.getClass());
+        String procName = ServiceUnits.getSrvUnitName(proc.getClass());
         String classType = proc.getClass().getName();
 
         try {
 
-            List<SrvDefine> srvDefine = SrvDefTools.getSrvDefine(proc.getClass());
+            List<SrvDefine> srvDefine = ServiceUnits.getSrvDefine(proc.getClass());
 
             if(procMap.containsKey(procName)){
                 log.warn("无法注册服务单元:{} 服务单元名称冲突,当前已注册了一个相同名字的服务单元.",procName);
@@ -77,7 +77,7 @@ public class ServiceUnitManager {
             procMap.put(procName,p);
             log.info("已注册服务单元:{} 包含{}个内部构件",procName, srvDefine.size());
 
-            SrvDefine hook = DefineTools.getHook(SrvDefType.HOOK_ACTIVATED, srvDefine);
+            SrvDefine hook = Defines.getHook(SrvDefType.HOOK_ACTIVATED, srvDefine);
 
             if(hook!=null){
                 hook.getMethod().invoke(proc);
@@ -86,7 +86,7 @@ public class ServiceUnitManager {
             //注入内部组件
             Application.injector.injectMembers(proc);
 
-        } catch (SrvDefineException e) {
+        } catch (ServiceDefinitionException e) {
             e.printStackTrace();
             log.warn("无法注册服务单元:{} - {} 因为服务单元已损坏.",procName,classType);
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -224,11 +224,11 @@ public class ServiceUnitManager {
         //ShellInstance user = request.getShellInstance();
 
         //查找服务单元中的Define
-        var procDef = DefineTools.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getSrvDefines());
+        var procDef = Defines.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getSrvDefines());
 
         //没有找到映射Define 尝试查找具有通配符的默认Define
         if(procDef == null){
-            procDef = DefineTools.getDefaultDefine(aProc.getSrvDefines());
+            procDef = Defines.getDefaultDefine(aProc.getSrvDefines());
         }
 
         if(procDef == null){
@@ -245,7 +245,7 @@ public class ServiceUnitManager {
         t.setRequest(request);
         t.setServiceUnit(aProc);
         t.setTarget(procDef.getMethod());
-        t.setInjectParams(SrvDefTools.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
+        t.setInjectParams(ServiceUnits.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
         t.setFinishHook(hook);
         t.setTaskManager(taskManager);
 
