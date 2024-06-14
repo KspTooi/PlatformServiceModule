@@ -17,7 +17,6 @@ public class SshServerProvider implements Provider<SshServer> {
     @Inject
     private SimplePasswordAuthenticator authenticator;
 
-
     @Override
     public SshServer get() {
 

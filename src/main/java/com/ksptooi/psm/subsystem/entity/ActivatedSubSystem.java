@@ -16,6 +16,6 @@ public class ActivatedSubSystem {
     private SubSystem entry;
     private ClassLoader classLoader;
     private Reflections reflections;
-    private List<Class<?>> processorDefine;
+    private List<Class<?>> srvDefine;
     private Injector injector;
 }

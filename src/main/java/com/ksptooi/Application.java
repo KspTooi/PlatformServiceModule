@@ -27,10 +27,13 @@ public class Application {
     public static void main(String[] p) throws InterruptedException {
 
 
-        SubSystemScanner subSystemScanner = injector.getInstance(SubSystemScanner.class);
-        var scan = subSystemScanner.scan("./subsystems");
+        var scan = injector.getInstance(SubSystemScanner.class);
+        var subSystems = scan.scan("./subsystems");
 
-        var subMgr = injector.getInstance(SubSystemManager.class);
+        var subManager = injector.getInstance(SubSystemManager.class);
+        subManager.install(injector,subSystems);
+
+/*        var subMgr = injector.getInstance(SubSystemManager.class);
         subMgr.install(injector,scan);
 
 
@@ -41,7 +44,7 @@ public class Application {
         unitMgr.installEventHandler();
 
         CountDownLatch cdl = new CountDownLatch(1);
-        cdl.await();
+        cdl.await();*/
     }
 
 }

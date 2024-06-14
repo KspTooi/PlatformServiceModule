@@ -23,7 +23,7 @@ import java.util.Set;
 @Unit
 public class SubSystemScanner {
 
-    private static final Logger log = LoggerFactory.getLogger(SubSystemScanner.class);
+    private static final Logger log = LoggerFactory.getLogger("SSC");
 
 
     public List<DiscoveredSubSystem> scan(File dir){
