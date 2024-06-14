@@ -9,7 +9,6 @@ import com.ksptooi.psm.processor.entity.*;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
-import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 import jakarta.inject.Inject;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -56,12 +55,12 @@ public class ServiceUnitManager {
      */
     public void register(Object proc){
 
-        String procName = SrvUnitTools.getSrvUnitName(proc.getClass());
+        String procName = SrvDefTools.getSrvUnitName(proc.getClass());
         String classType = proc.getClass().getName();
 
         try {
 
-            List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(proc.getClass());
+            List<SrvDefine> srvDefine = SrvDefTools.getSrvDefine(proc.getClass());
 
             if(procMap.containsKey(procName)){
                 log.warn("无法注册服务单元:{} 服务单元名称冲突,当前已注册了一个相同名字的服务单元.",procName);
@@ -246,7 +245,7 @@ public class ServiceUnitManager {
         t.setRequest(request);
         t.setServiceUnit(aProc);
         t.setTarget(procDef.getMethod());
-        t.setInjectParams(SrvUnitTools.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
+        t.setInjectParams(SrvDefTools.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
         t.setFinishHook(hook);
         t.setTaskManager(taskManager);
 

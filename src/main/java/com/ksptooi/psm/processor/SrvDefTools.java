@@ -1,7 +1,9 @@
 package com.ksptooi.psm.processor;
 
+import com.google.inject.Injector;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
+import com.ksptooi.psm.utils.RefTools;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +11,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class SrvUnitTools {
+public class SrvDefTools {
 
     public static final List<String> eventDefine = new ArrayList<>();
 
@@ -22,6 +24,41 @@ public class SrvUnitTools {
         eventDefine.add(StatementCommitEvent.class.getName());
         eventDefine.add(UserTypingEvent.class.getName());
     }
+
+    public static List<SrvDefine> getSrvDefine(Injector injector){
+
+        var bindingKeys = injector.getBindings().keySet();
+        var ret = new ArrayList<SrvDefine>();
+
+        for(var key : bindingKeys){
+            var instance = injector.getInstance(key);
+            getSrvDefineFromAny(instance,ret);
+        }
+
+        return null;
+    }
+
+    public static void getSrvDefineFromAny(Object any,List<SrvDefine> defines){
+
+
+        var annoSrvUnit = RefTools.getAnnotation(any, ServiceUnit.class);
+
+        if(annoSrvUnit == null){
+            return;
+        }
+
+        var clazz = any.getClass();
+        var srvUnitName = annoSrvUnit.value();
+
+        //获取SrvUnit中的Hook
+        var hookActivated = RefTools.getMethodByAnnotation(clazz, OnActivated.class);
+        var hookDestroyed = RefTools.getMethodByAnnotation(clazz, OnDestroyed.class);
+
+
+
+
+    }
+
 
     /**
      * 根据类模板创建服务单元实例
@@ -66,7 +103,7 @@ public class SrvUnitTools {
 
         //获取处理器中的钩子注解
         final Method[] annoOnActivated = ReflectUtils.getMethodByAnnotation(srvUnit, OnActivated.class);
-        final Method[] annoOnDestroy = ReflectUtils.getMethodByAnnotation(srvUnit, OnDestroy.class);
+        final Method[] annoOnDestroy = ReflectUtils.getMethodByAnnotation(srvUnit, OnDestroyed.class);
 
         if(annoOnActivated.length > 1 || annoOnDestroy.length > 1){
             throw new SrvDefineException("处理器不支持同时拥有多个相同的钩子注解 位于:"+procName);
@@ -377,7 +414,7 @@ public class SrvUnitTools {
 
     public static void main(String[] args) throws SrvDefineException {
 
-        List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(TestServiceUnit.class);
+        List<SrvDefine> srvDefine = SrvDefTools.getSrvDefine(TestServiceUnit.class);
 
         System.out.println(srvDefine);
 

@@ -6,6 +6,13 @@ import java.util.List;
 
 public class DefineTools {
 
+
+
+
+
+
+
+
     public static SrvDefine getHook(String hookName, List<SrvDefine> defines){
         for(SrvDefine def : defines){
             if(def.getDefType().equals(hookName)){

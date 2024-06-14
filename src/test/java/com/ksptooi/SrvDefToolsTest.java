@@ -3,13 +3,13 @@ package com.ksptooi;
 import com.ksptooi.psm.processor.*;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.OnActivated;
-import com.ksptooi.psm.processor.OnDestroy;
+import com.ksptooi.psm.processor.OnDestroyed;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.junit.Test;
 
 import java.util.List;
 
-public class SrvUnitToolsTest {
+public class SrvDefToolsTest {
 
     public static void main(String[] args) {
 
@@ -24,7 +24,7 @@ public class SrvUnitToolsTest {
     @Test
     public void getSrvDefine() throws SrvDefineException {
 
-        List<SrvDefine> srvDefine = SrvUnitTools.getSrvDefine(TestProc.class);
+        List<SrvDefine> srvDefine = SrvDefTools.getSrvDefine(TestProc.class);
 
         System.out.println(srvDefine);
 
@@ -43,7 +43,7 @@ class TestProc{
 
     }
 
-    @OnDestroy
+    @OnDestroyed
     public void close(){
 
     }

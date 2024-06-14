@@ -121,7 +121,7 @@ public class EventSchedule {
                     continue;
                 }
 
-                Object[] params = SrvUnitTools.assemblyParams(item.getMethod(), new ArrayList<>(), event,request);
+                Object[] params = SrvDefTools.assemblyParams(item.getMethod(), new ArrayList<>(), event,request);
                 item.getMethod().invoke(processInstance,params);
 
                 if(event.isIntercepted()){
