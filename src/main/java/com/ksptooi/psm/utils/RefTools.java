@@ -1,11 +1,27 @@
 package com.ksptooi.psm.utils;
 
+import com.ksptooi.psm.processor.ServiceUnit;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RefTools {
+
+
+
+
+    public static <A extends Annotation> A getAnnotation(Object any,Class<A> anno){
+
+        if(any == null){
+            return null;
+        }
+
+        return any.getClass().getAnnotation(anno);
+    }
+
+
 
 
     //查找类上带有指定注解与value的方法
