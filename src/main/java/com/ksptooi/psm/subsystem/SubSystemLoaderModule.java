@@ -37,6 +37,7 @@ public class SubSystemLoaderModule extends AbstractModule {
         var serviceUnits = ref.getTypesAnnotatedWith(ServiceUnit.class);
 
         log.info("Load [{}](Entry){}",dSubSystem.getName(),vEntry.getClass().getName());
+        bind(SubSystem.class).toInstance(vEntry);
 
         for(var u : units){
             log.info("Load [{}](Unit){}",dSubSystem.getName(),u.getName());
