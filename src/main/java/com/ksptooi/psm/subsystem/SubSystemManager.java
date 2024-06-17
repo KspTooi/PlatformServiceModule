@@ -3,10 +3,7 @@ package com.ksptooi.psm.subsystem;
 import com.google.inject.Injector;
 import com.ksptooi.Application;
 import com.ksptooi.guice.annotations.Unit;
-import com.ksptooi.psm.processor.ServiceDefinitionException;
-import com.ksptooi.psm.processor.ServiceUnit;
-import com.ksptooi.psm.processor.ServiceUnitManager;
-import com.ksptooi.psm.processor.ServiceUnits;
+import com.ksptooi.psm.processor.*;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 import jakarta.inject.Inject;
@@ -58,15 +55,11 @@ public class SubSystemManager {
             var sslm = new SubSystemLoaderModule(item,entryInstance);
             var subInjector = injector.createChildInjector(sslm);
             var subSystem = sslm.getSubSystem();
-
             subSystem.setInjector(subInjector);
 
-            //解析SrvDefine
             try {
-
-                var srvDefine = ServiceUnits.getSrvUnits(subInjector);
-
-            } catch (ServiceDefinitionException e) {
+                serviceUnitManager.register(subInjector);
+            } catch (ServiceUnitRegException e) {
                 throw new RuntimeException(e);
             }
 

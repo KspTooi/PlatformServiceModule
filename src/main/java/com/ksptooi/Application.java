@@ -20,20 +20,19 @@ public class Application {
 
     public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule(),csm);
 
-    public final static String version = "4.0E/F";
+    public final static String version = "4.0G";
     public final static String platform = "x64";
 
     public static void main(String[] p) throws InterruptedException, ServiceUnitRegException {
 
 
-        //var scan = injector.getInstance(SubSystemScanner.class);
-        //var subSystems = scan.scan("./subsystems");
-        //var subManager = injector.getInstance(SubSystemManager.class);
-        //subManager.install(injector,subSystems);
+        var serviceUnitMgr = injector.getInstance(ServiceUnitManager.class);
+        serviceUnitMgr.register(injector);
 
-
-        var suMgr = injector.getInstance(ServiceUnitManager.class);
-        suMgr.register(injector);
+        var scan = injector.getInstance(SubSystemScanner.class);
+        var subSystems = scan.scan("./subsystems");
+        var subManager = injector.getInstance(SubSystemManager.class);
+        subManager.install(injector,subSystems);
 
 /*        var subMgr = injector.getInstance(SubSystemManager.class);
         subMgr.install(injector,scan);
