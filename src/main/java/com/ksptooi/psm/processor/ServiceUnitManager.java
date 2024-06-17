@@ -11,6 +11,7 @@ import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
 import jakarta.inject.Inject;
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -43,17 +44,112 @@ public class ServiceUnitManager {
     @Inject
     private EventSchedule eventSchedule;
 
+
     private final static Map<String, ActivatedSrvUnit> procMap = new ConcurrentHashMap<>();
 
 
+    /**
+     * 从IOC容器中注册可用的服务单元(ServiceUnit)
+     * @param i IOC容器
+     * @throws ServiceUnitRegException 服务单元注册失败后执行回滚并抛出该异常
+     */
+    public void register(Injector i) throws ServiceUnitRegException{
 
-    public void register(Injector i){
+        var bk = i.getBindings().keySet();
 
+        var preparingSubmit = new HashMap<String,ActivatedSrvUnit>();
 
+        for(var any : bk){
 
+            if(!ServiceUnits.isServiceUnit(any)){
+                continue;
+            }
+
+            var name = ServiceUnits.getName(any);
+            ensureNameValid(name);
+
+            log.info("Registration ServiceUnit[{}]",name);
+
+            try {
+
+                var definition = ServiceUnits.getSrvDefineFromAny(any);
+                ActivatedSrvUnit p = new ActivatedSrvUnit();
+                p.setSrvUnitName(name);
+                p.setSrvUnit(any);
+                p.setClassType(any.getClass().getName());
+                p.setSrvDefines(definition);
+                preparingSubmit.put(name,p);
+
+            } catch (ServiceDefinitionException e) {
+                throw new ServiceUnitRegException(e);
+            }
+
+        }
+        install(preparingSubmit.values().stream().toList());
+        procMap.putAll(preparingSubmit);
     }
 
+    /**
+     * 安装服务单元请求处理器&事件处理器
+     * @param preparingSubmit 待提交的服务单元
+     */
+    private void install(List<ActivatedSrvUnit> preparingSubmit){
+        for(var unit : preparingSubmit){
 
+            var name = unit.getSrvUnitName();
+            var classType = unit.getClassType();
+
+            for(var def : unit.getSrvDefines()){
+
+                //安装请求处理器
+                if(def.getDefType().equals(SrvDefType.REQ_HANDLER)){
+
+                    var vo = requestHandlerMapper.getByPatternAndParamsCount(def.getPattern(),def.getParamCount());
+
+                    //数据库已经注册过rHandler
+                    if(vo!=null){
+                        //数据库的请求处理器类型与当前服务单元类型不一致
+                        if(!vo.getSrvUnitClassType().equals(classType)){
+                            requestHandlerMapper.deleteById(vo.getId());
+                            log.info("Remove RequestHandler {}:{}",vo.getSrvUnitName(),vo.getSrvUnitClassType());
+                        }else {
+                            log.info("Activation RequestHandler {}:{}({})",name,vo.getPattern(),vo.getParamsCount());
+                        }
+                    }
+                    if(vo == null){
+                        RequestHandlerVo insert = new RequestHandlerVo();
+                        insert.setId(snowflake.nextId());
+                        insert.setPattern(def.getPattern());
+                        insert.setParams(JSON.toJSONString(def.getParams()));
+                        insert.setParamsCount(def.getParamCount());
+                        insert.setSrvUnitName(name);
+                        insert.setSrvUnitClassType(classType);
+                        insert.setStatus(0);
+                        insert.setMetadata("");
+                        insert.setCreateTime(new Date());
+                        requestHandlerMapper.insert(insert);
+                        log.info("install RequestHandler {}:{}({})",name,def.getPattern(),def.getParamCount());
+                    }
+
+                }
+
+                //安装事件处理器
+                if(def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
+
+                    //不安装进程内事件
+                    if(! def.isGlobalEventHandler()){
+                        continue;
+                    }
+
+                    log.info("install EventHandler {}:{}({})",name,def.getMethod().getName(),def.getEventName());
+                    eventSchedule.register(def);
+                }
+
+            }
+
+
+        }
+    }
 
     public void register(List<Object> procMap) {
         for(Object obj : procMap){
@@ -363,6 +459,19 @@ public class ServiceUnitManager {
 
     public static ActivatedSrvUnit getProcessor(String procName){
         return procMap.get(procName);
+    }
+
+
+    private void ensureNameValid(String name) throws ServiceUnitRegException{
+
+        if(StringUtils.isBlank(name)){
+            throw new ServiceUnitRegException("the ServiceUnit name cannot be null or blank");
+        }
+
+        if(procMap.containsKey(name)){
+            throw new ServiceUnitRegException("repeat ServiceUnit name:"+name);
+        }
+
     }
 
 

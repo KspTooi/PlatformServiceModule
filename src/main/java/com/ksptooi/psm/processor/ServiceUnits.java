@@ -27,6 +27,14 @@ public class ServiceUnits {
     }
 
     /**
+     * 判断一个类是否为服务单元
+     */
+    public static boolean isServiceUnit(Object any){
+        return any.getClass().getAnnotation(ServiceUnit.class) != null;
+    }
+
+
+    /**
      * 获取IOC容器中的全部 SrvDef
      * @param injector IOC容器
      * @return 返回一组SrvDef
@@ -287,6 +295,11 @@ public class ServiceUnits {
         //获取处理器中的事件处理器
         ret.addAll(getEventHandlerInSrvUnit(srvUnit));
         return ret;
+    }
+
+
+    public static String getName(Object any){
+        return getSrvUnitName(any.getClass());
     }
 
     public static String getSrvUnitName(Class<?> proc){
