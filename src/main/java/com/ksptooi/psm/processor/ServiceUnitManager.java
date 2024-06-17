@@ -2,6 +2,7 @@ package com.ksptooi.psm.processor;
 
 
 import com.alibaba.fastjson.JSON;
+import com.google.inject.Injector;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.mapper.RequestHandlerMapper;
 import com.ksptooi.psm.modes.RequestHandlerVo;
@@ -43,6 +44,16 @@ public class ServiceUnitManager {
     private EventSchedule eventSchedule;
 
     private final static Map<String, ActivatedSrvUnit> procMap = new ConcurrentHashMap<>();
+
+
+
+    public void register(Injector i){
+
+
+
+    }
+
+
 
     public void register(List<Object> procMap) {
         for(Object obj : procMap){

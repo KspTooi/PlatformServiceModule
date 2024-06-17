@@ -1,4 +1,4 @@
-package com.ksptooi.guice.compomentscan;
+package com.ksptooi.psm.utils;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -16,16 +16,15 @@ import java.util.List;
 import java.util.Set;
 
 
-public final class UnitScanModule extends AbstractModule {
+public final class UnitLoaderModule extends AbstractModule {
 
-    private static final Logger log = LoggerFactory.getLogger(UnitScanModule.class);
+    private static final Logger log = LoggerFactory.getLogger(UnitLoaderModule.class);
 
     private final String packageName;
     private final Set<Class<? extends Annotation>> bindingAnnotations;
     private final SubSystemManager subSystemManager;
 
-
-    public UnitScanModule(String packageName){
+    public UnitLoaderModule(String packageName){
         this.packageName = packageName;
         this.bindingAnnotations = new HashSet<>();
         this.bindingAnnotations.add(Unit.class);
@@ -33,13 +32,13 @@ public final class UnitScanModule extends AbstractModule {
     }
 
     @SafeVarargs
-    public UnitScanModule(String packageName, final Class<? extends Annotation>... bindingAnnotations) {
+    public UnitLoaderModule(String packageName, final Class<? extends Annotation>... bindingAnnotations) {
         this.packageName = packageName;
         this.bindingAnnotations = new HashSet<>(Arrays.asList(bindingAnnotations));
         subSystemManager = null;
     }
 
-    public UnitScanModule(SubSystemManager ssm){
+    public UnitLoaderModule(SubSystemManager ssm){
         packageName = null;
         bindingAnnotations = null;
         subSystemManager = ssm;
