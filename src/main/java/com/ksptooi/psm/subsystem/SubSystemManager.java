@@ -7,7 +7,6 @@ import com.ksptooi.psm.processor.ServiceDefinitionException;
 import com.ksptooi.psm.processor.ServiceUnit;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.ServiceUnits;
-import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 import jakarta.inject.Inject;
@@ -61,13 +60,11 @@ public class SubSystemManager {
             var subSystem = sslm.getSubSystem();
 
             subSystem.setInjector(subInjector);
-            subSystem.setSrvDefine();
 
             //解析SrvDefine
             try {
 
-                var srvDefine = ServiceUnits.getSrvDefine(subInjector);
-
+                var srvDefine = ServiceUnits.getSrvUnits(subInjector);
 
             } catch (ServiceDefinitionException e) {
                 throw new RuntimeException(e);

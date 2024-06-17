@@ -24,7 +24,7 @@ public class ServiceUnitsTest {
     @Test
     public void getSrvDefine() throws ServiceDefinitionException {
 
-        List<SrvDefine> srvDefine = ServiceUnits.getSrvDefine(TestProc.class);
+        List<SrvDefine> srvDefine = ServiceUnits.getSrvUnits(TestProc.class);
 
         System.out.println(srvDefine);
 

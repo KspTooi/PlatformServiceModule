@@ -60,7 +60,7 @@ public class ServiceUnitManager {
 
         try {
 
-            List<SrvDefine> srvDefine = ServiceUnits.getSrvDefine(proc.getClass());
+            List<SrvDefine> srvDefine = ServiceUnits.getSrvUnits(proc.getClass());
 
             if(procMap.containsKey(procName)){
                 log.warn("无法注册服务单元:{} 服务单元名称冲突,当前已注册了一个相同名字的服务单元.",procName);

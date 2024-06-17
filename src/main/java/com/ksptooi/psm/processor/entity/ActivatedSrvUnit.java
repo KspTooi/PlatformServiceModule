@@ -1,7 +1,6 @@
 package com.ksptooi.psm.processor.entity;
 
 import lombok.Data;
-
 import java.util.List;
 
 @Data

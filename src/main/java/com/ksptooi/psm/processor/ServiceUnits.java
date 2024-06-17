@@ -32,7 +32,7 @@ public class ServiceUnits {
      * @return 返回一组SrvDef
      * @throws ServiceDefinitionException 至少有一个SrvDef出现错误时会抛出该异常。
      */
-    public static List<ActivatedSrvUnit> getSrvDefine(Injector injector) throws ServiceDefinitionException {
+    public static List<ActivatedSrvUnit> getSrvUnits(Injector injector) throws ServiceDefinitionException {
 
         var bindingKeys = injector.getBindings().keySet();
 
@@ -215,7 +215,7 @@ public class ServiceUnits {
     /**
      * 查找该服务单元中的映射
      */
-    public static List<SrvDefine> getSrvDefine(Class<?> srvUnit) throws ServiceDefinitionException {
+    public static List<SrvDefine> getSrvUnits(Class<?> srvUnit) throws ServiceDefinitionException {
 
         //获取服务单元名称
         var annoSrvUnit = srvUnit.getAnnotation(ServiceUnit.class);
@@ -543,7 +543,7 @@ public class ServiceUnits {
 
     public static void main(String[] args) throws ServiceDefinitionException {
 
-        List<SrvDefine> srvDefine = ServiceUnits.getSrvDefine(TestServiceUnit.class);
+        List<SrvDefine> srvDefine = ServiceUnits.getSrvUnits(TestServiceUnit.class);
 
         System.out.println(srvDefine);
 
