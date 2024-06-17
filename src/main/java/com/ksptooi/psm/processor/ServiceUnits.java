@@ -25,7 +25,13 @@ public class ServiceUnits {
         eventDefine.add(UserTypingEvent.class.getName());
     }
 
-    public static List<SrvDefine> getSrvDefine(Injector injector){
+    /**
+     * 获取IOC容器中的全部 SrvDef
+     * @param injector IOC容器
+     * @return 返回一组SrvDef
+     * @throws ServiceDefinitionException 至少有一个SrvDef出现错误时会抛出该异常。
+     */
+    public static List<SrvDefine> getSrvDefine(Injector injector) throws ServiceDefinitionException {
 
         var bindingKeys = injector.getBindings().keySet();
         var ret = new ArrayList<SrvDefine>();
@@ -35,11 +41,10 @@ public class ServiceUnits {
             getSrvDefineFromAny(instance,ret);
         }
 
-        return null;
+        return ret;
     }
 
-    public static void getSrvDefineFromAny(Object any,List<SrvDefine> defines){
-
+    public static void getSrvDefineFromAny(Object any,List<SrvDefine> defines) throws ServiceDefinitionException {
 
         var annoSrvUnit = RefTools.getAnnotation(any, ServiceUnit.class);
 
@@ -50,13 +55,120 @@ public class ServiceUnits {
         var clazz = any.getClass();
         var srvUnitName = annoSrvUnit.value();
 
+        if(!chkSrvUnitName(srvUnitName)){
+            throw new ServiceDefinitionException("服务单元已损坏,原因:服务单元名称不合法. 位于:"+ srvUnitName);
+        }
+
         //获取SrvUnit中的Hook
         var hookActivated = RefTools.getMethodByAnnotation(clazz, OnActivated.class);
         var hookDestroyed = RefTools.getMethodByAnnotation(clazz, OnDestroyed.class);
 
+        if(hookActivated.length > 0){
+            SrvDefine defHook = new SrvDefine();
+            defHook.setDefType(SrvDefType.HOOK_ACTIVATED);
+            defHook.setMethod(hookActivated[0]);
+            defines.add(defHook);
+        }
+
+        if(hookDestroyed.length > 0){
+            SrvDefine defHook = new SrvDefine();
+            defHook.setDefType(SrvDefType.HOOK_DESTROYED);
+            defHook.setMethod(hookActivated[0]);
+            defines.add(defHook);
+        }
+
+        //获取SrvUnit中的RequestHandler
+        var requestHandlers = RefTools.getMethodByAnnotation(clazz, RequestHandler.class);
+
+        ensureCorrectRequestHandlers(requestHandlers);
+
+        for(var rHandler : requestHandlers){
+
+            var pattern = rHandler.getAnnotation(RequestHandler.class).value();
+            var alias = getAliasByAnnotation(rHandler);
+            var params = getParamNameByAnnotation(rHandler);
+
+            SrvDefine def = new SrvDefine();
+            def.setDefType(SrvDefType.REQ_HANDLER);
+            def.setPattern(pattern);
+            def.setSrvUnitName(srvUnitName);
+            def.setAlias(alias);
+            def.setParams(params);
+            def.setParamCount(params.size());
+            def.setMethod(rHandler);
+            defines.add(def);
+        }
+
+        //获取SrvUnit中的EventHandler
+        var eventHandlers = RefTools.getMethodByAnnotation(clazz,EventHandler.class);
+
+        for(var eHandler : eventHandlers){
+
+            var type = getEventHandlerType(eHandler);
+
+            if(type == null){
+                throw new ServiceDefinitionException("事件处理器已损坏. ServiceUnitName:"+srvUnitName + " FuncName:"+eHandler.getName());
+            }
+
+            SrvDefine def = new SrvDefine();
+            def.setDefType(SrvDefType.EVENT_HANDLER);
+            def.setSrvUnitName(srvUnitName);
+            def.setMethod(eHandler);
+            def.setEventHandlerOrder(eHandler.getAnnotation(EventHandler.class).order());
+            def.setEventHandlerType(type);
+
+            var eventName = getEventHandlerEventName(eHandler);
+            def.setEventName(eventName);
+            def.setGlobalEventHandler(eHandler.getAnnotation(EventHandler.class).global());
+            defines.add(def);
+        }
+
+    }
 
 
 
+    private static void ensureCorrectRequestHandlers(Method[] handlers) throws ServiceDefinitionException{
+
+        var hasWildcard = false;
+        var set = new HashSet<String>();
+
+        for(var m : handlers){
+
+            var anno = m.getAnnotation(RequestHandler.class);
+            var pattern = anno.value();
+
+            //Pattern合法性检测
+            if(StringUtils.isBlank(pattern)){
+                throw new ServiceDefinitionException("pattern is blank:"+pattern);
+            }
+
+            //不能以空格开头&空格结尾
+            if(!pattern.equals(pattern.trim())){
+                throw new ServiceDefinitionException("pattern:" + pattern + "cannot start or end with a space");
+            }
+
+            //包含通配符
+            if(pattern.contains("*") && pattern.length() != 1){
+                throw new ServiceDefinitionException("pattern:" + pattern + "cannot contain \"*\" unless it is the only character");
+            }
+
+            //Pattern重复检测
+            if(!pattern.equals("*")){
+                if(set.contains(pattern)){
+                    throw new ServiceDefinitionException("repeated pattern:"+pattern);
+                }
+                set.add(pattern);
+            }
+
+            //同一服务单元中不能出现多个通配符映射
+            if(pattern.equals("*")){
+                if(hasWildcard){
+                    throw new ServiceDefinitionException("repeated wildcard pattern in same service unit");
+                }
+                hasWildcard = true;
+            }
+
+        }
     }
 
 
@@ -122,7 +234,7 @@ public class ServiceUnits {
         }
         if(annoOnDestroy.length > 0){
             SrvDefine defHook = new SrvDefine();
-            defHook.setDefType(SrvDefType.HOOK_DESTROY);
+            defHook.setDefType(SrvDefType.HOOK_DESTROYED);
             defHook.setMethod(annoOnDestroy[0]);
             ret.add(defHook);
         }

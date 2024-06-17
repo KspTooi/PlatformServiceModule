@@ -3,6 +3,7 @@ package com.ksptooi.psm.subsystem;
 import com.google.inject.Injector;
 import com.ksptooi.Application;
 import com.ksptooi.guice.annotations.Unit;
+import com.ksptooi.psm.processor.ServiceDefinitionException;
 import com.ksptooi.psm.processor.ServiceUnit;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.ServiceUnits;
@@ -60,7 +61,13 @@ public class SubSystemManager {
             subSystem.setInjector(subInjector);
 
             //解析SrvDefine
-            ServiceUnits.getSrvDefine(subInjector);
+            try {
+
+                ServiceUnits.getSrvDefine(subInjector);
+
+            } catch (ServiceDefinitionException e) {
+                throw new RuntimeException(e);
+            }
 
 
         }

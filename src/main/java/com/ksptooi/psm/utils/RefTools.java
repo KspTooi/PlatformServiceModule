@@ -22,9 +22,12 @@ public class RefTools {
     }
 
 
-
-
-    //查找类上带有指定注解与value的方法
+    /**
+     * 查找类上带有指定注解与value的方法
+     * @param clazz 需要查找的类
+     * @param inAnno 需要查找的注解
+     * @return 失败返回0长度数组
+     */
     public static Method[] getMethodByAnnotation(Class<?> clazz, Class<? extends Annotation> inAnno){
 
         if(clazz == null || inAnno == null){
