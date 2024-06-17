@@ -7,6 +7,7 @@ import com.ksptooi.psm.processor.ServiceDefinitionException;
 import com.ksptooi.psm.processor.ServiceUnit;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.ServiceUnits;
+import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 import jakarta.inject.Inject;
@@ -46,7 +47,7 @@ public class SubSystemManager {
             try {
                 var instance = item.getEntry().getDeclaredConstructor().newInstance();
                 if(!(instance instanceof SubSystem)){
-                    log.error("[无法安装] 子系统 {} 已损坏. 因为其入口没有继承自SubSystem.",item.getName());
+                    log.error("Cannot install subsystem {} that is damaged because its entry does not inherit from SubSystem",item.getName());
                     continue;
                 }
                 entryInstance = (SubSystem) instance;
@@ -58,12 +59,15 @@ public class SubSystemManager {
             var sslm = new SubSystemLoaderModule(item,entryInstance);
             var subInjector = injector.createChildInjector(sslm);
             var subSystem = sslm.getSubSystem();
+
             subSystem.setInjector(subInjector);
+            subSystem.setSrvDefine();
 
             //解析SrvDefine
             try {
 
-                ServiceUnits.getSrvDefine(subInjector);
+                var srvDefine = ServiceUnits.getSrvDefine(subInjector);
+
 
             } catch (ServiceDefinitionException e) {
                 throw new RuntimeException(e);

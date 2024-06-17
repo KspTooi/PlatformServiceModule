@@ -1,6 +1,7 @@
 package com.ksptooi.psm.processor;
 
 import com.google.inject.Injector;
+import com.ksptooi.psm.processor.entity.ActivatedSrvUnit;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
 import com.ksptooi.psm.utils.RefTools;
@@ -31,25 +32,40 @@ public class ServiceUnits {
      * @return 返回一组SrvDef
      * @throws ServiceDefinitionException 至少有一个SrvDef出现错误时会抛出该异常。
      */
-    public static List<SrvDefine> getSrvDefine(Injector injector) throws ServiceDefinitionException {
+    public static List<ActivatedSrvUnit> getSrvDefine(Injector injector) throws ServiceDefinitionException {
 
         var bindingKeys = injector.getBindings().keySet();
-        var ret = new ArrayList<SrvDefine>();
+
+        var ret = new ArrayList<ActivatedSrvUnit>();
 
         for(var key : bindingKeys){
-            var instance = injector.getInstance(key);
-            getSrvDefineFromAny(instance,ret);
+
+            var srvUnit = injector.getInstance(key);
+
+            var def = getSrvDefineFromAny(srvUnit);
+
+            if(def.isEmpty()){
+                continue;
+            }
+
+            ActivatedSrvUnit u = new ActivatedSrvUnit();
+            u.setSrvUnitName(def.getFirst().getSrvUnitName());
+            u.setSrvUnit(srvUnit);
+            u.setClassType(srvUnit.getClass().getName());
+            u.setSrvDefines(def);
+            ret.add(u);
         }
 
         return ret;
     }
 
-    public static void getSrvDefineFromAny(Object any,List<SrvDefine> defines) throws ServiceDefinitionException {
+    public static List<SrvDefine> getSrvDefineFromAny(Object any) throws ServiceDefinitionException {
 
+        var ret = new ArrayList<SrvDefine>();
         var annoSrvUnit = RefTools.getAnnotation(any, ServiceUnit.class);
 
         if(annoSrvUnit == null){
-            return;
+            return ret;
         }
 
         var clazz = any.getClass();
@@ -67,14 +83,14 @@ public class ServiceUnits {
             SrvDefine defHook = new SrvDefine();
             defHook.setDefType(SrvDefType.HOOK_ACTIVATED);
             defHook.setMethod(hookActivated[0]);
-            defines.add(defHook);
+            ret.add(defHook);
         }
 
         if(hookDestroyed.length > 0){
             SrvDefine defHook = new SrvDefine();
             defHook.setDefType(SrvDefType.HOOK_DESTROYED);
             defHook.setMethod(hookActivated[0]);
-            defines.add(defHook);
+            ret.add(defHook);
         }
 
         //获取SrvUnit中的RequestHandler
@@ -96,7 +112,7 @@ public class ServiceUnits {
             def.setParams(params);
             def.setParamCount(params.size());
             def.setMethod(rHandler);
-            defines.add(def);
+            ret.add(def);
         }
 
         //获取SrvUnit中的EventHandler
@@ -120,9 +136,10 @@ public class ServiceUnits {
             var eventName = getEventHandlerEventName(eHandler);
             def.setEventName(eventName);
             def.setGlobalEventHandler(eHandler.getAnnotation(EventHandler.class).global());
-            defines.add(def);
+            ret.add(def);
         }
 
+        return ret;
     }
 
 
