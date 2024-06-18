@@ -91,6 +91,8 @@ public class ServiceUnits {
 
             if(background!=null){
                 def.setBackgroundRequestHandler(true);
+            }else {
+                def.setBackgroundRequestHandler(false);
             }
 
             ret.add(def);

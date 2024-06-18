@@ -54,7 +54,7 @@ public class TaskManagerSrvUnit {
         }
 
         cable.dye(GreenDye.pickUp);
-        cable.w("已切换到进程:")
+        cable.w("切换进程:")
                 .w(process.getPid())
                 .w("(")
                 .w(process.getTaskName())

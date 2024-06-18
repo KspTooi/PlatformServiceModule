@@ -48,18 +48,18 @@ public class TaskManager {
             eventSchedule.forward(event);
 
             //进程切换到前台
-            request.getShell().setForeground(task);
+            if(!task.isBackground()){
+                request.getShell().setForeground(task);
+            }
 
             try {
                 task.getTarget().invoke(task.getServiceUnit().getSrvUnit(),task.getInjectParams());
             } catch (Exception e){
-
                 if(e.getCause() instanceof InterruptedException){
                     log.info("进程被中止:{}", taskName);
                 }else {
                     e.printStackTrace();
                 }
-
             }
 
             releaseTask(task);
@@ -69,8 +69,10 @@ public class TaskManager {
             eventSchedule.forward(exit);
 
             //进程从前台移除
-            request.getShell().removeForeground();
-            
+            if(!task.isBackground()){
+                request.getShell().removeForeground();
+            }
+
             //log.info("进程退出:{}", taskName);
         });
 

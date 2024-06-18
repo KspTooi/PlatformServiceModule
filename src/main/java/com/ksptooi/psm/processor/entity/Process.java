@@ -47,45 +47,75 @@ public class Process {
     @Getter
     private TaskManager taskManager;
 
+    private Boolean background;
+
+    public void setBackground(boolean b){
+        if(this.background == null){
+            this.background = b;
+            return;
+        }
+        throw new RuntimeException("illegal set");
+    }
+
+    public boolean isBackground(){
+        return background;
+    }
+
     public void setPid(int pid){
         if(this.pid == -1){
             this.pid = pid;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setRequest(ShellRequest request){
         if(this.request == null){
             this.request = request;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setServiceUnit(ActivatedSrvUnit proc){
         if(this.serviceUnit == null){
             this.serviceUnit = proc;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setTarget(Method tgt){
         if(this.target == null){
             this.target = tgt;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setInjectParams(Object[] params){
         if(this.injectParams == null){
             this.injectParams = params;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setInstance(Thread thread){
         if(this.instance == null){
             this.instance = thread;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setTaskManager(TaskManager manager) {
         if(this.taskManager == null){
             this.taskManager = manager;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
     public void setTaskName(String name) {
         if(this.taskName == null){
             this.taskName = name;
+            return;
         }
+        throw new RuntimeException("illegal set");
     }
 
     public String getStageStr(){

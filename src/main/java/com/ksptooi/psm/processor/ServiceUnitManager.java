@@ -260,6 +260,7 @@ public class ServiceUnitManager {
         t.setTarget(procDef.getMethod());
         t.setInjectParams(ServiceUnits.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
         t.setTaskManager(taskManager);
+        t.setBackground(procDef.isBackgroundRequestHandler());
 
         //执行Define
         taskManager.commit(t);
