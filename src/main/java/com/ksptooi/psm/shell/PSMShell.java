@@ -91,7 +91,9 @@ public class PSMShell implements Command,Runnable{
     @Override
     public void destroy(ChannelSession session) throws Exception {
         offline = true;
-        shellThread.interrupt();
+        if(shellThread!=null){
+            shellThread.interrupt();
+        }
     }
 
     @Override
@@ -264,6 +266,24 @@ public class PSMShell implements Command,Runnable{
         //进程Cab连接到Port
         cab.bindPort(shellAioPort);
         cab.connect(ConnectMode.OUTPUT);
+
+        cab.addStateListener(sessionId,(c)->{
+            var p = c.getPort();
+
+            //cable已被迁移走
+            if(!p.getPortId().equals(shellAioPort.getPortId())){
+                removeForeground();
+                return;
+            }
+
+            //cab已断开INPUT
+            if(c.isConnect(ConnectMode.INPUT)){
+                cable.connect(ConnectMode.INPUT);
+            }
+
+            //cab已断开Output
+            removeForeground();
+        });
     }
 
     /**
@@ -277,6 +297,7 @@ public class PSMShell implements Command,Runnable{
         }
 
         var cab = currentTask.getRequest().getCable();
+        cab.removeStateListener(sessionId);
         cab.disconnect();
         currentTask = null;
         cable.connect();
