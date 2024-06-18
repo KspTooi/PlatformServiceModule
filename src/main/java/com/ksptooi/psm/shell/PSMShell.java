@@ -24,9 +24,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class PSMShell implements Command,Runnable{
+
+    private final String sessionId = UUID.randomUUID().toString();
 
     private ExitCallback exitCallback;
     private OutputStream eos;
@@ -259,6 +262,7 @@ public class PSMShell implements Command,Runnable{
         var cab = request.getCable();
 
         //进程Cab连接到Port
+        cab.bindPort(shellAioPort);
         cab.connect(ConnectMode.OUTPUT);
     }
 
@@ -316,5 +320,7 @@ public class PSMShell implements Command,Runnable{
         return cable;
     }
 
-
+    public String getSessionId(){
+        return this.sessionId;
+    }
 }
