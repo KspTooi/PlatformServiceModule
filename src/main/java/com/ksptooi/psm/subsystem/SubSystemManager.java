@@ -64,6 +64,8 @@ public class SubSystemManager {
             }
 
             installed.add(subSystem);
+            entryInstance.onActivated();
+
         }
     }
 
