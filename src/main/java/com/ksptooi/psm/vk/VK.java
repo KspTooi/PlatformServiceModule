@@ -34,15 +34,48 @@ public class VK {
     public static final int[] CTRL_Y = {25};
     public static final int[] CTRL_Z = {26};
 
+    public static final int[] A = {65};
+    public static final int[] B = {66};
+    public static final int[] C = {67};
+    public static final int[] D = {68};
+    public static final int[] E = {69};
+    public static final int[] F = {70};
+    public static final int[] G = {71};
+    public static final int[] H = {72};
+    public static final int[] I = {73};
+    public static final int[] J = {74};
+    public static final int[] K = {75};
+    public static final int[] L = {76};
+    public static final int[] M = {77};
+    public static final int[] N = {78};
+    public static final int[] O = {79};
+    public static final int[] P = {80};
+    public static final int[] Q = {81};
+    public static final int[] R = {82};
+    public static final int[] S = {83};
+    public static final int[] T = {84};
+    public static final int[] U = {85};
+    public static final int[] V = {86};
+    public static final int[] W = {87};
+    public static final int[] X = {88};
+    public static final int[] Y = {89};
+    public static final int[] Z = {90};
+
+    public static final int[] F1 = {27,79,80};
+    public static final int[] F2 = {27,79,81};
+    public static final int[] F3 = {27,79,82};
+    public static final int[] F4 = {27,79,83};
+    public static final int[] F5 = {27,91,49,53,126};
+    public static final int[] F6 = {27,91,49,55,126};
+    public static final int[] F7 = {27,91,49,56,126 };
+    public static final int[] F8 = {27,91,49,57,126 };
+    public static final int[] F9 = {27,91,50,48,126};
+    public static final int[] F10 = {27,91,50,49,126};
+    public static final int[] F11 = {27,91,50,51,126};
+    public static final int[] F12 = {27,91,50,52,126};
 
 
     public static final int[] BACKSPACE = {127};
-
-
-
-
-
-
     public static final int[] UP = {27,91,65};
     public static final int[] DOWN = {27,91,66};
     public static final int[] RIGHT = {27,91,67};
