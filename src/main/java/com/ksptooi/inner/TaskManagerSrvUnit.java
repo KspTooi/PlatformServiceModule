@@ -37,6 +37,7 @@ public class TaskManagerSrvUnit {
 
     }
 
+    @Background
     @RequestHandler("attach")
     public void attachProcess(ShellRequest req, @Param("pid")String pid){
 

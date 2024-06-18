@@ -67,58 +67,6 @@ public class SubSystemManager {
         }
     }
 
-
-    public void install(List<DiscoveredSubSystem> dss){
-        for(var item : dss){
-
-            if(exists(item.getName())){
-                log.error("cannot install subsystem {} because the same name is already installed.",item.getName());
-                continue;
-            }
-
-            //实例化子系统入口
-            SubSystem entryInstance = null;
-
-            try {
-                var instance = item.getEntry().getDeclaredConstructor().newInstance();
-                if(!(instance instanceof SubSystem)){
-                    log.error("[无法安装] 子系统 {} 已损坏. 因为其入口没有继承自SubSystem.",item.getName());
-                    continue;
-                }
-                entryInstance = (SubSystem) instance;
-            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            //扫描子系统中定义的Processor
-            Set<Class<?>> processorDefine = item.getReflections().getTypesAnnotatedWith(ServiceUnit.class);
-            serviceUnitManager.register(ServiceUnits.getSrvUnitInstance(processorDefine));
-            serviceUnitManager.installRequestHandler();
-            serviceUnitManager.installEventHandler();
-
-            var activated = new ActivatedSubSystem();
-            activated.setJarFile(item.getJarFile());
-            activated.setName(item.getName());
-            activated.setVersion(item.getVersion());
-            activated.setEntry(entryInstance);
-            activated.setClassLoader(item.getClassLoader());
-            activated.setReflections(item.getReflections());
-            activated.setSrvDefine(processorDefine.stream().toList());
-            installed.add(activated);
-
-            log.info("子系统 {}-{} 已安装",item.getName(),item.getVersion());
-
-            //给子系统入口注入内部组件
-            Application.injector.injectMembers(entryInstance);
-            //调用子系统安装完成钩子
-            entryInstance.onActivated();
-        }
-
-
-
-    }
-
     public void uninstall(ActivatedSubSystem ass){
 
     }

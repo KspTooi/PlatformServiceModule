@@ -30,45 +30,9 @@ public class ServiceUnits {
      * 判断一个类是否为服务单元
      */
     public static boolean isServiceUnit(Object any){
-
-        var annotation = any.getClass().getAnnotation(ServiceUnit.class);
-
         return any.getClass().getAnnotation(ServiceUnit.class) != null;
     }
 
-
-    /**
-     * 获取IOC容器中的全部 SrvDef
-     * @param injector IOC容器
-     * @return 返回一组SrvDef
-     * @throws ServiceDefinitionException 至少有一个SrvDef出现错误时会抛出该异常。
-     */
-    public static List<ActivatedSrvUnit> getSrvUnits(Injector injector) throws ServiceDefinitionException {
-
-        var bindingKeys = injector.getBindings().keySet();
-
-        var ret = new ArrayList<ActivatedSrvUnit>();
-
-        for(var key : bindingKeys){
-
-            var srvUnit = injector.getInstance(key);
-
-            var def = getSrvDefineFromAny(srvUnit);
-
-            if(def.isEmpty()){
-                continue;
-            }
-
-            ActivatedSrvUnit u = new ActivatedSrvUnit();
-            u.setSrvUnitName(def.getFirst().getSrvUnitName());
-            u.setSrvUnit(srvUnit);
-            u.setClassType(srvUnit.getClass().getName());
-            u.setSrvDefines(def);
-            ret.add(u);
-        }
-
-        return ret;
-    }
 
     public static List<SrvDefine> getSrvDefineFromAny(Object any) throws ServiceDefinitionException {
 
@@ -111,6 +75,7 @@ public class ServiceUnits {
 
         for(var rHandler : requestHandlers){
 
+            var background = rHandler.getAnnotation(Background.class);
             var pattern = rHandler.getAnnotation(RequestHandler.class).value();
             var alias = getAliasByAnnotation(rHandler);
             var params = getParamNameByAnnotation(rHandler);
@@ -123,6 +88,11 @@ public class ServiceUnits {
             def.setParams(params);
             def.setParamCount(params.size());
             def.setMethod(rHandler);
+
+            if(background!=null){
+                def.setBackgroundRequestHandler(true);
+            }
+
             ret.add(def);
         }
 

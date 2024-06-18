@@ -40,6 +40,9 @@ public class SrvDefine implements Comparable<SrvDefine>{
     //是否是全局事件处理器?
     private boolean globalEventHandler;
 
+    //是否是后台事件处理器
+    private boolean backgroundRequestHandler;
+
     //事件名称
     private String eventName;
 
