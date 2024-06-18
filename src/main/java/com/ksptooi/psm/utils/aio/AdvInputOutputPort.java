@@ -39,7 +39,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
     public int read(AdvInputOutputCable cable,char[] c) throws IOException {
 
         if(! isConnect(cable,ConnectMode.INPUT)){
-            throw new RuntimeException("cannot flush. the cable is not connected to the output on this port");
+            throw new RuntimeException("cannot read. the cable is not connected to the input on this port");
         }
 
         int read = br.read(c);
@@ -70,7 +70,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
 
 
     public AdvInputOutputCable createCable(){
-        return new AdvInputOutputCable("", this);
+        return new AdvInputOutputCable(UUID.randomUUID().toString(), this);
     }
 
     @Override
@@ -110,14 +110,14 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
             if(inputCable == null){
                 return false;
             }
-            return inputCable.getId() == cable.getId();
+            return inputCable.getId().equals(cable.getId());
         }
 
         if(t.val() == ConnectMode.OUTPUT.val()){
             if(outputCable == null){
                 return false;
             }
-            return outputCable.getId() == cable.getId();
+            return outputCable.getId().equals(cable.getId());
         }
 
         return false;
@@ -148,6 +148,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
         return env;
     }
 
+    @Override
     public String getPortId(){
         return this.portId;
     }

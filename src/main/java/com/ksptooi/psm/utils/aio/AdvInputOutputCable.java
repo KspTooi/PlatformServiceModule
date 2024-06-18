@@ -5,10 +5,12 @@ import com.ksptooi.psm.shell.PSMShell;
 import com.ksptooi.psm.utils.aio.color.CableDye;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 高级IO线缆
@@ -26,7 +28,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
     //线缆染料
     private volatile CableDye dye = null;
 
-    private volatile Map<String,CableStateListener> listener;
+    private final Map<String,CableStateListener> listener = new ConcurrentHashMap<>();
 
     public AdvInputOutputCable(String id, AdvancedInputOutputPort port){
         this.id = id;
@@ -263,7 +265,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         os.clear();
         port = null;
         destroyed = true;
-        triggerUpdate();
+        listener.clear();
     }
 
     /**
