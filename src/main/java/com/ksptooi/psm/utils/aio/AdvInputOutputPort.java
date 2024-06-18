@@ -1,17 +1,19 @@
 package com.ksptooi.psm.utils.aio;
 
+import com.ksptooi.psm.utils.RefTools;
 import org.apache.sshd.server.Environment;
 import xyz.downgoon.snowflake.Snowflake;
 
 import java.io.*;
 import java.util.Queue;
+import java.util.UUID;
 
 /**
  * 高级IO端口
  */
 public class AdvInputOutputPort implements AdvancedInputOutputPort{
 
-    private final Snowflake snowflake = new Snowflake(2,16);
+    private final String portId = UUID.randomUUID().toString();
 
     private final InputStream is;
     private final OutputStream os;
@@ -68,7 +70,7 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
 
 
     public AdvInputOutputCable createCable(){
-        return new AdvInputOutputCable(snowflake.nextId(), this);
+        return new AdvInputOutputCable("", this);
     }
 
     @Override
@@ -122,17 +124,17 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
     }
 
     @Override
-    public long getCurrentCableId(ConnectMode t) {
+    public String getCurrentCableId(ConnectMode t) {
 
         if(t.val() == ConnectMode.INPUT.val()){
-            return inputCable == null ? -1 : inputCable.getId();
+            return inputCable == null ? null : inputCable.getId();
         }
 
         if(t.val() == ConnectMode.OUTPUT.val()){
-            return outputCable == null ? -1 : outputCable.getId();
+            return outputCable == null ? null : outputCable.getId();
         }
 
-        return -1;
+        return null;
     }
 
     private void ensureBindThisPort(AdvInputOutputCable cable){
@@ -144,6 +146,10 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
 
     public Environment getEnv(){
         return env;
+    }
+
+    public String getPortId(){
+        return this.portId;
     }
 
 }

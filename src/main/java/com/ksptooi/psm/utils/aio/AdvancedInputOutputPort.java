@@ -22,5 +22,5 @@ public interface AdvancedInputOutputPort {
 
     public boolean isConnect(AdvInputOutputCable cable,ConnectMode t);
 
-    public long getCurrentCableId(ConnectMode t);
+    public String getCurrentCableId(ConnectMode t);
 }

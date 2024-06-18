@@ -1,9 +1,12 @@
 package com.ksptooi.psm.utils.aio;
 
 import asia.kala.ansi.AnsiString;
+import com.ksptooi.psm.shell.PSMShell;
 import com.ksptooi.psm.utils.aio.color.CableDye;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -12,7 +15,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class AdvInputOutputCable extends BufferedAndMatcher {
 
-    private final long id;
+    private final String id;
     private AdvancedInputOutputPort port;
 
     private boolean destroyed = false;
@@ -23,8 +26,9 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
     //线缆染料
     private volatile CableDye dye = null;
 
+    private volatile Map<String,CableStateListener> listener;
 
-    public AdvInputOutputCable(Long id, AdvancedInputOutputPort port){
+    public AdvInputOutputCable(String id, AdvancedInputOutputPort port){
         this.id = id;
         this.port = port;
     }
@@ -73,6 +77,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         }
         //更换port
         this.port = port;
+        triggerUpdate();
         return this;
     }
 
@@ -211,9 +216,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         return this;
     }
 
-
-
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -257,6 +260,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         os.clear();
         port = null;
         destroyed = true;
+        triggerUpdate();
     }
 
     /**
@@ -266,6 +270,16 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         if(port == null || destroyed){
             throw new RuntimeException("this cable unavailable");
         }
+    }
+
+    public void triggerUpdate(){
+        listener.values().forEach((ret)-> ret.update(this));
+    }
+    public void addStateListener(String k, CableStateListener csl){
+        listener.put(k,csl);
+    }
+    public void removeStateListener(String k){
+        listener.remove(k);
     }
 
 }

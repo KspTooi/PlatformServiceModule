@@ -25,7 +25,7 @@ public class Application {
     public final static UnitLoaderModule csm = new UnitLoaderModule("com.ksptooi");
     public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule(),csm);
 
-    public final static String version = "4.0L";
+    public final static String version = "4.0M";
     public final static String platform = "x64";
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
