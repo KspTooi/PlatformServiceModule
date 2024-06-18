@@ -1,4 +1,4 @@
-package com.ksptooi.ihub.serviceunit;
+package com.ksptooi.idlebox.serviceunit;
 
 import com.ksptooi.guice.annotations.Unit;
 import jakarta.inject.Inject;
