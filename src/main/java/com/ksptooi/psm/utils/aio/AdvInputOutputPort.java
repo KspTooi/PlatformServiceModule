@@ -18,7 +18,6 @@ public class AdvInputOutputPort implements AdvancedInputOutputPort{
     private final InputStream is;
     private final OutputStream os;
     private final Environment env;
-
     private final BufferedReader br;
     private final PrintWriter p;
 

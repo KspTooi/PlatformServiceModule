@@ -20,6 +20,9 @@ import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.session.ServerSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +32,7 @@ import java.util.UUID;
 
 public class PSMShell implements Command,Runnable{
 
+    private static final Logger log = LoggerFactory.getLogger(PSMShell.class);
     private final String sessionId = UUID.randomUUID().toString();
 
     private ExitCallback exitCallback;
@@ -86,14 +90,22 @@ public class PSMShell implements Command,Runnable{
 
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
+        log.info("账户:{} 已建立新会话:{}",session.getSession().getUsername(),sessionId);
     }
 
     @Override
     public void destroy(ChannelSession session) throws Exception {
         offline = true;
+
+        removeForeground();
+        shellAioPort = null;
+        cable.destroy();
+        vt = null;
+
         if(shellThread!=null){
             shellThread.interrupt();
         }
+        log.info("账户:{} 会话已离线:{}",session.getSession().getUsername(),sessionId);
     }
 
     @Override
@@ -142,7 +154,7 @@ public class PSMShell implements Command,Runnable{
                     continue;
                 }
 
-                cable.printDebugText();
+                //cable.printDebugText();
 
                 //输入字符/或特殊符号
                 if(cable.match(VK.USER_INPUT)){
