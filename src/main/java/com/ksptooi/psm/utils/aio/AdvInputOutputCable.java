@@ -38,7 +38,9 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
 
         if(!isConnect(m)){
             port.connect(this,m,is,os);
+            triggerUpdate();
         }
+
         return this;
     }
 
@@ -51,6 +53,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
     public AdvInputOutputCable disconnect(ConnectMode m){
         if(isConnect(m)){
             port.disconnect(m);
+            triggerUpdate();
         }
         return this;
     }
