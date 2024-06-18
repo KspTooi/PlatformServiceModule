@@ -23,7 +23,7 @@ import java.util.Set;
 @Unit
 public class SubSystemScanner {
 
-    private static final Logger log = LoggerFactory.getLogger("SSC");
+    private static final Logger log = LoggerFactory.getLogger("CSM");
 
 
     public List<DiscoveredSubSystem> scan(File dir){
@@ -65,7 +65,7 @@ public class SubSystemScanner {
                 discovered.setClassLoader(loader);
                 discovered.setReflections(packageReflections);
 
-                log.info("发现可用的子系统 {}-{}:[{}]",anno.name(),anno.version(),jarFileName);
+                log.info("发现可用的子系统 {}-{}({})",anno.name(),anno.version(),jarFileName);
                 ret.add(discovered);
 
             } catch (MalformedURLException | SubSystemInstallException e) {

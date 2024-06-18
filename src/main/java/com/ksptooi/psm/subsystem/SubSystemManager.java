@@ -29,11 +29,11 @@ public class SubSystemManager {
     private ServiceUnitManager serviceUnitManager;
 
 
-    public void install(Injector injector, List<DiscoveredSubSystem> dss){
+    public void install(Injector parentCtx, List<DiscoveredSubSystem> dss){
         for(var item : dss){
 
             if(exists(item.getName())){
-                log.error("cannot install subsystem {} because the same name is already installed.",item.getName());
+                log.error("cannot install subsystem {}-{}({}) because the same name is already installed.",item.getName(),item.getVersion(),item.getJarFile().getName());
                 continue;
             }
 
@@ -53,7 +53,7 @@ public class SubSystemManager {
             }
 
             var sslm = new SubSystemLoaderModule(item,entryInstance);
-            var subInjector = injector.createChildInjector(sslm);
+            var subInjector = parentCtx.createChildInjector(sslm);
             var subSystem = sslm.getSubSystem();
             subSystem.setInjector(subInjector);
 
@@ -62,6 +62,8 @@ public class SubSystemManager {
             } catch (ServiceUnitRegException e) {
                 throw new RuntimeException(e);
             }
+
+            installed.add(subSystem);
 
         }
     }
