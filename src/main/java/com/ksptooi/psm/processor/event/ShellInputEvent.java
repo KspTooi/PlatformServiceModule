@@ -17,6 +17,10 @@ public class ShellInputEvent extends AbstractServiceUnitEvent {
         this.length = len;
     }
 
+    public boolean match(int[] vk){
+        return userShell.getCable().match(vk);
+    }
+
     @Override
     public PSMShell getUserShell() {
         return userShell;
