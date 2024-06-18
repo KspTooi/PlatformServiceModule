@@ -17,8 +17,8 @@ public class TestServiceUnit {
 
         for (int i = 0; i < 5000; i++) {
             Thread.sleep(500);
-            //p.println(i);
-            //p.flush();
+            p.println(i);
+            p.flush();
         }
 
     }
@@ -27,7 +27,7 @@ public class TestServiceUnit {
     public void userType(UserTypingEvent event){
 
         //当前有前台任务正在运行
-        if(event.getUserShell().hasForegroundTask()){
+        if(event.getUserShell().hasForegroundProcess()){
             return;
         }
 

@@ -33,7 +33,7 @@ public class Application {
 
         final var sts = System.currentTimeMillis();
 
-        injector.getInstance(H2DatabaseUnit.class).start();
+        //injector.getInstance(H2DatabaseUnit.class).start();
 
         var serviceUnitManager = injector.getInstance(ServiceUnitManager.class);
         var subSystemManager = injector.getInstance(SubSystemManager.class);

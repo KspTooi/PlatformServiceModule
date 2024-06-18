@@ -14,6 +14,7 @@ import com.ksptooi.psm.utils.aio.*;
 import com.ksptooi.psm.utils.aio.color.CyanDye;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
+import org.apache.sshd.common.channel.PtyMode;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -22,6 +23,7 @@ import org.apache.sshd.server.session.ServerSession;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class PSMShell implements Command,Runnable{
@@ -67,7 +69,6 @@ public class PSMShell implements Command,Runnable{
         shellAioPort = new AdvInputOutputPort(is,os,env);
         cable = shellAioPort.createCable();
         cable.connect();
-
         cable.dye(CyanDye.pickUp)
                 .w("Welcome To PlatformServiceModule(PSM/")
                 .w(v)
@@ -240,7 +241,7 @@ public class PSMShell implements Command,Runnable{
     /**
      * 进程切换到Shell前台
      */
-    public synchronized void toggleCurrentProcess(Process procTask){
+    public synchronized void setForeground(Process procTask){
 
         //当前有前台任务 并且前台任务正在运行
         if(currentTask != null && currentTask.getStage() != Process.STAGE_FINISHED){
@@ -258,14 +259,13 @@ public class PSMShell implements Command,Runnable{
         var cab = request.getCable();
 
         //进程Cab连接到Port
-        cab.isConnect(ConnectMode.OUTPUT);
         cab.connect(ConnectMode.OUTPUT);
     }
 
     /**
      * 将当前的前台进程切换为后台进程
      */
-    public synchronized void toggleCurrentProcess(){
+    public synchronized void removeForeground(){
 
         //当前没有前台进程
         if(currentTask == null) {
@@ -276,14 +276,15 @@ public class PSMShell implements Command,Runnable{
         cab.disconnect();
         currentTask = null;
         cable.connect();
+        cable.nextLine().flush();
         vt.render();
     }
 
     public synchronized Process getCurrentProcess(){
         return currentTask;
     }
-
-    public synchronized boolean hasForegroundTask(){
+    
+    public synchronized boolean hasForegroundProcess(){
         if(currentTask == null){
             return false;
         }

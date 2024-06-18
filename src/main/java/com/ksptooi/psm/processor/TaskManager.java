@@ -48,7 +48,7 @@ public class TaskManager {
             eventSchedule.forward(event);
 
             //进程切换到前台
-            request.getShell().toggleCurrentProcess(task);
+            request.getShell().setForeground(task);
 
             try {
                 task.getTarget().invoke(task.getServiceUnit().getSrvUnit(),task.getInjectParams());
@@ -69,7 +69,7 @@ public class TaskManager {
             eventSchedule.forward(exit);
 
             //进程从前台移除
-            request.getShell().toggleCurrentProcess();
+            request.getShell().removeForeground();
             
             //log.info("进程退出:{}", taskName);
         });
@@ -117,6 +117,10 @@ public class TaskManager {
 
     private synchronized void releasePid(int pid){
         availablePids.add(pid);
+    }
+
+    public Process getProcess(int pid){
+        return tasks.get(pid);
     }
 
 }
