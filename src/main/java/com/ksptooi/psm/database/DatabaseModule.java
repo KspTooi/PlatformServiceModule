@@ -1,4 +1,4 @@
-package com.ksptooi.psm.mybatis;
+package com.ksptooi.psm.database;
 
 import com.google.inject.AbstractModule;
 import org.mybatis.guice.XMLMyBatisModule;

@@ -25,9 +25,7 @@ public class MybatisColdStart {
         hCfg.setPassword("");
         hCfg.setDriverClassName("org.h2.Driver");
         var hds = new HikariDataSource(hCfg);
-
         var sfb = new SqlSessionFactoryBuilder();
-
         var cfg = new Configuration();
 
         var env = new Environment("prod",new JdbcTransactionFactory(),hds);

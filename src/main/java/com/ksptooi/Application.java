@@ -2,21 +2,17 @@ package com.ksptooi;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.ksptooi.guice.compomentscan.ComponentScanModule;
-import com.ksptooi.psm.database.H2DatabaseUnit;
-import com.ksptooi.psm.mybatis.DatabaseModule;
+import com.ksptooi.psm.database.DatabaseModule;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.ServiceUnitRegException;
 import com.ksptooi.psm.shell.SshModules;
 import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.subsystem.SubSystemScanner;
-import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 import com.ksptooi.psm.utils.UnitLoaderModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 

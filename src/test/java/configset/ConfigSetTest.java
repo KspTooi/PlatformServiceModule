@@ -3,7 +3,7 @@ package configset;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.psm.configset.ConfigSet;
-import com.ksptooi.psm.mybatis.DatabaseModule;
+import com.ksptooi.psm.database.DatabaseModule;
 import com.ksptooi.psm.shell.SshModules;
 import org.junit.Before;
 import org.junit.Test;
