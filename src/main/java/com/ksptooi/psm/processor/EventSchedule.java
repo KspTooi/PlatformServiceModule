@@ -37,7 +37,7 @@ public class EventSchedule {
         List<SrvDefine> emList = eventMap.computeIfAbsent(def.getEventHandlerType(), k -> new ArrayList<>());
         emList.add(def);
         Collections.sort(emList);
-        log.info("注册事件处理器 {}:{}({})..{}",def.getSrvUnitName(),def.getEventName(),def.getEventHandlerOrder(),def.getMethod().getName());
+        //log.info("注册事件处理器 {}:{}({})..{}",def.getSrvUnitName(),def.getEventName(),def.getEventHandlerOrder(),def.getMethod().getName());
     }
 
     /**

@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Unit
 public class ServiceUnitManager {
 
-    private static final Logger log = LoggerFactory.getLogger(ServiceUnitManager.class);
+    private static final Logger log = LoggerFactory.getLogger("SrvUnitMgr");
 
     @Inject
     private RequestHandlerMapper requestHandlerMapper;
@@ -56,10 +56,11 @@ public class ServiceUnitManager {
     public void register(Injector i) throws ServiceUnitRegException{
 
         var bk = i.getBindings().keySet();
-
         var preparingSubmit = new HashMap<String,ActivatedSrvUnit>();
 
-        for(var any : bk){
+        for(var key : bk){
+
+            var any = i.getInstance(key);
 
             if(!ServiceUnits.isServiceUnit(any)){
                 continue;
@@ -68,7 +69,7 @@ public class ServiceUnitManager {
             var name = ServiceUnits.getName(any);
             ensureNameValid(name);
 
-            log.info("Registration ServiceUnit[{}]",name);
+            log.info("Registration [ServiceUnit] {}",name);
 
             try {
 
@@ -111,9 +112,9 @@ public class ServiceUnitManager {
                         //数据库的请求处理器类型与当前服务单元类型不一致
                         if(!vo.getSrvUnitClassType().equals(classType)){
                             requestHandlerMapper.deleteById(vo.getId());
-                            log.info("Remove RequestHandler {}:{}",vo.getSrvUnitName(),vo.getSrvUnitClassType());
+                            log.info("Remove [RequestHandler] {}:{}",vo.getSrvUnitName(),vo.getSrvUnitClassType());
                         }else {
-                            log.info("Activation RequestHandler {}:{}({})",name,vo.getPattern(),vo.getParamsCount());
+                            log.info("Activation [RequestHandler] {}:{}({})",name,vo.getPattern(),vo.getParamsCount());
                         }
                     }
                     if(vo == null){
@@ -128,7 +129,7 @@ public class ServiceUnitManager {
                         insert.setMetadata("");
                         insert.setCreateTime(new Date());
                         requestHandlerMapper.insert(insert);
-                        log.info("install RequestHandler {}:{}({})",name,def.getPattern(),def.getParamCount());
+                        log.info("Install [RequestHandler] {}:{}({})",name,def.getPattern(),def.getParamCount());
                     }
 
                 }
@@ -141,7 +142,7 @@ public class ServiceUnitManager {
                         continue;
                     }
 
-                    log.info("install EventHandler {}:{}({})",name,def.getMethod().getName(),def.getEventName());
+                    log.info("install [EventHandler] {}:{}({})",name,def.getMethod().getName(),def.getEventName());
                     eventSchedule.register(def);
                 }
 

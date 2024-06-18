@@ -30,6 +30,9 @@ public class ServiceUnits {
      * 判断一个类是否为服务单元
      */
     public static boolean isServiceUnit(Object any){
+
+        var annotation = any.getClass().getAnnotation(ServiceUnit.class);
+
         return any.getClass().getAnnotation(ServiceUnit.class) != null;
     }
 
