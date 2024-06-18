@@ -39,10 +39,6 @@ public class Process {
     @Getter
     private Thread instance;
 
-    //Task结束hook
-    @Getter
-    private HookTaskFinished finishHook;
-
     //表示Task的执行阶段 preparing execute finished
     @Setter @Getter
     private int stage = 0;
@@ -79,11 +75,6 @@ public class Process {
     public void setInstance(Thread thread){
         if(this.instance == null){
             this.instance = thread;
-        }
-    }
-    public void setFinishHook(HookTaskFinished hook){
-        if(this.finishHook == null){
-            this.finishHook = hook;
         }
     }
     public void setTaskManager(TaskManager manager) {

@@ -102,7 +102,6 @@ public class TaskManager {
         tasks.remove(t.getPid());
         t.setStage(Process.STAGE_FINISHED);
         releasePid(t.getPid());
-        t.getFinishHook().finished();
 
         //销毁AIO
         t.getRequest().getCable().destroy();

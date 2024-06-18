@@ -64,7 +64,6 @@ public class SubSystemManager {
             }
 
             installed.add(subSystem);
-
         }
     }
 

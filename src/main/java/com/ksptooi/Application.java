@@ -9,41 +9,42 @@ import com.ksptooi.psm.processor.ServiceUnitRegException;
 import com.ksptooi.psm.shell.SshModules;
 import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.subsystem.SubSystemScanner;
+import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
 import com.ksptooi.psm.utils.UnitLoaderModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 
 public class Application {
 
     public final static UnitLoaderModule csm = new UnitLoaderModule("com.ksptooi");
-
     public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule(),csm);
 
-    public final static String version = "4.0G";
+    public final static String version = "4.0H";
     public final static String platform = "x64";
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] p) throws InterruptedException, ServiceUnitRegException {
 
+        final var sts = System.currentTimeMillis();
 
-        var serviceUnitMgr = injector.getInstance(ServiceUnitManager.class);
-        serviceUnitMgr.register(injector);
+        var serviceUnitManager = injector.getInstance(ServiceUnitManager.class);
+        var subSystemManager = injector.getInstance(SubSystemManager.class);
+        var scanner =  injector.getInstance(SubSystemScanner.class);
 
-        var scan = injector.getInstance(SubSystemScanner.class);
-        var subSystems = scan.scan("./subsystems");
-        var subManager = injector.getInstance(SubSystemManager.class);
-        subManager.install(injector,subSystems);
+        //加载内部组件
+        serviceUnitManager.register(injector);
 
-/*        var subMgr = injector.getInstance(SubSystemManager.class);
-        subMgr.install(injector,scan);
+        //执行插件扫描
+        var subSystems = scanner.scan("./subsystems");
+        subSystemManager.install(injector,subSystems);
 
+        final var ets = System.currentTimeMillis();
+        log.info("Done({}ms)",(ets - sts));
 
-        ServiceUnitManager unitMgr = injector.getInstance(ServiceUnitManager.class);
-        unitMgr.scanFromPackage("com.ksptooi.psm");
-        unitMgr.scanFromPackage("com.ksptooi.inner");
-        unitMgr.installRequestHandler();
-        unitMgr.installEventHandler();
-*/
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();
     }

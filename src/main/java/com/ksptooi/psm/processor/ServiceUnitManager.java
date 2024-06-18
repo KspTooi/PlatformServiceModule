@@ -302,7 +302,7 @@ public class ServiceUnitManager {
     /**
      * 向服务单元转发请求
      */
-    public Process forward(ShellRequest request, HookTaskFinished hook){
+    public Process forward(ShellRequest request){
 
         resolverRequest(request);
 
@@ -354,7 +354,6 @@ public class ServiceUnitManager {
         t.setServiceUnit(aProc);
         t.setTarget(procDef.getMethod());
         t.setInjectParams(ServiceUnits.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
-        t.setFinishHook(hook);
         t.setTaskManager(taskManager);
 
         //执行Define

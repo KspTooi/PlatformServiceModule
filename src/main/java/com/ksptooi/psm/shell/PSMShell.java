@@ -5,7 +5,6 @@ import com.ksptooi.psm.processor.EventSchedule;
 import com.ksptooi.psm.processor.ShellRequest;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.TaskManager;
-import com.ksptooi.psm.processor.entity.HookTaskFinished;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.UserTypingEvent;
 import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
@@ -206,7 +205,7 @@ public class PSMShell implements Command,Runnable{
                     String statement = vt.getContent();
                     vt.reset();
 
-                    cable.nextLine();
+                    cable.nextLine().flush();
 
                     //statement组装为请求
                     ShellRequest req = new ShellRequest();
@@ -217,11 +216,7 @@ public class PSMShell implements Command,Runnable{
                     req.setShell(this);
                     req.setCable(shellAioPort.createCable());
 
-                    HookTaskFinished hook = ()->{
-                        System.out.println("Exit Hook");
-                    };
-
-                    Process forward = serviceUnitManager.forward(req, hook);
+                    Process forward = serviceUnitManager.forward(req);
 
                     if(forward == null){
                         vt.render();
@@ -281,6 +276,7 @@ public class PSMShell implements Command,Runnable{
         cab.disconnect();
         currentTask = null;
         cable.connect();
+        vt.render();
     }
 
     public synchronized Process getCurrentProcess(){
