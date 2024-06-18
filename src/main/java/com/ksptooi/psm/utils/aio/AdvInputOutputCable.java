@@ -29,28 +29,31 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         this.port = port;
     }
     
-    public void connect(ConnectMode m){
+    public AdvInputOutputCable connect(ConnectMode m){
         ensureCableNotDestroyed();
 
         if(!isConnect(m)){
             port.connect(this,m,is,os);
         }
-
+        return this;
     }
 
-    public void connect(){
+    public AdvInputOutputCable connect(){
         connect(ConnectMode.INPUT);
         connect(ConnectMode.OUTPUT);
+        return this;
     }
 
-    public void disconnect(ConnectMode m){
+    public AdvInputOutputCable disconnect(ConnectMode m){
         if(isConnect(m)){
             port.disconnect(m);
         }
+        return this;
     }
-    public void disconnect(){
+    public AdvInputOutputCable disconnect(){
         disconnect(ConnectMode.INPUT);
         disconnect(ConnectMode.OUTPUT);
+        return this;
     }
 
     public void read() throws IOException {
@@ -59,7 +62,7 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
     }
 
     //迁移线缆到新端口
-    public void bindPort(AdvancedInputOutputPort port){
+    public AdvInputOutputCable bindPort(AdvancedInputOutputPort port){
         ensureCableNotDestroyed();
         //先断开线缆与已有端口的连接
         if(isConnect(ConnectMode.INPUT)){
@@ -70,18 +73,20 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         }
         //更换port
         this.port = port;
+        return this;
     }
 
-    public void flush(){
+    public AdvInputOutputCable flush(){
 
         ensureCableNotDestroyed();
 
         //检查是否连接到了Port
         if(!isConnect(ConnectMode.OUTPUT)){
-            return;
+            return this;
         }
         wash();
         port.flush(this);
+        return this;
     }
 
     public AdvInputOutputCable nextLine() {
