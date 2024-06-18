@@ -73,6 +73,11 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
     //迁移线缆到新端口
     public AdvInputOutputCable bindPort(AdvancedInputOutputPort port){
         ensureCableNotDestroyed();
+
+        if(this.port.getPortId().equals(port.getPortId())){
+            return this;
+        }
+
         //先断开线缆与已有端口的连接
         if(isConnect(ConnectMode.INPUT)){
             disconnect(ConnectMode.INPUT);
