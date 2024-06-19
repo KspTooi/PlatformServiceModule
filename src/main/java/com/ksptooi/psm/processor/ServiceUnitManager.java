@@ -12,14 +12,10 @@ import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -313,7 +309,7 @@ public class ServiceUnitManager {
         req.setParams(paramList);
     }
 
-    public static ActivatedSrvUnit getProcessor(String procName){
+    public static ActivatedSrvUnit getServiceUnit(String procName){
         return procMap.get(procName);
     }
 

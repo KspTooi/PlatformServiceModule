@@ -61,9 +61,9 @@ public class EventSchedule {
 
             try {
 
-                //获得处理器实例
-                var processor = ServiceUnitManager.getProcessor(def.getSrvUnitName());
-                def.getMethod().invoke(processor.getSrvUnit(),event);
+                //获得服务单元实例
+                var serviceUnit = ServiceUnitManager.getServiceUnit(def.getSrvUnitName());
+                def.getMethod().invoke(serviceUnit.getSrvUnit(),event);
 
                 if(event.isIntercepted()){
                     break;
