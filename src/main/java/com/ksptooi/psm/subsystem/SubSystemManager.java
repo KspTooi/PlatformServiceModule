@@ -28,7 +28,6 @@ public class SubSystemManager {
     @Inject
     private ServiceUnitManager serviceUnitManager;
 
-
     public void install(Injector parentCtx, List<DiscoveredSubSystem> dss){
         for(var item : dss){
 
