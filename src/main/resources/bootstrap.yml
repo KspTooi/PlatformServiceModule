@@ -1,0 +1,12 @@
+
+sshd:
+  serverAddr: 0.0.0.0:1100
+
+dataSource:
+  driverClassName: org.h2.Driver
+  url: jdbc:h2:tcp://127.0.0.1:1101/./database;MAX_COMPACT_TIME=10000;CACHE_SIZE=0
+  username:
+  password:
+
+mybatis:
+  mapperLocation: classpath:mapper/*.xml
