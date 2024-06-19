@@ -5,7 +5,8 @@ import com.google.inject.Injector;
 import com.ksptooi.psm.bootstrap.BootOptions;
 import com.ksptooi.psm.bootstrap.Bootstrap;
 import com.ksptooi.psm.bootstrap.BootstrapException;
-import com.ksptooi.psm.database.DatabaseModule;
+import com.ksptooi.psm.database.MybatisOptStartModules;
+import com.ksptooi.psm.database.MybatisXmlStartModules;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.ServiceUnitRegException;
 import com.ksptooi.psm.shell.SshModules;
@@ -60,10 +61,11 @@ public class Application {
 
         var csm = new UnitLoaderModule("com.ksptooi");
         var sshd = new SshModules();
-        var xmlMybatis = new DatabaseModule();
+        var mxs = new MybatisXmlStartModules();
+        var mos = new MybatisOptStartModules(boot);
 
         if(injector == null){
-            injector = Guice.createInjector(csm,xmlMybatis,sshd);
+            injector = Guice.createInjector(csm,mxs,sshd);
         }
 
     }

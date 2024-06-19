@@ -5,7 +5,7 @@ import org.mybatis.guice.XMLMyBatisModule;
 import xyz.downgoon.snowflake.Snowflake;
 
 
-public class DatabaseModule extends AbstractModule {
+public class MybatisXmlStartModules extends AbstractModule {
 
     @Override
     protected void configure() {
