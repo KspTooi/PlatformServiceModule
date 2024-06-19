@@ -2,6 +2,9 @@ package com.ksptooi;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.ksptooi.psm.bootstrap.BootOptions;
+import com.ksptooi.psm.bootstrap.Bootstrap;
+import com.ksptooi.psm.bootstrap.BootstrapException;
 import com.ksptooi.psm.database.DatabaseModule;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.ServiceUnitRegException;
@@ -18,16 +21,20 @@ import java.util.concurrent.CountDownLatch;
 
 public class Application {
 
-    public final static UnitLoaderModule csm = new UnitLoaderModule("com.ksptooi");
-    public final static Injector injector = Guice.createInjector(new SshModules(), new DatabaseModule(),csm);
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
+
+    private static Injector injector = null;
 
     public final static String version = "4.0P";
     public final static String platform = "x64";
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] p) throws InterruptedException, ServiceUnitRegException, SQLException {
+    public static void main(String[] p) throws InterruptedException, ServiceUnitRegException, SQLException, BootstrapException {
 
         final var sts = System.currentTimeMillis();
+
+        //加载引导文件
+        var boot = Bootstrap.load("bootstrap.yml");
+        createInjector(boot);
 
         //injector.getInstance(H2DatabaseUnit.class).start();
 
@@ -47,6 +54,23 @@ public class Application {
 
         CountDownLatch cdl = new CountDownLatch(1);
         cdl.await();
+    }
+
+    private static void createInjector(BootOptions boot){
+
+        var csm = new UnitLoaderModule("com.ksptooi");
+        var sshd = new SshModules();
+        var xmlMybatis = new DatabaseModule();
+
+        if(injector == null){
+            injector = Guice.createInjector(csm,xmlMybatis,sshd);
+        }
+
+    }
+
+
+    public static Injector getInjector(){
+        return injector;
     }
 
 }

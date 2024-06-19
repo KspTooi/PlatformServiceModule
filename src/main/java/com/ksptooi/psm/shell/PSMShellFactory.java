@@ -15,7 +15,7 @@ public class PSMShellFactory implements ShellFactory {
     @Override
     public Command createShell(ChannelSession session) throws IOException {
         PSMShell psmShell = new PSMShell();
-        Application.injector.injectMembers(psmShell);
+        Application.getInjector().injectMembers(psmShell);
         return psmShell;
     }
 

@@ -192,7 +192,7 @@ public class ServiceUnitManager {
             }
 
             //注入内部组件
-            Application.injector.injectMembers(proc);
+            Application.getInjector().injectMembers(proc);
 
         } catch (ServiceDefinitionException e) {
             e.printStackTrace();
