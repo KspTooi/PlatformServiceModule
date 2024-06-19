@@ -85,32 +85,18 @@ public class EventSchedule {
      */
     private ServiceUnitEvent trigger(ServiceUnitEvent event, Process task){
 
-        if(task == null){
-            return event;
-        }
         //进程已结束
-        if(!task.getInstance().isAlive() || task.getStage() != Process.STAGE_RUNNING){
+        if(Processes.isFinished(task)){
             return event;
         }
 
-        var processInstance  = task.getServiceUnit().getSrvUnit();
+        var serviceUnitInstance  = task.getServiceUnit().getSrvUnit();
         var defines = task.getServiceUnit().getSrvDefines();
         var handler = new ArrayList<SrvDefine>();
         var request = task.getRequest();
 
-        //查找处理器内部的*非全局*可用事件处理器
-        for(var def : defines){
-            if(!def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
-                continue;
-            }
-            if(def.isGlobalEventHandler()){
-                continue;
-            }
-            if(def.getEventHandlerType().equals(event.getClass().getName())){
-                handler.add(def);
-            }
-        }
-
+        //查找服务单元内部的非全局可用事件处理器
+        Defines.findAvailableEventHandler(event,defines,handler);
         Collections.sort(handler);
 
         for(var item : handler){
@@ -122,7 +108,7 @@ public class EventSchedule {
                 }
 
                 Object[] params = ServiceUnits.assemblyParams(item.getMethod(), new ArrayList<>(), event,request);
-                item.getMethod().invoke(processInstance,params);
+                item.getMethod().invoke(serviceUnitInstance,params);
 
                 if(event.isIntercepted()){
                     break;
@@ -130,7 +116,7 @@ public class EventSchedule {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                log.warn("执行事件时出现错误. 处理器:{} 事件名:{} 事件处理器:{}",item.getSrvUnitName(),item.getEventName(),item.getMethod().getName());
+                log.warn("执行事件时出现错误. 服务单元:{} 事件名:{} 事件处理器:{}",item.getSrvUnitName(),item.getEventName(),item.getMethod().getName());
                 continue;
             }
 

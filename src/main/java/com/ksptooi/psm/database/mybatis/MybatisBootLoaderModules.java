@@ -7,7 +7,6 @@ import com.ksptooi.psm.bootstrap.BootOptions;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
-import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
@@ -20,11 +19,7 @@ import xyz.downgoon.snowflake.Snowflake;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.nio.file.Files;
-
 import static com.google.inject.matcher.Matchers.*;
 import static com.google.inject.util.Providers.guicify;
 
@@ -41,6 +36,8 @@ public class MybatisBootLoaderModules extends AbstractModule {
 
         var dsOpt = opt.getDataSource();
         var mybatis = opt.getMybatis();
+
+
 
         var hCfg = new HikariConfig();
         hCfg.setJdbcUrl(dsOpt.getUrl());

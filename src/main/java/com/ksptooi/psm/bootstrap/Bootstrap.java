@@ -32,7 +32,6 @@ public class Bootstrap extends AbstractModule {
         }
     }
 
-
     public static BootOptions load(String path) throws BootstrapException{
         return load(new File(path));
     }

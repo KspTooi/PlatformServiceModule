@@ -29,7 +29,6 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
 
     @Inject
     private UserAccountService accountService;
-
     @Inject
     private LoginHistoryService historyService;
 
@@ -38,8 +37,8 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
         try {
             //数据库里面没有任何用户
             if (accountService.getTotal() < 1) {
-                final String account = "default";
-                final String pwdPt = generatePassword();
+                var account = "default";
+                var pwdPt = generatePassword();
                 accountService.createUser(account,pwdPt);
                 log.info("已创建默认用户:{} 密码:{}",account,pwdPt);
                 return false;
@@ -49,8 +48,8 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
             return false;
         }
 
-        final UserVo vo = accountService.getByAccount(username);
-        final SocketAddress origin = session.getClientAddress();
+        var vo = accountService.getByAccount(username);
+        var origin = session.getClientAddress();
 
         if(vo == null || vo.getStatus() != 0){
             log.warn("源:{} 提供了一个无效的账户 {}.",origin,username);
@@ -58,7 +57,7 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
             return false;
         }
 
-        final String inPassCt = DigestUtils.sha512Hex(vo.getUid() + inPassPt);
+        var inPassCt = DigestUtils.sha512Hex(vo.getUid() + inPassPt);
 
         if(!vo.getPassword().equals(inPassCt)){
             log.warn("源:{} 账户:{} 因密码错误登录失败.",username,origin);

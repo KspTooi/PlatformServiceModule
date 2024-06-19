@@ -1,10 +1,30 @@
 package com.ksptooi.psm.processor;
 
 import com.ksptooi.psm.processor.entity.SrvDefine;
+import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 
 import java.util.List;
 
 public class Defines {
+
+
+    //查找处理器内部的*非全局*可用事件处理器
+    public static void findAvailableEventHandler(ServiceUnitEvent event, List<SrvDefine> defines, List<SrvDefine> handler){
+        for(var def : defines){
+            if(!def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
+                continue;
+            }
+            if(def.isGlobalEventHandler()){
+                continue;
+            }
+            if(def.getEventHandlerType().equals(event.getClass().getName())){
+                handler.add(def);
+            }
+        }
+    }
+
+
+
 
 
     public static SrvDefine getHook(String hookName, List<SrvDefine> defines){
