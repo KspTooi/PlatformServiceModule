@@ -1,5 +1,6 @@
 package com.ksptooi.psm.bootstrap;
 
+import com.google.inject.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -10,10 +11,27 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Bootstrap {
+public class Bootstrap extends AbstractModule {
 
 
     private static final Logger log = LoggerFactory.getLogger("Boot");
+
+    private File f;
+
+    public Bootstrap(String path){
+        this.f = new File(path);
+    }
+
+    @Override
+    protected void configure() {
+        try {
+            var load = load(f);
+            bind(BootOptions.class).toInstance(load);
+        } catch (BootstrapException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static BootOptions load(String path) throws BootstrapException{
         return load(new File(path));
@@ -52,6 +70,12 @@ public class Bootstrap {
 
         if(sshd == null || ds == null || mybatis == null){
             throw new BootstrapException("Bootstrap file verification failed.[E0]");
+        }
+
+        var addrSplit = sshd.getServerAddr().split(":");
+
+        if(addrSplit.length < 1){
+            throw new BootstrapException("sshd.serverAddr must include port number");
         }
 
     }

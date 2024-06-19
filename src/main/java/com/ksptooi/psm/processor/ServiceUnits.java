@@ -46,9 +46,7 @@ public class ServiceUnits {
         var clazz = any.getClass();
         var srvUnitName = annoSrvUnit.value();
 
-        if(!chkSrvUnitName(srvUnitName)){
-            throw new ServiceDefinitionException("服务单元已损坏,原因:服务单元名称不合法. 位于:"+ srvUnitName);
-        }
+        ensureServiceUnitNameValid(srvUnitName);
 
         //获取SrvUnit中的Hook
         var hookActivated = RefTools.getMethodByAnnotation(clazz, OnActivated.class);
@@ -207,9 +205,7 @@ public class ServiceUnits {
             throw new ServiceDefinitionException("服务单元已损坏,原因:服务单元需要@ServiceUnit注解. 位于:"+ srvUnit.getName());
         }
 
-        if(!chkSrvUnitName(annoSrvUnit.value())){
-            throw new ServiceDefinitionException("服务单元已损坏,原因:处理器名称不合法. 位于:"+ srvUnit.getName());
-        }
+        ensureServiceUnitNameValid(annoSrvUnit.value());
 
         final String procName = annoSrvUnit.value();
 
@@ -381,17 +377,17 @@ public class ServiceUnits {
         return params;
     }
 
-    public static boolean chkSrvUnitName(String name){
+
+    public static void ensureServiceUnitNameValid(String name) throws ServiceDefinitionException {
 
         if(StringUtils.isBlank(name)){
-            return false;
+            throw new ServiceDefinitionException("服务单元已损坏,原因:服务单元名称不合法. 位于:"+ name);
         }
 
         if(name.contains("*")){
-            return false;
+            throw new ServiceDefinitionException("服务单元已损坏,原因:服务单元名称不能包含通配符 位于:"+ name);
         }
 
-        return true;
     }
 
 
