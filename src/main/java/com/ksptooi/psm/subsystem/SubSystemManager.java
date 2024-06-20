@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,13 @@ public class SubSystemManager {
             }
 
             installed.add(subSystem);
-            entryInstance.onActivated();
+
+            //执行Install完成钩子
+            var hooks = new ArrayList<Method>();
+            SubSystems.findInstalledHook(entryInstance,hooks);
+            SubSystems.executeInstallHooks(entryInstance,hooks);
+
+            //entryInstance.onActivated();
         }
     }
 

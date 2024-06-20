@@ -3,21 +3,15 @@ package com.ksptooi.psm.subsystem;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-import com.google.inject.Singleton;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.ServiceUnit;
-import com.ksptooi.psm.processor.ServiceUnits;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
-import com.ksptooi.psm.utils.RefTools;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Set;
 
 public class SubSystemLoaderModule extends AbstractModule {
 
@@ -45,7 +39,7 @@ public class SubSystemLoaderModule extends AbstractModule {
         bind(SubSystem.class).toInstance(vEntry);
 
         var modules = new ArrayList<Method>();
-        ServiceUnits.findModules(vEntry,modules);
+        SubSystems.findModules(vEntry,modules);
 
         for(var m : modules){
 

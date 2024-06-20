@@ -30,36 +30,12 @@ public class ServiceUnits {
     }
 
 
-    public static void findModules(Object any, List<Method> ret){
-
-        if(!isServiceUnit(any) && !isEntry(any)){
-            return;
-        }
-
-        var method = RefTools.getMethodByAnnotation(any.getClass(), Module.class);
-
-        for(var m : method){
-
-            if(m.getParameterCount() > 0){
-                continue;
-            }
-
-            ret.add(m);
-        }
-
-    }
-
-
 
     /**
      * 判断一个类是否为服务单元
      */
     public static boolean isServiceUnit(Object any){
         return any.getClass().getAnnotation(ServiceUnit.class) != null;
-    }
-
-    public static boolean isEntry(Object any){
-        return any.getClass().getAnnotation(SubSystemEntry.class) != null;
     }
 
 
