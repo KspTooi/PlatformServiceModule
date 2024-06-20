@@ -1,6 +1,6 @@
 package com.ksptooi.psm.database;
 
-import com.ksptooi.psm.database.mybatis.ProviderDataSource;
+import com.ksptooi.psm.database.mybatis.DataSourceProvider;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
 
@@ -12,8 +12,15 @@ public class MybatisNOptStartModules extends MyBatisModule {
     @Override
     protected void initialize() {
 
-        bindDataSourceProviderType(ProviderDataSource.class);
+        bindDataSourceProviderType(DataSourceProvider.class);
         bindTransactionFactoryType(JdbcTransactionFactory.class);
 
+
+
+
     }
+
+
+
+
 }

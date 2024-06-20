@@ -36,8 +36,6 @@ public class Application {
         //加载引导文件
         bootstrap("bootstrap.yml");
 
-
-
         var boot = Bootstrap.load("bootstrap.yml");
 
         //injector.getInstance(H2DatabaseUnit.class).start();
@@ -67,11 +65,11 @@ public class Application {
         var csm = new UnitLoaderModule("com.ksptooi");
         var sshd = new SshModules();
 
-        //var mxs = new MybatisXmlStartModules();
-        var mbl = new MybatisBootLoaderModules(Bootstrap.load("bootstrap.yml"));
+        var mxs = new MybatisXmlStartModules();
+        //var mbl = new MybatisBootLoaderModules(Bootstrap.load("bootstrap.yml"));
 
         if(injector == null){
-            injector = Guice.createInjector(boot,csm,sshd,mbl);
+            injector = Guice.createInjector(boot,csm,sshd,mxs);
         }
 
     }

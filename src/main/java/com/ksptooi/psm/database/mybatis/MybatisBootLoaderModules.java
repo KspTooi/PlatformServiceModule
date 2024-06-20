@@ -16,6 +16,7 @@ import org.mybatis.guice.transactional.Transactional;
 import org.mybatis.guice.transactional.TransactionalMethodInterceptor;
 import xyz.downgoon.snowflake.Snowflake;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import static com.google.inject.util.Providers.guicify;
 
 public class MybatisBootLoaderModules extends AbstractModule {
 
-    private BootOptions opt;
+    private final BootOptions opt;
 
     public MybatisBootLoaderModules(BootOptions opt){
         this.opt = opt;
@@ -36,8 +37,6 @@ public class MybatisBootLoaderModules extends AbstractModule {
 
         var dsOpt = opt.getDataSource();
         var mybatis = opt.getMybatis();
-
-
 
         var hCfg = new HikariConfig();
         hCfg.setJdbcUrl(dsOpt.getUrl());
@@ -55,7 +54,6 @@ public class MybatisBootLoaderModules extends AbstractModule {
         cfg.setAutoMappingUnknownColumnBehavior(AutoMappingUnknownColumnBehavior.NONE);
 
         var ssf = sfb.build(cfg);
-
         bind(SqlSessionFactory.class).toInstance(ssf);
         bind(SqlSessionManager.class).toProvider(SqlSessionManagerProvider.class).in(Scopes.SINGLETON);
         bind(SqlSession.class).to(SqlSessionManager.class).in(Scopes.SINGLETON);
@@ -86,6 +84,8 @@ public class MybatisBootLoaderModules extends AbstractModule {
             for(var m : mappers){
                 bindMapper(m);
             }
+
+            bindTransactionInterceptors();
 
             Snowflake snowflake = new Snowflake(1,1);
             bind(Snowflake.class).toInstance(snowflake);

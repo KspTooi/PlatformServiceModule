@@ -6,12 +6,17 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.ServiceUnit;
+import com.ksptooi.psm.processor.ServiceUnits;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
+import com.ksptooi.psm.utils.RefTools;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class SubSystemLoaderModule extends AbstractModule {
@@ -38,6 +43,26 @@ public class SubSystemLoaderModule extends AbstractModule {
 
         log.info("Load [{}][Entry] {}",dSubSystem.getName(),vEntry.getClass().getSimpleName());
         bind(SubSystem.class).toInstance(vEntry);
+
+        var modules = new ArrayList<Method>();
+        ServiceUnits.findModules(vEntry,modules);
+
+        for(var m : modules){
+
+            try {
+
+                var invoke = m.invoke(vEntry);
+
+                if(invoke instanceof Module){
+                    install((Module) invoke);
+                    log.info("Load [{}][Module] {}",dSubSystem.getName(),m.getName());
+                }
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
         for(var u : units){
             log.info("Load [{}][Unit] {}",dSubSystem.getName(),u.getSimpleName());

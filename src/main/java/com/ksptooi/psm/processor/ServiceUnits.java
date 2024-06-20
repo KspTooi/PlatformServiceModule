@@ -1,9 +1,12 @@
 package com.ksptooi.psm.processor;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.ksptooi.psm.processor.entity.ActivatedSrvUnit;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
+import com.ksptooi.psm.subsystem.Module;
+import com.ksptooi.psm.subsystem.SubSystemEntry;
 import com.ksptooi.psm.utils.RefTools;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
@@ -26,11 +29,37 @@ public class ServiceUnits {
         eventDefine.add(UserTypingEvent.class.getName());
     }
 
+
+    public static void findModules(Object any, List<Method> ret){
+
+        if(!isServiceUnit(any) || !isEntry(any)){
+            return;
+        }
+
+        var method = RefTools.getMethodByAnnotation(any.getClass(), Module.class);
+
+        for(var m : method){
+
+            if(m.getParameterCount() > 0){
+                continue;
+            }
+
+            ret.add(m);
+        }
+
+    }
+
+
+
     /**
      * 判断一个类是否为服务单元
      */
     public static boolean isServiceUnit(Object any){
         return any.getClass().getAnnotation(ServiceUnit.class) != null;
+    }
+
+    public static boolean isEntry(Object any){
+        return any.getClass().getAnnotation(SubSystemEntry.class) != null;
     }
 
 
