@@ -7,6 +7,16 @@ import xyz.downgoon.snowflake.Snowflake;
 
 public class MybatisXmlStartModules extends AbstractModule {
 
+    private ClassLoader cl = null;
+
+    public MybatisXmlStartModules(ClassLoader cl){
+        this.cl = cl;
+    }
+
+    public MybatisXmlStartModules(){
+
+    }
+
     @Override
     protected void configure() {
         install(new XMLMyBatisModule() {
@@ -14,6 +24,11 @@ public class MybatisXmlStartModules extends AbstractModule {
             protected void initialize() {
                 setEnvironmentId("prod");
                 setClassPathResource("mybatis-config.xml");
+
+                if(cl != null){
+                    useResourceClassLoader(cl);
+                }
+
             }
         });
 

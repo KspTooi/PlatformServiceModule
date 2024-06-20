@@ -9,7 +9,11 @@ import java.util.List;
 public class SubSystems {
 
 
-    public static void executeInstallHooks(Object context,List<Method> ret){
+    public static void executeInstallHooks(Object context,List<Method> ret) throws Exception{
+
+        for(var m : ret){
+            Object invoke = m.invoke(context);
+        }
 
     }
 

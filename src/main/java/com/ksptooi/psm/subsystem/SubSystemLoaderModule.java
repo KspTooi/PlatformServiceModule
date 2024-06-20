@@ -45,7 +45,10 @@ public class SubSystemLoaderModule extends AbstractModule {
 
             try {
 
+                ClassLoader classLoader = vEntry.getClass().getClassLoader();
                 var invoke = m.invoke(vEntry);
+
+                ClassLoader classLoader1 = invoke.getClass().getClassLoader();
 
                 if(invoke instanceof Module){
                     install((Module) invoke);

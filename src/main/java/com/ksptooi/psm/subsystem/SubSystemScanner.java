@@ -3,6 +3,7 @@ package com.ksptooi.psm.subsystem;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.exception.SubSystemInstallException;
 import com.ksptooi.psm.subsystem.entity.DiscoveredSubSystem;
+import com.ksptooi.psm.utils.SubSystemClassLoader;
 import com.ksptooi.uac.commons.JarFileFilter;
 import com.ksptooi.uac.core.annatatiotion.PluginEntry;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +45,7 @@ public class SubSystemScanner {
             try {
 
                 var url = jar.toURI().toURL();
-                var loader = new URLClassLoader(new URL[]{url});
+                var loader = new SubSystemClassLoader(new URL[]{url});
 
                 var packageReflections = new Reflections(new ConfigurationBuilder()
                         .addUrls(url).addClassLoaders(loader)

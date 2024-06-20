@@ -3,6 +3,7 @@ package com.ksptooi.psm.subsystem;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.Application;
+import com.ksptooi.Platform;
 import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.*;
 import com.ksptooi.psm.subsystem.entity.ActivatedSubSystem;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -68,10 +70,20 @@ public class SubSystemManager {
 
             installed.add(subSystem);
 
+
+            Application.getInjector().injectMembers(entryInstance);
+
             //执行Install完成钩子
             var hooks = new ArrayList<Method>();
             SubSystems.findInstalledHook(entryInstance,hooks);
-            SubSystems.executeInstallHooks(entryInstance,hooks);
+
+            try {
+
+                SubSystems.executeInstallHooks(entryInstance,hooks);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             //entryInstance.onActivated();
         }
@@ -91,10 +103,20 @@ public class SubSystemManager {
     }
 
     public ActivatedSubSystem getSubSystem(String name){
+        for(var i : installed){
+            if(i.getName().equals(name)){
+                return i;
+            }
+        }
         return null;
     }
 
     public ActivatedSubSystem getSubSystem(String n,String v){
+        for(var i : installed){
+            if(i.getName().equals(n) && i.getVersion().equals(v)){
+                return i;
+            }
+        }
         return null;
     }
 
