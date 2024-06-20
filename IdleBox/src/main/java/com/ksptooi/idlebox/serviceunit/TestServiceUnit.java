@@ -1,10 +1,10 @@
 package com.ksptooi.idlebox.serviceunit;
 
-import com.ksptooi.psm.processor.EventHandler;
-import com.ksptooi.psm.processor.RequestHandler;
-import com.ksptooi.psm.processor.ServiceUnit;
-import com.ksptooi.psm.processor.ShellRequest;
+import com.google.inject.Inject;
+import com.ksptooi.Platform;
+import com.ksptooi.psm.processor.*;
 import com.ksptooi.psm.processor.event.StatementCommitEvent;
+import com.ksptooi.psm.subsystem.SubSystemManager;
 import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.ConnectMode;
 import org.slf4j.Logger;
@@ -16,8 +16,14 @@ public class TestServiceUnit {
 
     private static final Logger log = LoggerFactory.getLogger(TestServiceUnit.class);
 
+    @Inject
+    private EventSchedule schedule;
+
     @RequestHandler("handler")
     public void handler1(ShellRequest request){
+
+        var instance = Platform.getUnit(EventSchedule.class);
+        var sub = Platform.getUnit(SubSystemManager.class);
         var cable = request.getCable();
         cable.connect(ConnectMode.OUTPUT);
         cable.w("OK").flush();

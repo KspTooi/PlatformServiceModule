@@ -32,7 +32,7 @@ public class ServiceUnits {
 
     public static void findModules(Object any, List<Method> ret){
 
-        if(!isServiceUnit(any) || !isEntry(any)){
+        if(!isServiceUnit(any) && !isEntry(any)){
             return;
         }
 

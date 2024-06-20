@@ -3,6 +3,8 @@ package com.ksptooi.idlebox;
 
 import com.ksptooi.Application;
 import com.ksptooi.idlebox.serviceunit.UnitA;
+import com.ksptooi.psm.database.MybatisXmlStartModules;
+import com.ksptooi.psm.subsystem.Module;
 import com.ksptooi.psm.subsystem.SubSystem;
 import com.ksptooi.psm.subsystem.SubSystemEntry;
 import jakarta.inject.Inject;
@@ -31,6 +33,13 @@ public class IdleBox extends SubSystem {
 
         ua.test();
 
+
+
+    }
+
+    @Module
+    public MybatisXmlStartModules mybatisXmlStartModules(){
+        return new MybatisXmlStartModules();
     }
 
 

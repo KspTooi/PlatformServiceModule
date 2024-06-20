@@ -1,5 +1,6 @@
 package com.ksptooi.psm.subsystem;
 
+import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.ksptooi.Application;
 import com.ksptooi.guice.annotations.Unit;
@@ -51,9 +52,11 @@ public class SubSystemManager {
                 continue;
             }
 
-            var sslm = new SubSystemLoaderModule(item,entryInstance);
-            var subInjector = parentCtx.createChildInjector(sslm);
-            var subSystem = sslm.getSubSystem();
+            var ssl = new SubSystemLoaderModule(item,entryInstance);
+            //var subInjector = parentCtx.createChildInjector(ssl);
+            var subInjector = Guice.createInjector(ssl);
+
+            var subSystem = ssl.getSubSystem();
             subSystem.setInjector(subInjector);
 
             try {
@@ -64,7 +67,6 @@ public class SubSystemManager {
 
             installed.add(subSystem);
             entryInstance.onActivated();
-
         }
     }
 

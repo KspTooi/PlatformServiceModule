@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.idlebox.mapper.ConfigSetMapper">
+
+    <!-- 表实体出参映射-->
+    <resultMap id="poMap" type="com.ksptooi.psm.configset.ConfigSetVo">
+        <result column="ID" property="id"/>
+        <result column="KEY" property="key"/>
+        <result column="VAL" property="val"/>
+        <result column="DEF" property="def"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="CREATE_TIME" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO CONFIG_SET(`ID`,`KEY`,`VAL`,`DEF`,`USER_ID`,`DESCRIPTION`,"CREATE_TIME")
+        VALUES (#{val.id},#{val.key},#{val.val},#{val.def},#{val.userId},#{val.description},#{val.createTime})
+    </insert>
+
+    <select id="getByKey" resultMap="poMap">
+        SELECT * FROM CONFIG_SET
+        WHERE `KEY` = #{key}
+    </select>
+
+
+
+
+</mapper>
