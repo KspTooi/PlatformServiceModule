@@ -3,6 +3,7 @@ package com.ksptooi.psm.utils;
 import com.ksptooi.psm.processor.ServiceUnit;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,33 @@ import java.util.List;
 public class RefTools {
 
 
+    public static void executeNoArgsMethodsNE(Object ctx,List<Method> methods){
+
+        for (var m : methods){
+            try {
+                m.invoke(ctx);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static <A extends Annotation> List<Method> getNoArgsMethod(Object any,Class<A> anno){
+
+        var method = getMethodByAnnotation(any.getClass(), anno);
+
+        var ret = new ArrayList<Method>();
+
+        for(var m : method){
+            if(m.getParameterCount() == 0){
+                ret.add(m);
+            }
+        }
+
+        return ret;
+    }
 
 
     public static <A extends Annotation> A getAnnotation(Object any,Class<A> anno){
