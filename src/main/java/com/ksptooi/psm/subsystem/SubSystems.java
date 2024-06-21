@@ -1,5 +1,6 @@
 package com.ksptooi.psm.subsystem;
 
+import com.google.inject.AbstractModule;
 import com.ksptooi.psm.utils.RefTools;
 
 import java.lang.annotation.Annotation;
@@ -7,6 +8,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class SubSystems {
+
+
+
+    public static void a(AbstractModule mod){
+
+    }
+
+
 
 
     public static void executeInstallHooks(Object context,List<Method> ret) throws Exception{

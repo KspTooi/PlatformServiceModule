@@ -21,6 +21,8 @@ public class SubSystemLoaderModule extends AbstractModule {
     private ActivatedSubSystem aSubSystem;
     private final SubSystem vEntry;
 
+    private ClassLoader loader;
+
     public SubSystemLoaderModule(DiscoveredSubSystem dss,SubSystem vEntry){
         this.dSubSystem = dss;
         this.vEntry = vEntry;
@@ -31,8 +33,7 @@ public class SubSystemLoaderModule extends AbstractModule {
 
         //扫描子系统中的构件
         var ref = dSubSystem.getReflections();
-        var oldCl = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(dSubSystem.getClassLoader());
+        toggleClassLoader();
 
         var units = ref.getTypesAnnotatedWith(Unit.class);
         var serviceUnits = ref.getTypesAnnotatedWith(ServiceUnit.class);
@@ -40,6 +41,20 @@ public class SubSystemLoaderModule extends AbstractModule {
         log.info("Load [{}][Entry] {}",dSubSystem.getName(),vEntry.getClass().getSimpleName());
         bind(SubSystem.class).toInstance(vEntry);
 
+        var modules = new ArrayList<Method>();
+        SubSystems.findModules(vEntry,modules);
+
+        for(var m : modules){
+            try {
+                var invoke = m.invoke(vEntry);
+                if(invoke instanceof com.google.inject.Module){
+                    install((Module) invoke);
+                    log.info("Load [{}][Module] {}",dSubSystem.getName(),m.getName());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         for(var u : units){
             log.info("Load [{}][Unit] {}",dSubSystem.getName(),u.getSimpleName());
@@ -58,10 +73,26 @@ public class SubSystemLoaderModule extends AbstractModule {
         aSubSystem.setClassLoader(dSubSystem.getClassLoader());
         aSubSystem.setReflections(dSubSystem.getReflections());
         aSubSystem.setInjector(null);
-        Thread.currentThread().setContextClassLoader(oldCl);
+
+        resumeClassLoader();
     }
 
     public ActivatedSubSystem getSubSystem(){
         return aSubSystem;
     }
+
+    private void toggleClassLoader(){
+        if(loader == null){
+            loader = Thread.currentThread().getContextClassLoader();
+        }
+        Thread.currentThread().setContextClassLoader(dSubSystem.getClassLoader());
+    }
+
+    private void resumeClassLoader(){
+        if(loader!=null){
+            Thread.currentThread().setContextClassLoader(loader);
+        }
+    }
+
+
 }

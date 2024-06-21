@@ -56,9 +56,8 @@ public class SubSystemManager {
             }
 
             var ssl = new SubSystemLoaderModule(item,entryInstance);
-            var ssel = new SubSystemEntryLoaderModule(item,entryInstance);
             //var subInjector = parentCtx.createChildInjector(ssl);
-            var subInjector = Guice.createInjector(ssel,ssl);
+            var subInjector = Guice.createInjector(ssl);
 
             var subSystem = ssl.getSubSystem();
             subSystem.setInjector(subInjector);

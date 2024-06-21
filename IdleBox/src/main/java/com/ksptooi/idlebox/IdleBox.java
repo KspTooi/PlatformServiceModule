@@ -34,11 +34,9 @@ public class IdleBox extends SubSystem{
 
     @Module
     public MybatisXmlStartModules mybatisXmlStartModules(){
-
-        var v = new MybatisXmlStartModules();
-
-        return v;
+        return new MybatisXmlStartModules();
     }
+
 
     public void renderBanner(){
         System.out.println("  _____       _   _          ____                 \n" +
