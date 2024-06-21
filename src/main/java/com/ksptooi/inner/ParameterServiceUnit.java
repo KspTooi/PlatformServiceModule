@@ -1,9 +1,6 @@
 package com.ksptooi.inner;
 
-import com.ksptooi.psm.processor.OnActivated;
-import com.ksptooi.psm.processor.RequestHandler;
-import com.ksptooi.psm.processor.ServiceUnit;
-import com.ksptooi.psm.processor.ShellRequest;
+import com.ksptooi.psm.processor.*;
 import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.ConnectMode;
 import com.ksptooi.psm.utils.aio.color.GreenDye;
@@ -19,11 +16,11 @@ public class ParameterServiceUnit {
     }
 
     @RequestHandler("echo")
-    public void echo(ShellRequest req, @Param("fileName") String fileName){
+    public void echo(@Param("fileName") String fileName, ShellRequest req ,@Param("size") String size){
 
         var cable = req.getCable().connect(ConnectMode.OUTPUT);
         cable.dye(GreenDye.pickUp);
-        cable.print("输入参数为:"+fileName);
+        cable.print("输入参数为:"+fileName + ","+size);
         //cable.flush();
 
     }
