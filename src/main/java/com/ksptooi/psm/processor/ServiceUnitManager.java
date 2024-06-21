@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Ref;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,7 +92,7 @@ public class ServiceUnitManager {
         for(var v : preparingSubmit.values()){
             var any = v.getSrvUnit();
             RefTools.getNoArgsMethod(any, OnActivated.class,hooks);
-            RefTools.executeNoArgsMethodsNE(any,hooks);
+            RefTools.executeNoArgsMethodsIgnoreException(any,hooks);
             hooks.clear();
         }
 

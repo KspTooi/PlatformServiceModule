@@ -1,7 +1,5 @@
 package com.ksptooi.psm.utils;
 
-import com.ksptooi.psm.processor.ServiceUnit;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +9,7 @@ import java.util.List;
 public class RefTools {
 
 
-    public static void executeNoArgsMethodsNE(Object ctx,List<Method> methods){
+    public static void executeNoArgsMethodsIgnoreException(Object ctx, List<Method> methods){
 
         for (var m : methods){
             try {
