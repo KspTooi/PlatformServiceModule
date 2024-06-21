@@ -49,7 +49,7 @@ public class Application {
 
         //执行插件扫描
         var subSystems = scanner.scan("./subsystems");
-        subSystemManager.install(injector,subSystems);
+        subSystemManager.install(subSystems);
 
         final var ets = System.currentTimeMillis();
         log.info("Done({}ms)",(ets - sts));

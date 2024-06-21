@@ -32,7 +32,7 @@ public class SubSystemManager {
     @Inject
     private ServiceUnitManager serviceUnitManager;
 
-    public void install(Injector parentCtx, List<DiscoveredSubSystem> dss){
+    public void install(List<DiscoveredSubSystem> dss){
         for(var item : dss){
 
             if(exists(item.getName())){
@@ -77,14 +77,11 @@ public class SubSystemManager {
             SubSystems.findInstalledHook(entryInstance,hooks);
 
             try {
-
                 SubSystems.executeInstallHooks(entryInstance,hooks);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            //entryInstance.onActivated();
         }
     }
 

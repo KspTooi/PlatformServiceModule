@@ -10,12 +10,15 @@ import com.ksptooi.psm.processor.entity.*;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
+import com.ksptooi.psm.utils.RefTools;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.downgoon.snowflake.Snowflake;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Ref;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,6 +86,17 @@ public class ServiceUnitManager {
 
         }
         install(preparingSubmit.values().stream().toList());
+
+        var hooks = new ArrayList<Method>();
+
+        //执行服务单元的OnActivatedHook
+        for(var v : preparingSubmit.values()){
+            var any = v.getSrvUnit();
+            RefTools.getNoArgsMethod(any, OnActivated.class,hooks);
+            RefTools.executeNoArgsMethodsNE(any,hooks);
+            hooks.clear();
+        }
+
         procMap.putAll(preparingSubmit);
     }
 

@@ -8,6 +8,11 @@ import com.ksptooi.psm.shell.Colors;
 public class TestServiceUnit {
 
 
+    @OnActivated
+    public void test(){
+        System.out.println("服务单元被加载 @ServiceUnit(\"TestSrvUnit\")");
+    }
+
 
     @RequestHandler("test")
     public void test(ShellRequest req , Process task) throws InterruptedException {

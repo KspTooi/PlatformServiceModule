@@ -38,7 +38,6 @@ public class ServiceUnits {
         return any.getClass().getAnnotation(ServiceUnit.class) != null;
     }
 
-
     public static List<SrvDefine> getSrvDefineFromAny(Object any) throws ServiceDefinitionException {
 
         var ret = new ArrayList<SrvDefine>();

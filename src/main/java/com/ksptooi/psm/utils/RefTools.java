@@ -24,11 +24,9 @@ public class RefTools {
         }
     }
 
-    public static <A extends Annotation> List<Method> getNoArgsMethod(Object any,Class<A> anno){
+    public static <A extends Annotation> List<Method> getNoArgsMethod(Object any,Class<A> anno,List<Method> ret){
 
         var method = getMethodByAnnotation(any.getClass(), anno);
-
-        var ret = new ArrayList<Method>();
 
         for(var m : method){
             if(m.getParameterCount() == 0){
