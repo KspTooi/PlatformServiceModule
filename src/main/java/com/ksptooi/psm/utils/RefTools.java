@@ -12,6 +12,11 @@ public class RefTools {
     public static void executeNoArgsMethodsIgnoreException(Object ctx, List<Method> methods){
 
         for (var m : methods){
+
+            if(m.getParameterCount() != 0){
+                continue;
+            }
+
             try {
                 m.invoke(ctx);
             } catch (IllegalAccessException e) {

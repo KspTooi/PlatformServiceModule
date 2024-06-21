@@ -4,6 +4,8 @@ import com.ksptooi.guice.annotations.Unit;
 import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.task.AsyncProcessCommitEvent;
 import com.ksptooi.psm.processor.event.task.AsyncProcessExitEvent;
+import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
+import com.ksptooi.psm.utils.aio.ConnectMode;
 import jakarta.inject.Inject;
 import lombok.Getter;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -105,8 +107,15 @@ public class TaskManager {
         t.setStage(Process.STAGE_FINISHED);
         releasePid(t.getPid());
 
+        //flushAIO中的所有内容
+        var cable = t.getRequest().getCable();
+
+        if(cable.isConnect(ConnectMode.OUTPUT)){
+            cable.flush();
+        }
+
         //销毁AIO
-        t.getRequest().getCable().destroy();
+        cable.destroy();
     }
 
     private synchronized int takePid(){
