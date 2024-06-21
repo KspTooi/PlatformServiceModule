@@ -4,8 +4,8 @@ package com.ksptooi.idlebox;
 import com.google.inject.Injector;
 import com.ksptooi.Application;
 import com.ksptooi.Platform;
+import com.ksptooi.idlebox.mapper.ConfigSetMapper;
 import com.ksptooi.idlebox.serviceunit.UnitA;
-import com.ksptooi.psm.database.MybatisXmlStartModules;
 import com.ksptooi.psm.subsystem.*;
 import com.ksptooi.psm.subsystem.Module;
 import jakarta.inject.Inject;
@@ -26,32 +26,19 @@ public class IdleBox extends SubSystem{
     @OnInstalled
     public void onActivated() {
         renderBanner();
-
-        SubSystemManager ssm = Platform.getUnit(SubSystemManager.class);
-        Injector idleBox = ssm.getSubSystem("IdleBox").getInjector();
-
     }
 
     @OnInstalled
     public void install(){
-
     }
-
 
     @Module
     public MybatisXmlStartModules mybatisXmlStartModules(){
 
-        System.out.println(this.getClass().getClassLoader());
-        var v = new MybatisXmlStartModules(this.getClass().getClassLoader());
-        System.out.println(v.getClass().getClassLoader());
+        var v = new MybatisXmlStartModules();
 
         return v;
     }
-
-
-
-
-
 
     public void renderBanner(){
         System.out.println("  _____       _   _          ____                 \n" +

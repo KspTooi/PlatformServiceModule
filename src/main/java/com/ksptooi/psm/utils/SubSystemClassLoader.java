@@ -35,7 +35,8 @@ public class SubSystemClassLoader extends URLClassLoader {
         var resource = getResource(name);
 
         if(resource == null){
-            throw new RuntimeException("public InputStream getResourceAsStream(String name)");
+            //throw new RuntimeException("public InputStream getResourceAsStream(String name)");
+            return null;
         }
 
         try {
@@ -51,5 +52,8 @@ public class SubSystemClassLoader extends URLClassLoader {
         return findResource(name);
     }
 
-
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        return super.loadClass(name);
+    }
 }

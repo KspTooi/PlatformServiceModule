@@ -56,8 +56,9 @@ public class SubSystemManager {
             }
 
             var ssl = new SubSystemLoaderModule(item,entryInstance);
+            var ssel = new SubSystemEntryLoaderModule(item,entryInstance);
             //var subInjector = parentCtx.createChildInjector(ssl);
-            var subInjector = Guice.createInjector(ssl);
+            var subInjector = Guice.createInjector(ssel,ssl);
 
             var subSystem = ssl.getSubSystem();
             subSystem.setInjector(subInjector);
@@ -70,8 +71,7 @@ public class SubSystemManager {
 
             installed.add(subSystem);
 
-
-            Application.getInjector().injectMembers(entryInstance);
+            //Application.getInjector().injectMembers(entryInstance);
 
             //执行Install完成钩子
             var hooks = new ArrayList<Method>();
