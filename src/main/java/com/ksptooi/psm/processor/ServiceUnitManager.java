@@ -287,7 +287,6 @@ public class ServiceUnitManager {
     private void resolverRequest(ShellRequest req){
 
         String statement = req.getStatement();
-
         String requestName = null;
 
         //预处理

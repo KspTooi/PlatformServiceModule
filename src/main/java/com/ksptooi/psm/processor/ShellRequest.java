@@ -13,6 +13,10 @@ public class ShellRequest {
     public ShellRequest(){
     }
 
+    public ShellRequest(String statement){
+        this.statement = statement;
+    }
+
     public ShellRequest(ShellRequest r){
         this.statement = r.getStatement();
         this.pattern = r.getPattern();
