@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 @Getter
 public class StatementParsingException extends Exception{
 
+    private String message;
     private String statement;
     private int index;
 
@@ -22,10 +23,10 @@ public class StatementParsingException extends Exception{
 
     public StatementParsingException(String message,String statement,int index) {
         super(message);
+        this.message = message;
         this.statement = statement;
         this.index = index;
     }
-
 
     public StatementParsingException(String message, Throwable cause) {
         super(message, cause);
@@ -40,4 +41,18 @@ public class StatementParsingException extends Exception{
     }
 
 
+    @Override
+    public String toString() {
+
+        var msg = new StringBuilder();
+        msg.append("\r\n\r\n").append("StatementParsingException Cause:").append(message).append("\r\n");
+        msg.append("\r\n").append(statement).append("\r\n");
+
+        for(var i =0;i < index - 1; i++){
+            msg.append("_");
+        }
+        msg.append("^").append("\r\n");
+
+        return msg.toString();
+    }
 }
