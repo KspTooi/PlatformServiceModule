@@ -18,18 +18,20 @@ public class StatementResolver {
 
         var parser = new StatementResolver();
 
-        parser.resolve("command -fileName=文件名1,文件名2 -fileName -fileName=abc");
 
-
-        parser.resolve("command -param1=\"AA BB-CC\" -param2=1 -param2=2 -param2=A,B,C,D");
-        parser.resolve("echo -param1=p1 -param1=p1 -param2=p2 -param3=p3");
-        parser.resolve("echo -param1 = p1 -param2 = p2 -param3 = p3");
-        parser.resolve("echo -param1=p1    -param2=p2-param3=p3");
-        parser.resolve("echo -param1=p1-param2=p2-param3=p3");
-        //parser.resolve("echo -param1=");
-        parser.resolve("echo -param1=\"value-with-@-character\" -param2=\"quoted value\"");
-        parser.resolve("echo");
-        parser.resolve("echo -param1=value");
+        parser.resolve("");
+        //parser.resolve("command -fileName=文件名1,文件名2 -fileName -fileName=abc");
+//
+//
+        //parser.resolve("command -param1=\"AA BB-CC\" -param2=1 -param2=2 -param2=A,B,C,D");
+        //parser.resolve("echo -param1=p1 -param1=p1 -param2=p2 -param3=p3");
+        //parser.resolve("echo -param1 = p1 -param2 = p2 -param3 = p3");
+        //parser.resolve("echo -param1=p1    -param2=p2-param3=p3");
+        //parser.resolve("echo -param1=p1-param2=p2-param3=p3");
+        ////parser.resolve("echo -param1=");
+        //parser.resolve("echo -param1=\"value-with-@-character\" -param2=\"quoted value\"");
+        //parser.resolve("echo");
+        //parser.resolve("echo -param1=value");
         //parser.resolve("echo -param1=value1=value2");
     }
 
@@ -187,6 +189,11 @@ public class StatementResolver {
             kind.add(fmt(val));
         }
 
+        //没有解析到任何值
+        if(state == STATE_INIT){
+            throw new StatementParsingException("parsing exception",statement,cs.length - 1);
+        }
+
         ret.setPattern(fmt(pattern));
         ret.setParameter(parameters);
         System.out.println(ret);
@@ -198,75 +205,10 @@ public class StatementResolver {
     public void resolve(ShellRequest request) throws StatementParsingException{
 
         var statement = request.getStatement();
+        var parsed = resolve(statement);
 
-        if(statement.contains(">")){
-            resolveAsSequentialStyle(request);
-            return;
-        }
 
-        var parameters = new HashMap<String,String>();
 
-        var cs = statement.toCharArray();
-
-        var pattern = new StringBuilder();
-        var pName = new StringBuilder();
-        var pVal = new StringBuilder();
-
-        //echo -param1=p1 -param2=p2 -param3=p3
-        //状态机代码 0:pattern 1:paramName 2:val 3:val_separator
-        var state = 0;
-
-        for(var i = 0; i<cs.length; i++){
-
-            var cur = cs[i];
-
-            if(cur == '-'){
-                if(pattern.isEmpty()){
-                    throw new StatementParsingException("No Pattern Input",statement,i);
-                }
-                if(!pName.isEmpty() || !pVal.isEmpty()){
-                    parameters.put(fmt(pName), fmt(pVal));
-                    pName.setLength(0);
-                    pVal.setLength(0);
-                }
-                state = 1;
-                continue;
-            }
-            if(cur == '='){
-                if(state != 1 || pName.isEmpty()){
-                    throw new StatementParsingException("[value symbol start] was found but without parameter name",statement,i);
-                }
-                state = 2;
-                continue;
-            }
-            if(state == 0){
-                if(cur != ' '){
-                    pattern.append(cur);
-                    continue;
-                }
-            }
-            if(state == 1){
-                if(cur != ' '){
-                    pName.append(cur);
-                    continue;
-                }
-            }
-            if(state == 2){
-                pVal.append(cur);
-            }
-
-        }
-
-        if(state == 1 && pName.isEmpty()){
-            throw new StatementParsingException("[param symbol start] was found but without parameter name",statement,cs.length);
-        }
-        if(state == 2 && pVal.isEmpty()){
-            throw new StatementParsingException("[values symbol start] was found but without values",statement,cs.length);
-        }
-
-        parameters.put(pName.toString(),pVal.toString());
-
-        System.out.println(parameters);
     }
 
     public void resolveAsSequentialStyle(ShellRequest req){
