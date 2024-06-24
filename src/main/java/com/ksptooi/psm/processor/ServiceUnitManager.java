@@ -234,9 +234,8 @@ public class ServiceUnitManager {
             return null;
         }
 
-
         //查找数据库中的RequestHandler
-        RequestHandlerVo requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getParams().size());
+        var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getParams().size());
 
         if(requestHandlerVo == null){
             log.warn("无法处理请求:{} 无法从数据库查找到合适的Handler",request.getPattern());

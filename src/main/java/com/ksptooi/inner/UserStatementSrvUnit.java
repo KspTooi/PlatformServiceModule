@@ -66,9 +66,8 @@ public class UserStatementSrvUnit {
             return;
         }
 
-        cable.w(Colors.RED).w(request.getPattern()).w(": 无法处理请求,匹配处理器失败.").w(Colors.RESET);
+        cable.w(Colors.RED).w(request.getPattern()).w(": 不是内部或外部命令,也不是可运行的程序或服务.").w(Colors.RESET);
         cable.nextLine();
     }
-
 
 }

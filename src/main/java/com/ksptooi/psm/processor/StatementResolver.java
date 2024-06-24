@@ -209,7 +209,18 @@ public class StatementResolver {
         var statement = request.getStatement();
         var parsed = resolve(statement);
         request.setPattern(parsed.getPattern());
-        request.setParameters(parsed.getParameter());
+
+        var origin = parsed.getParameter();
+        var params = new HashMap<String,List<String>>();
+
+        //将参数名称全部转换为小写并合并
+        for(var entry : origin.entrySet()){
+            var pNameLC = entry.getKey().toLowerCase();
+            var kind = params.computeIfAbsent(pNameLC, k -> new ArrayList<>());
+            kind.addAll(entry.getValue());
+        }
+
+        request.setParameters(params);
     }
 
     public void resolveAsSequentialStyle(ShellRequest req){

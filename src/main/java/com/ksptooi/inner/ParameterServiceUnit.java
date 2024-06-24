@@ -16,13 +16,12 @@ public class ParameterServiceUnit {
     }
 
     @RequestHandler("echo")
-    public void echo(@Param("fileName") String fileName, ShellRequest req ,@Param("size") String size){
+    public void echo(ShellRequest request,@Param("fileName") String fileName,@Param("size") Integer size){
 
-        var cable = req.getCable().connect(ConnectMode.OUTPUT);
-        cable.dye(GreenDye.pickUp);
-        cable.print("输入参数为:"+fileName + ","+size);
-        //cable.flush();
-
+        var cable = request.getCable().connect(ConnectMode.OUTPUT).dye(GreenDye.pickUp);
+        cable.w("输入参数 ").w("FileName:").w(fileName);
+        cable.w(" Size:").w(size);
+        
     }
 
 }
