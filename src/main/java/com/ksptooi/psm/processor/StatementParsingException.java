@@ -48,11 +48,29 @@ public class StatementParsingException extends Exception{
         msg.append("\r\n\r\n").append("StatementParsingException Cause:").append(message).append("\r\n");
         msg.append("\r\n").append(statement).append("\r\n");
 
+        var cs = statement.toCharArray();
+
         for(var i =0;i < index; i++){
+
+            if(isDoubleWidth(cs[i])){
+                msg.append("。");
+                continue;
+            }
             msg.append(".");
         }
         msg.append("^").append("\r\n");
 
         return msg.toString();
+    }
+
+    //判断字符是否是双宽字符
+    private boolean isDoubleWidth(char c) {
+
+        if ((int) c <= 127) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 }

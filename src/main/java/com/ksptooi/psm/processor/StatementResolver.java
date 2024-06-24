@@ -18,7 +18,7 @@ public class StatementResolver {
 
         var parser = new StatementResolver();
 
-        parser.resolve("command -fileName=文件名1,文件名2\"");
+        parser.resolve("command -fileName=文件名1,文件名2 -fileName -fileName=abc");
 
 
         parser.resolve("command -param1=\"AA BB-CC\" -param2=1 -param2=2 -param2=A,B,C,D");
@@ -90,6 +90,11 @@ public class StatementResolver {
 
                     var kind = parameters.computeIfAbsent(fmt(name), k -> new ArrayList<>());
 
+                    //当前已经有Kind 但是依然试图添加boolean值
+                    if(!kind.isEmpty() && val.isEmpty()){
+                        throw new StatementParsingException("Invalid symbol",statement,i);
+                    }
+
                     if(!val.isEmpty()){
                         kind.add(fmt(val));
                         val.setLength(0);
@@ -110,7 +115,6 @@ public class StatementResolver {
                 state = STATE_P_VAL;
                 continue;
             }
-
 
             if(cur == ','){
                 if(state == STATE_V_IDLE){
@@ -154,8 +158,14 @@ public class StatementResolver {
         if(state == STATE_V_ESC){
             throw new StatementParsingException("Missing escaped closing symbol",statement,cs.length - 1);
         }
-        if(state == STATE_P_NAME && name.isEmpty()){
-            throw new StatementParsingException("Param symbol was found but without parameter name",statement,cs.length - 1);
+        if(state == STATE_P_NAME){
+            if(name.isEmpty()){
+                throw new StatementParsingException("Param symbol was found but without parameter name",statement,cs.length - 1);
+            }
+            var v = parameters.get(fmt(name));
+            if(v != null && !v.isEmpty()){
+                throw new StatementParsingException("Invalid symbol",statement,cs.length - 1);
+            }
         }
         if(state == STATE_P_VAL && (val.isEmpty() || name.isEmpty())){
             throw new StatementParsingException("Val symbol was found but without values",statement,cs.length - 1);
