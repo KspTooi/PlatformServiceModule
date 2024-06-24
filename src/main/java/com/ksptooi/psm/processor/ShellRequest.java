@@ -36,7 +36,7 @@ public class ShellRequest {
     private List<String> params;
 
     //请求参数组
-    private Map<String,String> parameters;
+    private Map<String,List<String>> parameters;
 
     //请求元数据
     private String metadata;

@@ -1,9 +1,12 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.guice.annotations.Unit;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Unit
 public class StatementResolver {
 
     private static final int STATE_INIT = 0;   //初始化
@@ -137,9 +140,9 @@ public class StatementResolver {
             }
 
             if(state == STATE_INIT){
-                if(cur == ' '){
-                    continue;
-                }
+                //if(cur == ' '){
+                //    continue;
+                //}
                 pattern.append(cur);
             }
             if(state == STATE_P_NAME){
@@ -170,7 +173,7 @@ public class StatementResolver {
             }
         }
         if(state == STATE_P_VAL && (val.isEmpty() || name.isEmpty())){
-            throw new StatementParsingException("Val symbol was found but without values",statement,cs.length - 1);
+            throw new StatementParsingException("Value symbol was found but without values",statement,cs.length - 1);
         }
         if(state == STATE_V_SEP){
             if(val.isEmpty()){
@@ -190,7 +193,7 @@ public class StatementResolver {
         }
 
         //没有解析到任何值
-        if(state == STATE_INIT){
+        if(state == STATE_INIT && pattern.isEmpty()){
             throw new StatementParsingException("parsing exception",statement,cs.length - 1);
         }
 
@@ -203,12 +206,10 @@ public class StatementResolver {
 
 
     public void resolve(ShellRequest request) throws StatementParsingException{
-
         var statement = request.getStatement();
         var parsed = resolve(statement);
-
-
-
+        request.setPattern(parsed.getPattern());
+        request.setParameters(parsed.getParameter());
     }
 
     public void resolveAsSequentialStyle(ShellRequest req){

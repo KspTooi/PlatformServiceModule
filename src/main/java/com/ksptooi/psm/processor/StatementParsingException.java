@@ -45,7 +45,7 @@ public class StatementParsingException extends Exception{
     public String toString() {
 
         var msg = new StringBuilder();
-        msg.append("\r\n\r\n").append("StatementParsingException Cause:").append(message).append("\r\n");
+        msg.append("\r\n").append("StatementParsingException Cause:").append(message).append("\r\n");
         msg.append("\r\n").append(statement).append("\r\n");
 
         var cs = statement.toCharArray();

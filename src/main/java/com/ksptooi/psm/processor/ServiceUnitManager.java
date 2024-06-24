@@ -11,6 +11,8 @@ import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
 import com.ksptooi.psm.utils.RefTools;
+import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
+import com.ksptooi.psm.utils.aio.color.RedDye;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +43,9 @@ public class ServiceUnitManager {
 
     @Inject
     private EventSchedule eventSchedule;
+
+    @Inject
+    private StatementResolver statementResolver;
 
 
     private final static Map<String, ActivatedSrvUnit> procMap = new ConcurrentHashMap<>();
@@ -218,7 +223,17 @@ public class ServiceUnitManager {
      */
     public Process forward(ShellRequest request){
 
-        resolverRequest(request);
+        try {
+            statementResolver.resolve(request);
+        } catch (StatementParsingException e) {
+            var cable = request.getShell().getCable().dye(RedDye.pickUp);
+            cable.nextLine();
+            cable.print("无法解析Statement");
+            cable.w(e.toString()).nextLine();
+            cable.flush();
+            return null;
+        }
+
 
         //查找数据库中的RequestHandler
         RequestHandlerVo requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getParams().size());
