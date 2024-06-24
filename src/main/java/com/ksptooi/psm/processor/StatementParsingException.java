@@ -48,8 +48,8 @@ public class StatementParsingException extends Exception{
         msg.append("\r\n\r\n").append("StatementParsingException Cause:").append(message).append("\r\n");
         msg.append("\r\n").append(statement).append("\r\n");
 
-        for(var i =0;i < index - 1; i++){
-            msg.append("_");
+        for(var i =0;i < index; i++){
+            msg.append(".");
         }
         msg.append("^").append("\r\n");
 
