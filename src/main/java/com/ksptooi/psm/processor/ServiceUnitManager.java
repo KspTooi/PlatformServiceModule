@@ -234,11 +234,11 @@ public class ServiceUnitManager {
             return null;
         }
 
-        //查找数据库中的RequestHandler
+        //查找数据库中的请求处理器
         var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getParams().size());
 
         if(requestHandlerVo == null){
-            log.warn("无法处理请求:{} 无法从数据库查找到合适的Handler",request.getPattern());
+            log.warn("无法处理用户请求,因为数据库中没有所需的请求处理器 {}.",request.getPattern());
             eventSchedule.forward(new BadRequestEvent(request, BadRequestEvent.ERR_UNKNOWN_HANDLER));
             return null;
         }

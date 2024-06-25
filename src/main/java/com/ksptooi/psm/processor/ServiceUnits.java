@@ -1,12 +1,8 @@
 package com.ksptooi.psm.processor;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
 import com.ksptooi.psm.processor.entity.ActivatedSrvUnit;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.*;
-import com.ksptooi.psm.subsystem.Module;
-import com.ksptooi.psm.subsystem.SubSystemEntry;
 import com.ksptooi.psm.utils.RefTools;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
@@ -29,6 +25,21 @@ public class ServiceUnits {
         eventDefine.add(UserTypingEvent.class.getName());
     }
 
+
+    public static SrvDefine matchDefine(ShellRequest request,ActivatedSrvUnit unit){
+
+        var pattern = request.getPattern();
+        var paramsCount = request.getParameterMap().size();
+        var params = request.getParameterMap();
+
+        //获取服务单元中多个参数数量匹配的Define
+        var defines = Defines.getDefines(pattern, paramsCount, unit);
+
+        //匹配参数
+
+
+        return null;
+    }
 
 
     /**

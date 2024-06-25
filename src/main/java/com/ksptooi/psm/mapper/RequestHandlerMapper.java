@@ -13,6 +13,8 @@ public interface RequestHandlerMapper {
 
     public RequestHandlerVo getByPatternAndParamsCount(@Param("pattern") String name, @Param("pCount") int pCount);
 
+    public List<RequestHandlerVo> getRequestHandlers(@Param("pattern")String pattern,@Param("pCount")int pCount);
+
     public int insert(@Param("val") RequestHandlerVo vo);
 
     public RequestHandlerVo getById(@Param("id")Long id);

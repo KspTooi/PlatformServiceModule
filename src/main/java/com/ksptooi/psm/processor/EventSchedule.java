@@ -30,13 +30,14 @@ public class EventSchedule {
             return;
         }
         if(!def.getDefType().equals(SrvDefType.EVENT_HANDLER)){
-            log.error("无法注册事件处理器,Define类型错误. 位于Proc:{}.{}",def.getSrvUnitName(),def.getMethod().getName());
+            log.error("无法注册事件处理器,Define类型错误. 位于服务单元:{}.{}",def.getSrvUnitName(),def.getMethod().getName());
             return;
         }
 
         List<SrvDefine> emList = eventMap.computeIfAbsent(def.getEventHandlerType(), k -> new ArrayList<>());
         emList.add(def);
         Collections.sort(emList);
+
         //log.info("注册事件处理器 {}:{}({})..{}",def.getSrvUnitName(),def.getEventName(),def.getEventHandlerOrder(),def.getMethod().getName());
     }
 

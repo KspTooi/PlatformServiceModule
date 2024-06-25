@@ -21,7 +21,7 @@ public class ShellRequest {
         this.statement = r.getStatement();
         this.pattern = r.getPattern();
         this.params = r.getParams();
-        this.parameters = r.getParameters();
+        this.parameterMap = r.getParameterMap();
         this.shell = r.getShell();
         this.cable = r.getCable();
     }
@@ -36,7 +36,7 @@ public class ShellRequest {
     private List<String> params;
 
     //请求参数组
-    private Map<String,List<String>> parameters;
+    private Map<String,List<String>> parameterMap;
 
     //请求元数据
     private String metadata;

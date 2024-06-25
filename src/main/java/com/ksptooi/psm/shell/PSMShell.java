@@ -14,7 +14,6 @@ import com.ksptooi.psm.utils.aio.*;
 import com.ksptooi.psm.utils.aio.color.CyanDye;
 import com.ksptooi.psm.vk.VK;
 import jakarta.inject.Inject;
-import org.apache.sshd.common.channel.PtyMode;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -230,7 +228,7 @@ public class PSMShell implements Command,Runnable{
                     req.setStatement(statement);
                     req.setPattern(null);
                     req.setParams(new ArrayList<>());
-                    req.setParameters(new HashMap<>());
+                    req.setParameterMap(new HashMap<>());
                     req.setShell(this);
                     req.setCable(shellAioPort.createCable());
 
@@ -355,5 +353,9 @@ public class PSMShell implements Command,Runnable{
 
     public String getSessionId(){
         return this.sessionId;
+    }
+
+    public String getUserName(){
+        return this.session.getSession().getUsername();
     }
 }

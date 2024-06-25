@@ -1,8 +1,10 @@
 package com.ksptooi.psm.processor;
 
+import com.ksptooi.psm.processor.entity.ActivatedSrvUnit;
 import com.ksptooi.psm.processor.entity.SrvDefine;
 import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Defines {
@@ -31,6 +33,23 @@ public class Defines {
         }
         return null;
     }
+
+
+    /**
+     * 根据pattern和参数数量查找define
+     */
+    public static List<SrvDefine> getDefines(String pattern, int paramsCount, ActivatedSrvUnit unit){
+        var ret = new ArrayList<SrvDefine>();
+        for(SrvDefine def : unit.getSrvDefines()){
+            if(def.getDefType().equals(SrvDefType.REQ_HANDLER)){
+                if(def.getPattern().equals(pattern) && def.getParamCount() == paramsCount){
+                    ret.add(def);
+                }
+            }
+        }
+        return ret;
+    }
+
 
     /**
      * 根据pattern和参数数量查找define

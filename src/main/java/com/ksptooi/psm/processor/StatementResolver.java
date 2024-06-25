@@ -220,7 +220,7 @@ public class StatementResolver {
             kind.addAll(entry.getValue());
         }
 
-        request.setParameters(params);
+        request.setParameterMap(params);
     }
 
     public void resolveAsSequentialStyle(ShellRequest req){

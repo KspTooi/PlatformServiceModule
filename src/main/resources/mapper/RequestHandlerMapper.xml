@@ -42,12 +42,17 @@
 
     <select id="getByPatternAndParamsCount" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
-        WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount} AND STATUS = 0
+        WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount} AND STATUS = 0 LIMIT 1
     </select>
 
     <select id="getById" resultMap="poMap">
         SELECT * FROM REQUEST_HANDLER
         WHERE ID = #{id} AND STATUS = 0
+    </select>
+
+    <select id="getRequestHandlers" resultType="com.ksptooi.psm.modes.RequestHandlerVo">
+        SELECT * FROM REQUEST_HANDLER
+        WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount} AND STATUS = 0
     </select>
 
 
