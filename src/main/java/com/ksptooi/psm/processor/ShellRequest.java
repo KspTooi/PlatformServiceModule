@@ -45,4 +45,24 @@ public class ShellRequest {
 
     private AdvInputOutputCable cable;
 
+    public String getParameter(String kind){
+        var val = parameterMap.get(kind);
+        if(val == null || val.isEmpty()){
+            return null;
+        }
+        return parameterMap.get(kind).getFirst();
+    }
+
+    public List<String> getParameters(String kind){
+        var val = parameterMap.get(kind);
+        if(val == null || val.isEmpty()){
+            return null;
+        }
+        return parameterMap.get(kind);
+    }
+
+    public boolean hasParameter(String kind){
+        return parameterMap.containsKey(kind);
+    }
+
 }

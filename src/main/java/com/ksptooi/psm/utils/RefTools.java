@@ -3,10 +3,36 @@ package com.ksptooi.psm.utils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RefTools {
+
+
+    public static List<?> getParameterType(Method method,int seq){
+
+        var ret = new ArrayList<>();
+
+        var genericParameterTypes = method.getGenericParameterTypes();
+
+        if(genericParameterTypes.length < seq){
+            return ret;
+        }
+
+        var pType = (ParameterizedType)genericParameterTypes[seq];
+
+        var actualTypeArguments = pType.getActualTypeArguments();
+
+        for(var actual : actualTypeArguments){
+            ret.add(actual);
+        }
+
+        return ret;
+    }
 
 
     public static void executeNoArgsMethodsIgnoreException(Object ctx, List<Method> methods){

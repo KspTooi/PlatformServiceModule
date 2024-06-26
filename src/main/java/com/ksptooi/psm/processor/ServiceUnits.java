@@ -337,6 +337,59 @@ public class ServiceUnits {
     }
 
 
+
+    public static Object[] assemblyParamsWithType(Method m,Map<String,List<String>> userParam,Object... injectParam) throws AssemblingException{
+
+        Class<?>[] parameterTypes = m.getParameterTypes();
+
+        var needInject = new HashSet<Integer>();
+        var needUserParam = new HashSet<Integer>();
+
+        Object[] ret = new Object[m.getParameterCount()];
+
+        //检查参数
+        for (var i = 0; i < parameterTypes.length; i++) {
+
+            var cur = parameterTypes[i];
+            var isInject = false;
+
+            //判断当前正在遍历的参数类型是否是需要外部容器注入的
+            NEXT:
+            for(var item : injectParam){
+                if(cur.isInstance(item)){
+                    ret[i] = item;
+                    isInject = true;
+                    continue NEXT;
+                }
+            }
+
+            //判断当前正遍历的参数是否是需要用户输入的
+            var paramAnno = cur.getAnnotation(Param.class);
+
+            if(paramAnno == null){
+                ret[i] = null;
+                continue;
+            }
+
+            //方法注解上的参数名
+            var requireName = paramAnno.value().toLowerCase();
+
+            var userValue = userParam.get(requireName);
+
+            if(cur.isAssignableFrom(List.class)){
+
+            }
+
+
+        }
+
+
+
+        return null;
+
+    }
+
+
     public static Object[] assemblyParams(Method m,List<String> outsideParams,Object... innerParam){
         return assemblyParams(m,innerParam,outsideParams);
     }

@@ -257,8 +257,6 @@ public class ServiceUnitManager {
             return null;
         }
 
-        //ShellInstance user = request.getShellInstance();
-
         //查找服务单元中的Define
         var procDef = Defines.getDefine(requestHandlerVo.getPattern(), requestHandlerVo.getParamsCount(), aProc.getSrvDefines());
 
