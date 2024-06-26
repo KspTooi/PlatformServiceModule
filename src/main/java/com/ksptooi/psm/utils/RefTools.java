@@ -28,6 +28,7 @@ public class RefTools {
         var actualTypeArguments = pType.getActualTypeArguments();
 
         for(var actual : actualTypeArguments){
+            System.out.println(pType.getRawType());
             ret.add(actual);
         }
 
