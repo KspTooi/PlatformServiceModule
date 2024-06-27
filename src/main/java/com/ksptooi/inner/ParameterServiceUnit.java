@@ -2,19 +2,11 @@ package com.ksptooi.inner;
 
 import com.ksptooi.psm.processor.*;
 import com.ksptooi.psm.utils.RefTools;
-import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.ConnectMode;
 import com.ksptooi.psm.utils.aio.color.GreenDye;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.apache.sshd.common.util.security.SecurityUtils;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @ServiceUnit("bundled::test::ParameterServiceUnit")
 public class ParameterServiceUnit {
@@ -36,7 +28,7 @@ public class ParameterServiceUnit {
 
             if(item.getName().equals("echo1")){
 
-                var parameterType = RefTools.getParameterType(item,1);
+                var parameterType = RefTools.getParameterActualType(item,1);
 
                 System.out.println(parameterType);
 

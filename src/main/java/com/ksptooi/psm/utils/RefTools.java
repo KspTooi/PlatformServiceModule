@@ -4,16 +4,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RefTools {
 
 
-    public static List<?> getParameterType(Method method,int seq){
+
+    public static List<?> getParameterActualType(Method method, int seq){
 
         var ret = new ArrayList<>();
 

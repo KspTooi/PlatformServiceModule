@@ -7,8 +7,11 @@ import com.ksptooi.psm.utils.RefTools;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 public class ServiceUnits {
@@ -341,6 +344,7 @@ public class ServiceUnits {
     public static Object[] assemblyParamsWithType(Method m,Map<String,List<String>> userParam,Object... injectParam) throws AssemblingException{
 
         Class<?>[] parameterTypes = m.getParameterTypes();
+        var parameters = m.getParameters();
 
         var needInject = new HashSet<Integer>();
         var needUserParam = new HashSet<Integer>();
@@ -350,13 +354,14 @@ public class ServiceUnits {
         //检查参数
         for (var i = 0; i < parameterTypes.length; i++) {
 
-            var cur = parameterTypes[i];
+            var curType = parameterTypes[i];
+            var curParam = parameters[i];
             var isInject = false;
 
             //判断当前正在遍历的参数类型是否是需要外部容器注入的
             NEXT:
             for(var item : injectParam){
-                if(cur.isInstance(item)){
+                if(curType.isInstance(item)){
                     ret[i] = item;
                     isInject = true;
                     continue NEXT;
@@ -364,7 +369,7 @@ public class ServiceUnits {
             }
 
             //判断当前正遍历的参数是否是需要用户输入的
-            var paramAnno = cur.getAnnotation(Param.class);
+            var paramAnno = curParam.getAnnotation(Param.class);
 
             if(paramAnno == null){
                 ret[i] = null;
@@ -372,20 +377,38 @@ public class ServiceUnits {
             }
 
             //方法注解上的参数名
-            var requireName = paramAnno.value().toLowerCase();
+            var requireParamName = paramAnno.value().toLowerCase();
+            var userValue = Optional.ofNullable(userParam.get(requireParamName)).orElse(new ArrayList<>());
 
-            var userValue = userParam.get(requireName);
 
-            if(cur.isAssignableFrom(List.class)){
-
+            if(curType.isAssignableFrom(Boolean.class) || curType.isAssignableFrom(boolean.class)){
+                if(userValue.isEmpty()){
+                    ret[i] = false;
+                    continue;
+                }
+                ret[i] = true;
+                continue;
             }
+
+            if(curType.isAssignableFrom(String.class)){
+                if(userValue.isEmpty()){
+                    throw new AssemblingException("缺少参数:"+requireParamName);
+                }
+                if(userValue.size() > 1){
+                    throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
+                }
+                ret[i] = userValue.getFirst();
+            }
+
 
 
         }
 
 
+        return ret;
+    }
 
-        return null;
+    private static void ensureParamValid(){
 
     }
 
