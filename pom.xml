@@ -6,7 +6,7 @@
 
     <groupId>com.ksptool</groupId>
     <artifactId>PlatformServiceModule</artifactId>
-    <version>4.0T</version>
+    <version>4.0U</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

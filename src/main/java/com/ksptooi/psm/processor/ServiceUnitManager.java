@@ -233,8 +233,15 @@ public class ServiceUnitManager {
             return null;
         }
 
+        var argumentCount = request.getArgumentMap().size();
+
+        if(argumentCount < 1){
+            argumentCount = request.getSeqArgument().size();
+        }
+
         //查找数据库中的请求处理器
-        var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getArgumentMap().size());
+        var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), argumentCount);
+
 
         if(requestHandlerVo == null){
             log.warn("无法处理用户请求,因为数据库中没有所需的请求处理器 {}.",request.getPattern());
@@ -284,11 +291,19 @@ public class ServiceUnitManager {
         t.setTaskManager(taskManager);
         t.setBackground(procDef.isBackgroundRequestHandler());
 
-
-
         try {
-            var inject = ServiceUnits.assemblyArgumentWithType(procDef.getMethod(),request.getArgumentMap(),request,t,taskManager);
-            t.setInjectParams(inject);
+
+            Object[] injection = null;
+
+            if(request.isSeqStyleArgument()){
+                injection = ServiceUnits.assemblyArgumentWithSeq(procDef.getMethod(),request.getSeqArgument(),request,t,taskManager);
+            }
+
+            if(!request.isSeqStyleArgument()){
+                injection = ServiceUnits.assemblyArgumentWithType(procDef.getMethod(),request.getArgumentMap(),request,t,taskManager);
+            }
+
+            t.setInjectParams(injection);
         } catch (AssemblingException e) {
             log.warn("参数组装错误",e);
             eventSchedule.forward(new BadRequestEvent(new ShellRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER,e));

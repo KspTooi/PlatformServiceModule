@@ -26,7 +26,7 @@ public class Application {
 
     private static Injector injector = null;
 
-    public final static String version = "4.0T";
+    public final static String version = "4.0U";
     public final static String platform = "x64";
 
     public static void main(String[] p) throws InterruptedException, ServiceUnitRegException, SQLException, BootstrapException {
