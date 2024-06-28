@@ -273,15 +273,27 @@ public class ServiceUnitManager {
         //注入请求元数据
         request.setMetadata(requestHandlerVo.getMetadata());
 
+
+
+
         //注入Define所需要的入参
         var t = new Process();
         t.setTaskName(procDef.getMethod().getName());
         t.setRequest(request);
         t.setServiceUnit(aProc);
         t.setTarget(procDef.getMethod());
-        t.setInjectParams(ServiceUnits.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
+        //t.setInjectParams(ServiceUnits.assemblyParams(procDef.getMethod(),request.getParams(),request,t,taskManager));
         t.setTaskManager(taskManager);
         t.setBackground(procDef.isBackgroundRequestHandler());
+
+        try {
+            var inject = ServiceUnits.assemblyParamsWithType(procDef.getMethod(),request.getParameterMap(),request,t,taskManager);
+            t.setInjectParams(inject);
+        } catch (AssemblingException e) {
+            log.warn("参数组装错误",e);
+            return null;
+        }
+
 
         //执行Define
         taskManager.commit(t);

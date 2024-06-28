@@ -30,14 +30,14 @@ public class ParameterServiceUnit {
 
                 var parameterType = RefTools.getParameterActualType(item,1);
 
-                System.out.println(parameterType);
+                System.out.println(parameterType.getFirst().equals(Integer.class));
 
             }
         }
     }
 
     @RequestHandler("echo1")
-    public List<String> echo1(ShellRequest req, @Param("names")List<SecurityUtils> names){
+    public List<String> echo1(ShellRequest req, @Param("names")List<Integer> names){
 
         //String s = names.get(0);
         System.out.println(names);

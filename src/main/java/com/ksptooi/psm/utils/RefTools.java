@@ -4,16 +4,18 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RefTools {
 
 
 
-    public static List<?> getParameterActualType(Method method, int seq){
+    public static List<Type> getParameterActualType(Method method, int seq){
 
-        var ret = new ArrayList<>();
+        var ret = new ArrayList<Type>();
 
         var genericParameterTypes = method.getGenericParameterTypes();
 
@@ -25,10 +27,7 @@ public class RefTools {
 
         var actualTypeArguments = pType.getActualTypeArguments();
 
-        for(var actual : actualTypeArguments){
-            System.out.println(pType.getRawType());
-            ret.add(actual);
-        }
+        ret.addAll(Arrays.asList(actualTypeArguments));
 
         return ret;
     }

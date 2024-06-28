@@ -359,13 +359,17 @@ public class ServiceUnits {
             var isInject = false;
 
             //判断当前正在遍历的参数类型是否是需要外部容器注入的
-            NEXT:
+
             for(var item : injectParam){
                 if(curType.isInstance(item)){
                     ret[i] = item;
                     isInject = true;
-                    continue NEXT;
+                    break;
                 }
+            }
+
+            if(isInject){
+                continue;
             }
 
             //判断当前正遍历的参数是否是需要用户输入的
@@ -380,7 +384,7 @@ public class ServiceUnits {
             var requireParamName = paramAnno.value().toLowerCase();
             var userValue = Optional.ofNullable(userParam.get(requireParamName)).orElse(new ArrayList<>());
 
-
+            //处理Boolean类型
             if(curType.isAssignableFrom(Boolean.class) || curType.isAssignableFrom(boolean.class)){
                 if(userValue.isEmpty()){
                     ret[i] = false;
@@ -390,26 +394,131 @@ public class ServiceUnits {
                 continue;
             }
 
+            //处理字符串
             if(curType.isAssignableFrom(String.class)){
-                if(userValue.isEmpty()){
-                    throw new AssemblingException("缺少参数:"+requireParamName);
-                }
+                ensureParamNotBlank(requireParamName,userValue);
                 if(userValue.size() > 1){
                     throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
                 }
                 ret[i] = userValue.getFirst();
+                continue;
+            }
+            if(curType.isAssignableFrom(String[].class)){
+                ensureParamNotBlank(requireParamName,userValue);
+                ret[i] = userValue.toArray();
+                continue;
             }
 
+            //处理INT
+            if(curType.isAssignableFrom(Integer.class) || curType.isAssignableFrom(int.class)){
+                ensureParamNotBlank(requireParamName,userValue);
+                if(userValue.size() > 1){
+                    throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
+                }
+                try{
+                    ret[i] = Integer.parseInt(userValue.getFirst());
+                }catch (Exception ex){
+                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                }
+                continue;
+            }
+            if(curType.isAssignableFrom(Integer[].class) || curType.isAssignableFrom(int[].class)){
+                ensureParamNotBlank(requireParamName,userValue);
+                var t = new int[userValue.size()];
+                for (int a = 0; a < userValue.size(); a++) {
+                    try{
+                        t[a] = Integer.parseInt(userValue.get(a));
+                    }catch (Exception ex){
+                        throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                    }
+                }
+                ret[i] = t;
+                continue;
+            }
 
+            //处理double
+            if(curType.isAssignableFrom(Double.class) || curType.isAssignableFrom(double.class)){
+                ensureParamNotBlank(requireParamName,userValue);
+                if(userValue.size() > 1){
+                    throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
+                }
+                try{
+                    ret[i] = Double.parseDouble(userValue.getFirst());
+                }catch (Exception ex){
+                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                }
+                continue;
+            }
+            if(curType.isAssignableFrom(Double[].class) || curType.isAssignableFrom(double[].class)){
+                ensureParamNotBlank(requireParamName,userValue);
+                var t = new double[userValue.size()];
+                for (int a = 0; a < userValue.size(); a++) {
+                    try{
+                        t[a] = Double.parseDouble(userValue.get(a));
+                    }catch (Exception ex){
+                        throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                    }
+                }
+                ret[i] = t;
+                continue;
+            }
 
+            //处理List类型
+            if(curType.isAssignableFrom(List.class)){
+
+                ensureParamNotBlank(requireParamName,userValue);
+
+                //泛型上的类型
+                var actualType = RefTools.getParameterActualType(m, i);
+
+                //无泛型
+                if(actualType.isEmpty()){
+                    ret[i] = userValue;
+                    continue;
+                }
+
+                var actual = actualType.getFirst();
+                var list = new ArrayList<Object>();
+
+                if(actual.equals(String.class)){
+                    list.add(userValue);
+                }
+
+                try{
+                    if(actual.equals(Double.class) || actual.equals(double.class)){
+                        for(var var : userValue){
+                            list.add(Double.parseDouble(var));
+                        }
+                    }
+
+                    if(actual.equals(Integer.class) || actual.equals(int.class)){
+                        for(var var : userValue){
+                            list.add(Integer.parseInt(var));
+                        }
+                    }
+                }catch (Exception ex){
+                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法转换.");
+                }
+
+                ret[i] = list;
+                continue;
+            }
+
+            //处理未知类型
+            throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue+"转换为"+curType.getName());
         }
 
 
         return ret;
     }
 
-    private static void ensureParamValid(){
-
+    private static void ensureParamNotBlank(String paramName,List<String> value)throws AssemblingException{
+        if(value == null || value.isEmpty()){
+            throw new AssemblingException("缺少参数:"+paramName);
+        }
+        if(StringUtils.isBlank(value.getFirst())){
+            throw new AssemblingException("缺少参数:"+paramName);
+        }
     }
 
 
