@@ -16,6 +16,10 @@ public class StatementResolver {
     private static final int STATE_V_ESC = 4;  //解析转义符
     private static final int STATE_V_IDLE = 5;  //惰性状态
 
+    //顺序风格的状态机
+    private static final int SEQ_STATE_INIT = 101;
+    private static final int SEQ_STATE_VAL = 102;
+    private static final int SEQ_STATE_ESC = 103;
 
     public static void main(String[] args) throws StatementParsingException {
 
@@ -206,7 +210,16 @@ public class StatementResolver {
 
 
     public void resolve(ShellRequest request) throws StatementParsingException{
+
         var statement = request.getStatement();
+
+        //按顺序风格解析
+        if(isSequenceStyleStatement(statement)){
+            resolveAsSequentialStyle(request);
+            return;
+        }
+
+
         var parsed = resolve(statement);
         request.setPattern(parsed.getPattern());
 
@@ -220,7 +233,7 @@ public class StatementResolver {
             kind.addAll(entry.getValue());
         }
 
-        request.setParameterMap(params);
+        request.setArgumentMap(params);
     }
 
     public void resolveAsSequentialStyle(ShellRequest req){
@@ -237,7 +250,7 @@ public class StatementResolver {
         //无参数
         if(params.length <= 1){
             req.setPattern(requestName);
-            req.setParams(new ArrayList<>());
+            req.setSeqArgument(new ArrayList<>());
             return;
         }
 
@@ -257,11 +270,34 @@ public class StatementResolver {
         }
 
         req.setPattern(params[0]);
-        req.setParams(paramList);
+        req.setSeqArgument(paramList);
+        req.setSeqStyleArgument(true);
+    }
+
+    /**
+     * 判断一段statement是否为"顺序风格"
+     * @param statement
+     * @return
+     */
+    public boolean isSequenceStyleStatement(String statement){
+
+        var cs = statement.toCharArray();
+
+        for (int i = 0; i < cs.length; i++) {
+            if(cs[i] == '"' || cs[i] == '-'){
+                return false;
+            }
+            if(cs[i] == '>'){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String fmt(StringBuilder b){
         return b.toString().trim();
     }
+
 
 }

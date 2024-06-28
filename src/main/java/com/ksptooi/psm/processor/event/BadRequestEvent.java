@@ -54,4 +54,6 @@ public class BadRequestEvent extends AbstractServiceUnitEvent {
 
     public static final String ERR_INVOKE_EXCEPTION = "PSM:STM:E3";
 
+    public static final String ERR_ASSEMBLY_ARGUMENT = "PSM:STM:E6";
+
 }

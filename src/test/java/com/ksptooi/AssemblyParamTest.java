@@ -21,7 +21,7 @@ public class AssemblyParamTest {
             if(m.getName().equals("target")){
 
                 //组装参数
-                var objects = ServiceUnits.assemblyParamsWithType(m, userParam);
+                var objects = ServiceUnits.assemblyArgumentWithType(m, userParam);
                 System.out.println(Arrays.toString(objects));
 
             }

@@ -227,8 +227,8 @@ public class PSMShell implements Command,Runnable{
                     ShellRequest req = new ShellRequest();
                     req.setStatement(statement);
                     req.setPattern(null);
-                    req.setParams(new ArrayList<>());
-                    req.setParameterMap(new HashMap<>());
+                    req.setSeqArgument(new ArrayList<>());
+                    req.setArgumentMap(new HashMap<>());
                     req.setShell(this);
                     req.setCable(shellAioPort.createCable());
 

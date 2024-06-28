@@ -29,7 +29,6 @@ public class ParameterServiceUnit {
             if(item.getName().equals("echo1")){
 
                 var parameterType = RefTools.getParameterActualType(item,1);
-
                 System.out.println(parameterType.getFirst().equals(Integer.class));
 
             }

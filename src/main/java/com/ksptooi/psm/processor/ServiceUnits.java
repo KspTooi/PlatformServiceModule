@@ -7,7 +7,6 @@ import com.ksptooi.psm.utils.RefTools;
 import com.ksptooi.uac.commons.ReflectUtils;
 import com.ksptooi.uac.core.annatatiotion.Param;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -32,8 +31,8 @@ public class ServiceUnits {
     public static SrvDefine matchDefine(ShellRequest request,ActivatedSrvUnit unit){
 
         var pattern = request.getPattern();
-        var paramsCount = request.getParameterMap().size();
-        var params = request.getParameterMap();
+        var paramsCount = request.getArgumentMap().size();
+        var params = request.getArgumentMap();
 
         //获取服务单元中多个参数数量匹配的Define
         var defines = Defines.getDefines(pattern, paramsCount, unit);
@@ -340,14 +339,78 @@ public class ServiceUnits {
     }
 
 
+    public static Object[] assemblyArgumentWithSeq(Method m,List<String> argument,Object... injectionArguments) throws AssemblingException{
 
-    public static Object[] assemblyParamsWithType(Method m,Map<String,List<String>> userParam,Object... injectParam) throws AssemblingException{
+        var parameterTypes = m.getParameterTypes();
+        var parameters = m.getParameters();
+        Object[] ret = new Object[m.getParameterCount()];
+
+        var curSeq = 0;
+
+        for(var i = 0; i < parameterTypes.length; i++){
+
+            var curType = parameterTypes[i];
+            var curParam = parameters[i];
+            var isInjected = false;
+
+            //判断当前正在遍历的参数类型是否是需要外部容器注入的
+            for(var item : injectionArguments){
+                if(curType.isInstance(item)){
+                    ret[i] = item;
+                    isInjected = true;
+                    break;
+                }
+            }
+            if(isInjected){
+                continue; //已注入
+            }
+
+            var annoParam = curParam.getAnnotation(Param.class);
+
+            //无注解
+            if(annoParam == null){
+                ret[i] = null;
+                continue;
+            }
+
+            if(curSeq >= argument.size()){
+                ret[i] = null;
+                continue;
+            }
+
+            if(curType.isAssignableFrom(String.class)){
+                ret[i] = argument.get(curSeq);
+            }
+            if(curType.isAssignableFrom(Integer.class) || curType.isAssignableFrom(int.class)){
+                try{
+                    ret[i] = Integer.parseInt(argument.get(curSeq));
+                }catch (Exception ex){
+                    throw new AssemblingException("参数:"+annoParam.value()+"值错误. 无法将"+argument.get(curSeq)+"转换为Int");
+                }
+            }
+            if(curType.isAssignableFrom(Double.class) || curType.isAssignableFrom(double.class)){
+                try{
+                    ret[i] = Double.parseDouble(argument.get(curSeq));
+                }catch (Exception ex){
+                    throw new AssemblingException("参数:"+annoParam.value()+"值错误. 无法将"+argument.get(curSeq)+"转换为Double");
+                }
+            }
+            if(curType.isAssignableFrom(Boolean.class) || curType.isAssignableFrom(boolean.class)){
+                ret[i] = true;
+            }
+
+            curSeq++;
+        }
+
+        return ret;
+    }
+
+
+
+    public static Object[] assemblyArgumentWithType(Method m, Map<String,List<String>> arguments, Object... injectionArguments) throws AssemblingException{
 
         Class<?>[] parameterTypes = m.getParameterTypes();
         var parameters = m.getParameters();
-
-        var needInject = new HashSet<Integer>();
-        var needUserParam = new HashSet<Integer>();
 
         Object[] ret = new Object[m.getParameterCount()];
 
@@ -356,19 +419,18 @@ public class ServiceUnits {
 
             var curType = parameterTypes[i];
             var curParam = parameters[i];
-            var isInject = false;
+            var isInjected = false;
 
             //判断当前正在遍历的参数类型是否是需要外部容器注入的
-
-            for(var item : injectParam){
+            for(var item : injectionArguments){
                 if(curType.isInstance(item)){
                     ret[i] = item;
-                    isInject = true;
+                    isInjected = true;
                     break;
                 }
             }
 
-            if(isInject){
+            if(isInjected){
                 continue;
             }
 
@@ -382,7 +444,7 @@ public class ServiceUnits {
 
             //方法注解上的参数名
             var requireParamName = paramAnno.value().toLowerCase();
-            var userValue = Optional.ofNullable(userParam.get(requireParamName)).orElse(new ArrayList<>());
+            var userValue = Optional.ofNullable(arguments.get(requireParamName)).orElse(new ArrayList<>());
 
             //处理Boolean类型
             if(curType.isAssignableFrom(Boolean.class) || curType.isAssignableFrom(boolean.class)){

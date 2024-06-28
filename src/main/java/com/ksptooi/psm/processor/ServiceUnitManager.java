@@ -11,7 +11,6 @@ import com.ksptooi.psm.processor.entity.Process;
 import com.ksptooi.psm.processor.event.BadRequestEvent;
 import com.ksptooi.Application;
 import com.ksptooi.psm.utils.RefTools;
-import com.ksptooi.psm.utils.aio.AdvInputOutputCable;
 import com.ksptooi.psm.utils.aio.color.RedDye;
 import jakarta.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
@@ -235,7 +234,7 @@ public class ServiceUnitManager {
         }
 
         //查找数据库中的请求处理器
-        var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getParams().size());
+        var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), request.getArgumentMap().size());
 
         if(requestHandlerVo == null){
             log.warn("无法处理用户请求,因为数据库中没有所需的请求处理器 {}.",request.getPattern());
@@ -268,12 +267,11 @@ public class ServiceUnitManager {
         if(procDef == null){
             //服务单元中找不到任何Define
             eventSchedule.forward(new BadRequestEvent(new ShellRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER));
+            return null;
         }
 
         //注入请求元数据
         request.setMetadata(requestHandlerVo.getMetadata());
-
-
 
 
         //注入Define所需要的入参
@@ -286,11 +284,14 @@ public class ServiceUnitManager {
         t.setTaskManager(taskManager);
         t.setBackground(procDef.isBackgroundRequestHandler());
 
+
+
         try {
-            var inject = ServiceUnits.assemblyParamsWithType(procDef.getMethod(),request.getParameterMap(),request,t,taskManager);
+            var inject = ServiceUnits.assemblyArgumentWithType(procDef.getMethod(),request.getArgumentMap(),request,t,taskManager);
             t.setInjectParams(inject);
         } catch (AssemblingException e) {
             log.warn("参数组装错误",e);
+            eventSchedule.forward(new BadRequestEvent(new ShellRequest(request),BadRequestEvent.ERR_CANNOT_ASSIGN_HANDLER,e));
             return null;
         }
 
@@ -322,7 +323,7 @@ public class ServiceUnitManager {
         //无参数
         if(params.length <= 1){
             req.setPattern(requestName);
-            req.setParams(new ArrayList<>());
+            req.setSeqArgument(new ArrayList<>());
             return;
         }
 
@@ -342,7 +343,7 @@ public class ServiceUnitManager {
         }
 
         req.setPattern(params[0]);
-        req.setParams(paramList);
+        req.setSeqArgument(paramList);
     }
 
     public static ActivatedSrvUnit getServiceUnit(String procName){
