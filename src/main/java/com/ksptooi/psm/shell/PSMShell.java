@@ -6,10 +6,8 @@ import com.ksptooi.psm.processor.ShellRequest;
 import com.ksptooi.psm.processor.ServiceUnitManager;
 import com.ksptooi.psm.processor.TaskManager;
 import com.ksptooi.psm.processor.entity.Process;
-import com.ksptooi.psm.processor.event.UserTypingEvent;
+import com.ksptooi.psm.processor.event.*;
 import com.ksptooi.psm.processor.event.generic.ServiceUnitEvent;
-import com.ksptooi.psm.processor.event.ShellInputEvent;
-import com.ksptooi.psm.processor.event.StatementCommitEvent;
 import com.ksptooi.psm.utils.aio.*;
 import com.ksptooi.psm.utils.aio.color.CyanDye;
 import com.ksptooi.psm.vk.VK;
@@ -89,6 +87,9 @@ public class PSMShell implements Command,Runnable{
         //启动处理线程
         this.shellThread = Thread.ofVirtual().start(this);
         log.info("账户:{} 已建立新会话:{}",session.getSession().getUsername(),sessionId);
+
+        var e = new UserSessionLoggedEvent(this,getUserName(),getSessionId());
+        eventSchedule.forward(e);
     }
 
     @Override
@@ -103,7 +104,11 @@ public class PSMShell implements Command,Runnable{
         if(shellThread!=null){
             shellThread.interrupt();
         }
+
         log.info("账户:{} 会话已离线:{}",session.getSession().getUsername(),sessionId);
+
+        var e = new UserSessionClosedEvent(getUserName(),getSessionId());
+        eventSchedule.forward(e);
     }
 
     @Override

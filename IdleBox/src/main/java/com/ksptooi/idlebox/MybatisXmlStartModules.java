@@ -24,11 +24,9 @@ public class MybatisXmlStartModules extends AbstractModule {
             protected void initialize() {
                 setEnvironmentId("prod");
                 setClassPathResource("mybatis-config.xml");
-
                 if(cl != null){
                     useResourceClassLoader(cl);
                 }
-
             }
         });
 

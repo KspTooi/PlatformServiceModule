@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.ksptool</groupId>
             <artifactId>PlatformServiceModule</artifactId>
-            <version>4.0S</version>
+            <version>4.0U</version>
         </dependency>
 
 
