@@ -20,4 +20,6 @@ public interface RequestHandlerMapper {
     public RequestHandlerVo getById(@Param("id")Long id);
 
     public int deleteById(@Param("id")Long id);
+
+    public RequestHandlerVo query(@Param("val")String val);
 }

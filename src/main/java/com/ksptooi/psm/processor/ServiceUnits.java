@@ -25,6 +25,9 @@ public class ServiceUnits {
         eventDefine.add(ShellInputEvent.class.getName());
         eventDefine.add(StatementCommitEvent.class.getName());
         eventDefine.add(UserTypingEvent.class.getName());
+        eventDefine.add(AfterVirtualTextAreaChangeEvent.class.getName());
+        eventDefine.add(UserSessionClosedEvent.class.getName());
+        eventDefine.add(UserSessionLoggedEvent.class.getName());
     }
 
 

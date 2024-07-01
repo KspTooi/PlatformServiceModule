@@ -179,8 +179,11 @@ public class PSMShell implements Command,Runnable{
                         continue;
                     }
 
+                    var oldContent = vt.getContent();
                     vt.insert(cable.getReadString());
                     vt.render();
+
+                    eventSchedule.forward(new AfterVirtualTextAreaChangeEvent(this,vt,vt.getContent(),oldContent));
                     continue;
                 }
 
@@ -202,8 +205,10 @@ public class PSMShell implements Command,Runnable{
                 }
 
                 if(cable.match(VK.BACKSPACE)){
+                    var oldContent = vt.getContent();
                     vt.backspace();
                     vt.render();
+                    eventSchedule.forward(new AfterVirtualTextAreaChangeEvent(this,vt,vt.getContent(),oldContent));
                     continue;
                 }
 
@@ -362,5 +367,9 @@ public class PSMShell implements Command,Runnable{
 
     public String getUserName(){
         return this.session.getSession().getUsername();
+    }
+
+    public VirtualTextArea getVirtualTextArea(){
+        return vt;
     }
 }

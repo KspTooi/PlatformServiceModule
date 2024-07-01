@@ -55,5 +55,10 @@
         WHERE PATTERN = #{pattern} AND PARAMS_COUNT = #{pCount} AND STATUS = 0
     </select>
 
+    <select id="query" resultType="com.ksptooi.psm.modes.RequestHandlerVo">
+        SELECT * FROM REQUEST_HANDLER
+        WHERE STATUS = 0 AND PATTERN LIKE CONCAT('%', '${val}', '%') LIMIT 1
+    </select>
+
 
 </mapper>

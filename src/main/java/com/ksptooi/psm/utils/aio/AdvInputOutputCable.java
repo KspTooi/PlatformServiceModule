@@ -292,4 +292,9 @@ public class AdvInputOutputCable extends BufferedAndMatcher {
         listener.remove(k);
     }
 
+    public AdvInputOutputCable clearLine(){
+        this.print("\r").print("\033[K").print("\033[2K").flush();
+        return this;
+    }
+
 }
