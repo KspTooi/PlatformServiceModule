@@ -203,7 +203,7 @@ public class StatementResolver {
 
         ret.setPattern(fmt(pattern));
         ret.setParameter(parameters);
-        System.out.println(ret);
+        //System.out.println(ret);
         return ret;
     }
 

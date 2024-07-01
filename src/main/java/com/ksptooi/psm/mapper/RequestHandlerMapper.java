@@ -22,4 +22,7 @@ public interface RequestHandlerMapper {
     public int deleteById(@Param("id")Long id);
 
     public RequestHandlerVo query(@Param("val")String val);
+
+
+    public List<RequestHandlerVo> queryMany(@Param("val")String val);
 }

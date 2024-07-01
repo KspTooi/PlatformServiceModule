@@ -57,7 +57,12 @@
 
     <select id="query" resultType="com.ksptooi.psm.modes.RequestHandlerVo">
         SELECT * FROM REQUEST_HANDLER
-        WHERE STATUS = 0 AND PATTERN LIKE CONCAT('%', '${val}', '%') LIMIT 1
+        WHERE STATUS = 0 AND PATTERN LIKE CONCAT('${val}', '%') LIMIT 1
+    </select>
+
+    <select id="queryMany" resultType="com.ksptooi.psm.modes.RequestHandlerVo">
+        SELECT * FROM REQUEST_HANDLER
+        WHERE STATUS = 0 AND PATTERN LIKE CONCAT('${val}', '%')
     </select>
 
 

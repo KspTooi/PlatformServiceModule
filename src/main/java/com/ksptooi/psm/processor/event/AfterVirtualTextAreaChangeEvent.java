@@ -13,7 +13,6 @@ public class AfterVirtualTextAreaChangeEvent extends AbstractServiceUnitEvent {
     private final String newContent;
     private final String oldContent;
 
-
     public AfterVirtualTextAreaChangeEvent(PSMShell shell,VirtualTextArea vt,String nContent,String oContent){
         this.shell = shell;
         this.virtualTextArea = vt;
