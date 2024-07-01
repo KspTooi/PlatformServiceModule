@@ -133,6 +133,12 @@ public class VirtualTextArea {
         return buf.toString();
     }
 
+    public void setContent(String content){
+        buf.setLength(0);
+        buf.append(content);
+        vCursor = buf.length();
+    }
+
     public void reset(){
         buf.setLength(0);
         vCursor = 0;
