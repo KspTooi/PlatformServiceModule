@@ -85,7 +85,7 @@ public class CommandLineUpgradeUnit {
             completionMap.remove(sessionId);
 
             if(event.getNewContent().endsWith(" ")){
-                
+
             }
 
             return;
