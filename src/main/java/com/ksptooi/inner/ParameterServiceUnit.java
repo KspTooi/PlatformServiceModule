@@ -35,7 +35,7 @@ public class ParameterServiceUnit {
     }
 
     @RequestHandler("echo1")
-    public List<String> echo1(ShellRequest req, @Param("names")List<Integer> names){
+    public List<String> echo1(ShellRequest req, @Param("names")boolean names){
 
         //String s = names.get(0);
         System.out.println(names);
@@ -45,11 +45,9 @@ public class ParameterServiceUnit {
 
     @RequestHandler("echo")
     public void echo(ShellRequest request,@Param("fileName") String fileName,@Param("size") Double size){
-
         var cable = request.getCable().connect(ConnectMode.OUTPUT).dye(GreenDye.pickUp);
         cable.w("输入参数 ").w("FileName:").w(fileName);
         cable.w(" Size:").w(size);
-
     }
 
 }

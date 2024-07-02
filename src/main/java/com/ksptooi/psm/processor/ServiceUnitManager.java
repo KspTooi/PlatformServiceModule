@@ -46,7 +46,6 @@ public class ServiceUnitManager {
     @Inject
     private StatementResolver statementResolver;
 
-
     private final static Map<String, ActivatedSrvUnit> procMap = new ConcurrentHashMap<>();
 
 

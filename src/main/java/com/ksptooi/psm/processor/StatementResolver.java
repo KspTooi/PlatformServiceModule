@@ -26,20 +26,9 @@ public class StatementResolver {
         var parser = new StatementResolver();
 
 
-        parser.resolve("");
-        //parser.resolve("command -fileName=文件名1,文件名2 -fileName -fileName=abc");
-//
-//
-        //parser.resolve("command -param1=\"AA BB-CC\" -param2=1 -param2=2 -param2=A,B,C,D");
-        //parser.resolve("echo -param1=p1 -param1=p1 -param2=p2 -param3=p3");
-        //parser.resolve("echo -param1 = p1 -param2 = p2 -param3 = p3");
-        //parser.resolve("echo -param1=p1    -param2=p2-param3=p3");
-        //parser.resolve("echo -param1=p1-param2=p2-param3=p3");
-        ////parser.resolve("echo -param1=");
-        //parser.resolve("echo -param1=\"value-with-@-character\" -param2=\"quoted value\"");
-        //parser.resolve("echo");
-        //parser.resolve("echo -param1=value");
-        //parser.resolve("echo -param1=value1=value2");
+        var resolve = parser.resolve("echo -name");
+
+        System.out.println(resolve);
     }
 
     public ParsedStatements resolve(String statement) throws StatementParsingException {

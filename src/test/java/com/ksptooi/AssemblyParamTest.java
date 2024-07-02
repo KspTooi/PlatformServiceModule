@@ -14,8 +14,8 @@ public class AssemblyParamTest {
     public static void main(String[] args) throws AssemblingException {
 
         var userParam = new HashMap<String, List<String>>();
-        userParam.put("key1", List.of("1"));
-        userParam.put("key2", List.of("2A42"));
+        userParam.put("key1", List.of());
+        userParam.put("key2", List.of("2"));
 
         for(var m : AssemblyParamTest.class.getMethods()){
             if(m.getName().equals("target")){

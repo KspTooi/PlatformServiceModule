@@ -39,14 +39,12 @@ public class CommandLineUpgradeUnit {
         var sessionId = e.getUserShell().getSessionId();
 
         if(e.match(VK.TAB)){
-
             if(completionMap.containsKey(sessionId)){
                 var vt = e.getUserShell().getVirtualTextArea();
                 vt.setContent(completionMap.get(sessionId));
                 vt.render();
                 completionMap.remove(sessionId);
             }
-
         }
 
     }
@@ -78,13 +76,18 @@ public class CommandLineUpgradeUnit {
          * 1.全字匹配后(用户输入Pattern与数据库中某一个模式完全一致)不再进行Pattern补全. 需根据Pattern查询数据库中的参数进行参数补全
          * 2.全字匹配无命中则首先进行顺序匹配 根据用户Pattern右匹配数据库中最短的一条模式
          * 3.顺序匹配无命中则进行"首字母匹配" 取用户Pattern第一个字符模糊查询数据库获取到以……开头的所有模式 取查询结果集模式第一个字母与每个空格后的首字母与用户Pattern匹配
-         * 例: 数据库模式:uac user add. 首字母匹配用户Pattern为:uua
-         *
+         * ex: 数据库模式:uac user add. 首字母匹配用户Pattern为:uua
          */
 
         //已全字匹配(需要匹配参数)
         if(! requestHandlerMapper.getByPattern(ps.getPattern()).isEmpty()){
+
             completionMap.remove(sessionId);
+
+            if(event.getNewContent().endsWith(" ")){
+                
+            }
+
             return;
         }
 

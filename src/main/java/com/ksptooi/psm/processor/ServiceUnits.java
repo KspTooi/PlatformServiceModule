@@ -447,14 +447,17 @@ public class ServiceUnits {
 
             //方法注解上的参数名
             var requireParamName = paramAnno.value().toLowerCase();
-            var userValue = Optional.ofNullable(arguments.get(requireParamName)).orElse(new ArrayList<>());
+            var userValue = arguments.get(requireParamName);
 
             //处理Boolean类型
             if(curType.isAssignableFrom(Boolean.class) || curType.isAssignableFrom(boolean.class)){
-                if(userValue.isEmpty()){
+                //没有输入参数时 userVal为null
+                //输入了参数没有指定值时userVal长度为0
+                if(userValue == null){
                     ret[i] = false;
                     continue;
                 }
+
                 ret[i] = true;
                 continue;
             }
