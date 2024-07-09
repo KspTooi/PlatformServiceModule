@@ -22,21 +22,23 @@ public class ParameterServiceUnit {
         var clazz = ParameterServiceUnit.class;
         var instance = clazz.getConstructor().newInstance();
 
-
         for(var item : clazz.getMethods()){
-
             if(item.getName().equals("echo1")){
-
                 var parameterType = RefTools.getParameterActualType(item,1);
                 System.out.println(parameterType.getFirst().equals(Integer.class));
-
             }
         }
     }
 
+    @RequestHandler("echoSet")
+    public List<String> echoSet(ShellRequest req, @ParamSet EchoParamSet set){
+        //String s = names.get(0);
+        System.out.println(set);
+        return null;
+    }
+
     @RequestHandler("echo1")
     public List<String> echo1(ShellRequest req, @Param("names")boolean names){
-
         //String s = names.get(0);
         System.out.println(names);
         return null;

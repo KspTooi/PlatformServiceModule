@@ -23,6 +23,5 @@ public interface RequestHandlerMapper {
 
     public RequestHandlerVo query(@Param("val")String val);
 
-
     public List<RequestHandlerVo> queryMany(@Param("val")String val);
 }

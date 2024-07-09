@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ksptooi.psm.mapper.CommandsMapper">
+
+    <!-- 表实体出参映射-->
+    <resultMap id="poMap" type="com.ksptooi.psm.modes.CommandEntity">
+        <result column="ID" property="id"/>
+        <result column="PATTERN" property="pattern"/>
+        <result column="SERVICE_UNIT_NAME" property="serviceUnitName"/>
+        <result column="SERVICE_UNIT_CLASS_TYPE" property="serviceUnitClassType"/>
+        <result column="STATUS" property="status"/>
+        <result column="METADATA" property="metadata"/>
+        <result column="CREATED_TIME" property="createdTime"/>
+    </resultMap>
+
+    <!-- 表的所有参数 ,不带t-->
+    <sql id="tableColumns">
+        `ID`,
+        `PATTERN`,
+        `SERVICE_UNIT_NAME`,
+	    `SERVICE_UNIT_CLASS_TYPE`,
+	    `STATUS`,
+	    `METADATA`,
+	    `CREATED_TIME`
+    </sql>
+
+    <select id="getByPattern" resultMap="poMap">
+        SELECT * FROM COMMANDS
+        WHERE PATTERN = #{pattern} AND STATUS = 0
+    </select>
+
+    <select id="queryMany" resultMap="poMap">
+        SELECT * FROM COMMANDS
+        WHERE STATUS = 0 AND PATTERN LIKE CONCAT('${val}', '%')
+    </select>
+
+
+</mapper>
