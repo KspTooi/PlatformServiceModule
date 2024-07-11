@@ -25,9 +25,27 @@
 	    `CREATED_TIME`
     </sql>
 
+    <insert id="insert">
+        INSERT INTO COMMANDS(ID,PATTERN,SERVICE_UNIT_NAME,SERVICE_UNIT_CLASS_TYPE,STATUS,METADATA,CREATED_TIME)
+        VALUES (
+                 #{val.id}
+               ,#{val.pattern}
+               ,#{val.serviceUnitName}
+               ,#{val.serviceUnitClassType}
+               ,#{val.status}
+               ,#{val.metadata}
+               ,#{val.createdTime}
+               )
+    </insert>
+
+    <delete id="deleteById">
+        UPDATE COMMANDS SET STATUS = 1
+        WHERE ID = #{id} AND STATUS = 0
+    </delete>
+
     <select id="getByPattern" resultMap="poMap">
         SELECT * FROM COMMANDS
-        WHERE PATTERN = #{pattern} AND STATUS = 0
+        WHERE PATTERN = #{val} AND STATUS = 0
     </select>
 
     <select id="queryMany" resultMap="poMap">

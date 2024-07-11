@@ -26,6 +26,7 @@
         <mapper resource="mapper/LoginHistoryMapper.xml"/>
         <mapper resource="mapper/StatementHistoryMapper.xml"/>
         <mapper resource="mapper/ConfigSetMapper.xml"/>
+        <mapper resource="mapper/CommandsMapper.xml"/>
     </mappers>
 
 </configuration>
