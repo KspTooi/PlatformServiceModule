@@ -4,7 +4,9 @@ package com.ksptooi.psm.processor;
 import com.alibaba.fastjson.JSON;
 import com.google.inject.Injector;
 import com.ksptooi.guice.annotations.Unit;
+import com.ksptooi.psm.mapper.CommandsMapper;
 import com.ksptooi.psm.mapper.RequestHandlerMapper;
+import com.ksptooi.psm.modes.CommandEntity;
 import com.ksptooi.psm.modes.RequestHandlerVo;
 import com.ksptooi.psm.processor.entity.*;
 import com.ksptooi.psm.processor.entity.Process;
@@ -33,6 +35,9 @@ public class ServiceUnitManager {
 
     @Inject
     private RequestHandlerMapper requestHandlerMapper;
+
+    @Inject
+    private CommandsMapper commandsMapper;
 
     @Inject
     private Snowflake snowflake;
@@ -117,32 +122,30 @@ public class ServiceUnitManager {
                 //安装请求处理器
                 if(def.getDefType().equals(SrvDefType.REQ_HANDLER)){
 
-                    var vo = requestHandlerMapper.getByPatternAndParamsCount(def.getPattern(),def.getParamCount());
+                    var byPattern = commandsMapper.getByPattern(def.getPattern());
 
-                    //数据库已经注册过rHandler
-                    if(vo!=null){
-                        //数据库的请求处理器类型与当前服务单元类型不一致
-                        if(!vo.getSrvUnitClassType().equals(classType)){
-                            requestHandlerMapper.deleteById(vo.getId());
-                            log.info("Remove [RequestHandler] {}:{}",vo.getSrvUnitName(),vo.getSrvUnitClassType());
+                    if(byPattern != null){
+                        if(byPattern.getServiceUnitClassType().equals(classType)){
+                            log.info("Remove [RequestHandler] {}:{}",byPattern.getServiceUnitName(),byPattern.getServiceUnitClassType());
+                            commandsMapper.deleteById(byPattern.getId());
+                            byPattern = null;
                         }else {
-                            log.info("Activation [RequestHandler] {}:{}({})",name,vo.getPattern(),vo.getParamsCount());
+                            log.info("Activation [RequestHandler] {}:{}",name,byPattern.getPattern());
                         }
                     }
-                    if(vo == null){
-                        RequestHandlerVo insert = new RequestHandlerVo();
+
+                    if(byPattern == null){
+                        var insert = new CommandEntity();
                         insert.setId(snowflake.nextId());
                         insert.setPattern(def.getPattern());
-                        insert.setParams(JSON.toJSONString(def.getParams()));
-                        insert.setParamsCount(def.getParamCount());
-                        insert.setSrvUnitName(name);
-                        insert.setSrvUnitClassType(classType);
+                        insert.setServiceUnitName(name);
+                        insert.setServiceUnitClassType(classType);
                         insert.setStatus(0);
-                        insert.setMetadata("");
-                        insert.setCreateTime(new Date());
-                        requestHandlerMapper.insert(insert);
-                        log.info("Install [RequestHandler] {}:{}({})",name,def.getPattern(),def.getParamCount());
+                        insert.setMetadata(null);
+                        insert.setCreatedTime(new Date());
+                        commandsMapper.insert(insert);
                     }
+
 
                 }
 
@@ -316,49 +319,7 @@ public class ServiceUnitManager {
     }
 
 
-
-
-    /**
-     * 解析请求语句
-     * @param req
-     * @return
-     */
-    private void resolverRequest(ShellRequest req){
-
-        String statement = req.getStatement();
-        String requestName = null;
-
-        //预处理
-        requestName = statement.trim();
-
-        //解析参数
-        String[] params = statement.split(">");
-
-        //无参数
-        if(params.length <= 1){
-            req.setPattern(requestName);
-            req.setSeqArgument(new ArrayList<>());
-            return;
-        }
-
-        //有参数
-        List<String> paramList = new ArrayList<>();
-        String param = params[1];
-
-        String[] split = param.split(",");
-
-        for(String item:split){
-
-            if(item.trim().equals("")){
-                continue;
-            }
-
-            paramList.add(item.trim());
-        }
-
-        req.setPattern(params[0]);
-        req.setSeqArgument(paramList);
-    }
+    
 
     public static ActivatedSrvUnit getServiceUnit(String procName){
         return procMap.get(procName);
