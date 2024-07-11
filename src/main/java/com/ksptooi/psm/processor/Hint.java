@@ -1,13 +1,12 @@
-package com.ksptooi.inner;
+package com.ksptooi.psm.processor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.TYPE,ElementType.PARAMETER})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ParamSet {
-
-
+public @interface Hint {
+    String[] value();
 }
