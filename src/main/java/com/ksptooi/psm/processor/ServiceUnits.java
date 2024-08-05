@@ -467,7 +467,7 @@ public class ServiceUnits {
                 if(userValue.size() > 1){
                     throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
                 }
-                ret[i] = userValue.getFirst();
+                ret[i] = userValue.get(0);
                 continue;
             }
             if(curType.isAssignableFrom(String[].class)){
@@ -483,9 +483,9 @@ public class ServiceUnits {
                     throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
                 }
                 try{
-                    ret[i] = Integer.parseInt(userValue.getFirst());
+                    ret[i] = Integer.parseInt(userValue.get(0));
                 }catch (Exception ex){
-                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.get(0)+"转换为Int");
                 }
                 continue;
             }
@@ -496,7 +496,7 @@ public class ServiceUnits {
                     try{
                         t[a] = Integer.parseInt(userValue.get(a));
                     }catch (Exception ex){
-                        throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                        throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.get(0)+"转换为Int");
                     }
                 }
                 ret[i] = t;
@@ -510,9 +510,9 @@ public class ServiceUnits {
                     throw new AssemblingException("参数:"+requireParamName+"传递了过多的值");
                 }
                 try{
-                    ret[i] = Double.parseDouble(userValue.getFirst());
+                    ret[i] = Double.parseDouble(userValue.get(0));
                 }catch (Exception ex){
-                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                    throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.get(0)+"转换为Int");
                 }
                 continue;
             }
@@ -523,7 +523,7 @@ public class ServiceUnits {
                     try{
                         t[a] = Double.parseDouble(userValue.get(a));
                     }catch (Exception ex){
-                        throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.getFirst()+"转换为Int");
+                        throw new AssemblingException("参数:"+requireParamName+"值错误. 无法将"+userValue.get(0)+"转换为Int");
                     }
                 }
                 ret[i] = t;
@@ -544,7 +544,7 @@ public class ServiceUnits {
                     continue;
                 }
 
-                var actual = actualType.getFirst();
+                var actual = actualType.get(0);
                 var list = new ArrayList<Object>();
 
                 if(actual.equals(String.class)){
@@ -583,7 +583,7 @@ public class ServiceUnits {
         if(value == null || value.isEmpty()){
             throw new AssemblingException("缺少参数:"+paramName);
         }
-        if(StringUtils.isBlank(value.getFirst())){
+        if(StringUtils.isBlank(value.get(0))){
             throw new AssemblingException("缺少参数:"+paramName);
         }
     }

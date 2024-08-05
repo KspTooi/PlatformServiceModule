@@ -9,8 +9,8 @@
     <version>4.0W1</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
     </properties>
 
     <description>A command execution framework based on SSH protocol</description>
@@ -259,8 +259,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>18</source>
+                    <target>18</target>
                 </configuration>
             </plugin>
             <!-- 打包依赖maven插件-->

@@ -20,6 +20,7 @@ import java.net.SocketAddress;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 @Unit
@@ -47,6 +48,8 @@ public class SimplePasswordAuthenticator implements PasswordAuthenticator {
             e.printStackTrace();
             return false;
         }
+
+        IntFunction<Integer> integerIntFunction = (int x) -> x + 1;
 
         var vo = accountService.getByAccount(username);
         var origin = session.getClientAddress();

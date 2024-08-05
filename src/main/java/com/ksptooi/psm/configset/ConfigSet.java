@@ -45,7 +45,7 @@ public class ConfigSet {
             return null;
         }
 
-        var data = byKey.getFirst();
+        var data = byKey.get(0);
 
         if(StringUtils.isNullOrEmpty(data.getVal())){
             return data.getDef();

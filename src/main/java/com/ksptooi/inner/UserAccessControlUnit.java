@@ -21,7 +21,6 @@ public class UserAccessControlUnit {
     @Inject
     private Snowflake snowflake;
 
-
     @RequestHandler("whoami")
     public void whoami(ShellRequest request){
         var c = request.getCable().connect(ConnectMode.OUTPUT);

@@ -25,7 +25,7 @@ public class ParameterServiceUnit {
         for(var item : clazz.getMethods()){
             if(item.getName().equals("echo1")){
                 var parameterType = RefTools.getParameterActualType(item,1);
-                System.out.println(parameterType.getFirst().equals(Integer.class));
+                System.out.println(parameterType.get(0).equals(Integer.class));
             }
         }
     }

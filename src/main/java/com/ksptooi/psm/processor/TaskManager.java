@@ -43,7 +43,7 @@ public class TaskManager {
 
         log.info("用户:{} 启动进程:{} PID:{}", username,taskName,task.getPid());
 
-        Thread thread = Thread.ofVirtual().name(taskName).start(() -> {
+        Thread thread = new Thread(() -> {
 
             //提交进程创建事件
             var event = new AsyncProcessCommitEvent(task);
@@ -77,7 +77,7 @@ public class TaskManager {
 
             //log.info("进程退出:{}", taskName);
         });
-
+        thread.start();
         task.setInstance(thread);
     }
 

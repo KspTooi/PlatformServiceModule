@@ -53,7 +53,7 @@ public class ShellRequest {
         if(val == null || val.isEmpty()){
             return null;
         }
-        return argumentMap.get(kind).getFirst();
+        return argumentMap.get(kind).get(0);
     }
 
     public List<String> getArgument(String kind){

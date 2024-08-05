@@ -51,6 +51,7 @@ public class Application {
         var subSystems = scanner.scan("./subsystems");
         subSystemManager.install(subSystems);
 
+
         final var ets = System.currentTimeMillis();
         log.info("Done({}ms)",(ets - sts));
 

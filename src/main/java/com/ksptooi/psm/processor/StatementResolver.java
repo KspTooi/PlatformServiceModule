@@ -25,7 +25,6 @@ public class StatementResolver {
 
         var parser = new StatementResolver();
 
-
         var resolve = parser.resolve("echo -name");
 
         System.out.println(resolve);

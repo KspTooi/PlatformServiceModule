@@ -13,5 +13,4 @@ public class EchoParamSet {
     @Introduction("用户账户")
     private String account;
 
-
 }

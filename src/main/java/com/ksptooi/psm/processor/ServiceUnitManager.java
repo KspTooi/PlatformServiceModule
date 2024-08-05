@@ -146,6 +146,32 @@ public class ServiceUnitManager {
                         commandsMapper.insert(insert);
                     }
 
+                    var byPatternLegacy = requestHandlerMapper.getByPatternAndParamsCount(def.getPattern(),def.getParamCount());
+
+                    if(byPatternLegacy != null){
+                        if(byPatternLegacy.getSrvUnitClassType().equals(classType)){
+                            log.info("Remove [RequestHandler](Legacy) {}:{}",byPatternLegacy.getSrvUnitName(),byPatternLegacy.getSrvUnitClassType());
+                            commandsMapper.deleteById(byPatternLegacy.getId());
+                            byPattern = null;
+                        }else {
+                            log.info("Activation [RequestHandler](Legacy) {}:{}",name,byPatternLegacy.getPattern());
+                        }
+                    }
+
+                    if(byPattern == null){
+                        var insert = new RequestHandlerVo();
+                        insert.setId(snowflake.nextId());
+                        insert.setPattern(def.getPattern());
+                        insert.setParams(JSON.toJSONString(def.getParams()));
+                        insert.setParamsCount(def.getParamCount());
+                        insert.setSrvUnitName(def.getSrvUnitName());
+                        insert.setSrvUnitClassType(classType);
+                        insert.setStatus(0);
+                        insert.setMetadata(null);
+                        insert.setCreateTime(new Date());
+                        requestHandlerMapper.insert(insert);
+                    }
+
 
                 }
 
@@ -243,7 +269,6 @@ public class ServiceUnitManager {
 
         //查找数据库中的请求处理器
         var requestHandlerVo = requestHandlerMapper.getByPatternAndParamsCount(request.getPattern(), argumentCount);
-
 
         if(requestHandlerVo == null){
             log.warn("无法处理用户请求,因为数据库中没有所需的请求处理器 {}.",request.getPattern());

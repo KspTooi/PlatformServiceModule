@@ -85,7 +85,8 @@ public class PSMShell implements Command,Runnable{
         vt.render();
 
         //启动处理线程
-        this.shellThread = Thread.ofVirtual().start(this);
+        this.shellThread = new Thread(this);
+        this.shellThread.start();
         log.info("账户:{} 已建立新会话:{}",session.getSession().getUsername(),sessionId);
 
         var e = new UserSessionLoggedEvent(this,getUserName(),getSessionId());
